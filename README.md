@@ -71,7 +71,7 @@ Kommandos ausführen
 
 ### roemische_zahl_test.py
 Das Programm testet das eigentliche Programm zur Berechnung der Römischen Zahl.
-Dieses Testprogramm ist Euer Sicherheitsnetz und meldet Euch
+Dieses Testprogramm ist Euer Sicherheitsnetz und gibt Euch Roten Alarm
 wenn das eigentliche Programm fehlerhaft arbeitet.
 
 1. Kommandos ausführen
