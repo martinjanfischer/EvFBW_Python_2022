@@ -1,6 +1,15 @@
 # EvFBW_Python_2022
 Python Programmierkurs 2022 für Jugendliche beim Evangelischen Familienbildungswerk
 
+## Software
+Wir arbeiten auf Windows Computern.
+
+Installiere das Python Übersetzerprogramm von
+[www.python.org](https://www.python.org/downloads/)
+
+Installiere den Texteditor Notepad++ von
+[notepad-plus-plus.org](https://notepad-plus-plus.org/downloads/)
+
 ## Zusatz Module
 Unsere Python Skripte benötigen zusätzliche Software.
 Wir installieren die Module über das Programm Pip.
@@ -23,7 +32,6 @@ Dazu musst Du das folgende Kommando ausführen
 ```
     pip freeze > zusatz_module.txt
 ```
-
 
 ## 10. November 2022
 Wir beginnen mit den Grundlagen
