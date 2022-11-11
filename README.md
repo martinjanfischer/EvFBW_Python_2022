@@ -4,11 +4,14 @@ Python Programmierkurs 2022 für Jugendliche beim Evangelischen Familienbildungs
 ## Software
 Wir arbeiten auf Windows Computern.
 
-Installiere das Python Übersetzerprogramm von
+Installiere das Python Übersetzer Programm von
 [www.python.org](https://www.python.org/downloads/)
 
-Installiere den Texteditor Notepad++ von
+Installiere den Textbearbeitungs Programm Notepad++ von
 [notepad-plus-plus.org](https://notepad-plus-plus.org/downloads/)
+
+Installiere das Bildbearbeitungs Programm The Gimp von
+[www.gimp.org](https://www.gimp.org/)
 
 ## Zusatz Module
 Unsere Python Skripte benötigen zusätzliche Software.
