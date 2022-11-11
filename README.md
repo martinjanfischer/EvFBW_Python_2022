@@ -17,6 +17,13 @@ musst Du das folgende Kommando ausführen
     pip uninstall -r zusatz_module.txt
 ```
 
+Ihr könnt jederzeit den Inhalt dieser Datei 
+mit allen in dem Kurs aktuell benötigten Modulen ersetzen.
+Dazu musst Du das folgende Kommando ausführen
+```
+    pip freeze > zusatz_module.txt
+```
+
 
 ## 10. November 2022
 Wir beginnen mit den Grundlagen
