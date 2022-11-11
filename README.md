@@ -48,19 +48,27 @@ in dem der Text "Hallo Welt, mein Name ist ..." angezeigt wird.
 7. Das Programm zeigt jetzt Deinen Namen.
 
 ### roemische_zahl.py
-1. Kommandos ausführen
+Das Programm erwartet ein eine Arabische Zahl als Argument.
+1. Wenn keine Arabische Zahl angegeben wird, wird ein Hilfetext angezeigt.
+Kommandos ausführen
 ```
     python roemische_zahl.py
 ```
-2. Das Programm erwartet ein eine Arabische Zahl als Argument,
-daher wird ein Hilfetext angezeigt.
-1. Kommandos ausführen
+2. Wenn keine Arabische Zahl angegeben wird, wird ein Hilfetext angezeigt.
+Kommandos ausführen
 ```
     python roemische_zahl.py 7
 ```
-4. Das Programm zeigt die Römische Zahl VII an.
+3. Das Programm zeigt die Römische Zahl VII an.
+
+### roemische_zahl_test.py
+Das Programm testet das eigentliche Programm zur Berechnung der Römischen Zahl.
+Dieses Testprogramm ist Euer Sicherheitsnetz und meldet Euch
+wenn das eigentliche Programm fehlerhaft arbeitet.
+
 1. Kommandos ausführen
 ```
     python roemische_zahl_test.py
 ```
-6. Das Programm testet das eigentliche Römische Zahl Programm.
+
+
