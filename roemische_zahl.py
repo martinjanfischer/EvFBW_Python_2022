@@ -9,11 +9,11 @@ def roemische_zahl(arabische_zahl): # Definiere Funktion "roemische_zahl" mit Pa
 '''
 if __name__ == '__main__':
     import argparse
-    parser = argparse.ArgumentParser(description = 'Berechne die Römische Zahl aus einer Arabischen Zahl')
-    parser.add_argument('arabischezahl', type=int, help='Eine ganze Arabische Zahl')
+    parser = argparse.ArgumentParser(description = 'Berechne die Römische Zahl aus einer natürlichen Arabischen Zahl')
+    parser.add_argument('arabische_zahl', type=int, help='Eine natürliche Arabische Zahl')
     args = parser.parse_args()
     
     # Die obige Funktion "roemische_zahl" wird nur dann in der Kommandozeile ausgeführt...
     # ... wenn man sie hier in der __main__ Funktion aufruft
-    print(roemische_zahl(args.arabischezahl))
+    print(roemische_zahl(args.arabische_zahl))
 '''
