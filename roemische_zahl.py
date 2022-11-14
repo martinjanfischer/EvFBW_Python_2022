@@ -12,9 +12,7 @@ def berechne_roemische_zahl(arabische_zahl):
     """ 
     roemische_zahl = ''         # Definiere Variable "roemische_zahl" die einen leeren Zeichenketten-Text enthält
     
-    if arabische_zahl==0:       # Wenn Variable "arabische_zahl" gleich Null ist ...
-        roemische_zahl = ''     # ... dann bekommt die Variable "roemische_zahl" einen leeren Zeichenketten-Text
-    elif arabische_zahl==1:     # Ansonsten, wenn die Variable "arabische_zahl" gleich Eins ist ...
+    if arabische_zahl==1:       # Wenn die Variable "arabische_zahl" gleich Eins ist ...
         roemische_zahl = 'I'    # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
     
     return roemische_zahl       # Gebe den Wert von der Variablen "roemische_zahl" zurück
