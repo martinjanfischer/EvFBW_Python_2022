@@ -3,13 +3,6 @@
 # Definiere Funktion "berechne_roemische_zahl"
 # mit Parameter-Variablen "arabische_zahl"
 def berechne_roemische_zahl(arabische_zahl):
-    """
-    Die Funktion berechne_roemische_zahl
-    berechnet die Römische Zahl aus einer Arabischen Zahl.
-    
-    :param int arabische_zahl: Ganzzahlige Variable mit einer Arabischen Zahl
-    :return: Zeichenketten-Text mit der berechneten Römischen Zahl
-    """ 
     roemische_zahl = ''         # Definiere Variable "roemische_zahl" die einen leeren Zeichenketten-Text enthält
     
     if arabische_zahl==1:       # Wenn die Variable "arabische_zahl" gleich Eins ist ...
