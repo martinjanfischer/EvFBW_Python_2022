@@ -42,7 +42,7 @@ Wir beginnen mit den Grundlagen
 - Römische Zahl aus Arabischer Zahl
 
 ### hallo_welt_bunt.py
-1. Kommandos ausführen
+1. Führe folgende Kommandos aus
 ```
     pip install PyQt5
     python hallo_welt_bunt.py
@@ -61,25 +61,55 @@ in dem der Text "Hallo Welt, mein Name ist ..." angezeigt wird.
 ### roemische_zahl.py
 Das Programm erwartet ein eine Arabische Zahl als Argument.
 1. Wenn keine Arabische Zahl angegeben wird, wird ein Hilfetext angezeigt.
-Kommandos ausführen
+Führe folgendes Kommando aus
 ```
     python roemische_zahl.py
 ```
-2. Wenn keine Arabische Zahl angegeben wird, wird ein Hilfetext angezeigt.
-Kommandos ausführen
+2. Wenn eine Arabische Zahl angegeben wird, wird dafür eine Römische Zahl angezeigt.
+Führe folgendes Kommando mit dem Argument 7 aus
 ```
     python roemische_zahl.py 7
 ```
 3. Das Programm zeigt die Römische Zahl VII an.
+```
+    VII
+```
 
 ### roemische_zahl_test.py
 Das Programm testet das eigentliche Programm zur Berechnung der Römischen Zahl.
 Dieses Testprogramm ist Euer Sicherheitsnetz und gibt Euch Roten Alarm
 wenn das eigentliche Programm fehlerhaft arbeitet.
 
-1. Kommandos ausführen
+1. Führe folgendes Kommando aus
 ```
     python roemische_zahl_test.py
 ```
+2. Wenn alle Tests erfolgreich ausgeführt wurden, erhält man folgende Ausgabe
+```
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
 
+OK
+```
+3. Wenn ein oder mehrere Tests fehlgeschlagen sind, erhält man folgende Ausgabe
+```
+.F
+======================================================================
+FAIL: teste_roemische_zahl_1_bis_10 (__main__.roemische_zahl_test)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\Sources\EvFBW_Python_2022\roemische_zahl_test.py", line 30, in teste_roemische_zahl_1_bis_10
+    self.assertEqual(ergebnis, 'VIII')       # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text VII enthält
+AssertionError: 'VII' != 'VIII'
+- VII
++ VIII
+?    +
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.007s
+
+FAILED (failures=1)
+```
 
