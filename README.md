@@ -36,7 +36,7 @@ Dazu musst Du das folgende Kommando ausführen
     pip freeze > zusatz_module.txt
 ```
 
-## 10. November 2022
+## 10. & 17. November 2022
 Wir beginnen mit den Grundlagen
 - Hallo Welt Programm
 - Römische Zahl aus Arabischer Zahl
