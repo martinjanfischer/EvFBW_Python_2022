@@ -14,7 +14,7 @@ class roemische_zahl_test(unittest.TestCase):   # Definiere die Test Klasse "roe
         ergebnis = berechne_roemische_zahl(0)   # Rufe die Funktion berechne_roemische_zahl mit 0 auf und speichere den Rückgabewert in der Variablen "ergebnis"
         self.assertEqual(ergebnis, '')          # Melde einen Fehler wenn die Variable ergebnis nicht den leeren Zeichenketten-Text enthält
     
-    def teste_roemische_zahl_1_bis_10(self):    # Definiere die Testfunktion "teste_roemische_zahl_1_bis_10"
+    def teste_roemische_zahl_1_bis_9(self):    # Definiere die Testfunktion "teste_roemische_zahl_1_bis_10"
         ergebnis = berechne_roemische_zahl(1)   # Rufe die Funktion berechne_roemische_zahl mit 1 auf und speichere den Rückgabewert in der Variablen "ergebnis"
         self.assertEqual(ergebnis, 'I')         # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text I enthält
         ergebnis = berechne_roemische_zahl(2)   # Rufe die Funktion berechne_roemische_zahl mit 2 auf und speichere den Rückgabewert in der Variablen "ergebnis"
@@ -33,13 +33,11 @@ class roemische_zahl_test(unittest.TestCase):   # Definiere die Test Klasse "roe
         self.assertEqual(ergebnis, 'VIII')      # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text VIII enthält
         ergebnis = berechne_roemische_zahl(9)   # Rufe die Funktion berechne_roemische_zahl mit 9 auf und speichere den Rückgabewert in der Variablen "ergebnis"
         self.assertEqual(ergebnis, 'IX')        # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text IX enthält
-        ergebnis = berechne_roemische_zahl(10)  # Rufe die Funktion berechne_roemische_zahl mit 10 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, 'X')         # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text X enthält
     
-    '''
-    def teste_roemische_zahl_11_bis_90(self):
+    def teste_roemische_zahl_10_bis_99(self):
         arabisch_roemisch_woerterbuch = {
-            11: 'XI'
+            10: 'X'
+            , 11: 'XI'
             , 12: 'XII'
             , 13: 'XIII'
             , 14: 'XIV'
@@ -119,16 +117,7 @@ class roemische_zahl_test(unittest.TestCase):   # Definiere die Test Klasse "roe
             , 88: 'LXXXVIII'
             , 89: 'LXXXIX'
             , 90: 'XC'
-        }
-        for arabische_zahl, roemische_zahl in arabisch_roemisch_woerterbuch.items():
-            ergebnis = berechne_roemische_zahl(arabische_zahl)
-            self.assertEqual(ergebnis, roemische_zahl)
-    '''
-    
-    '''
-    def teste_roemische_zahl_91_bis_1000(self):
-        arabisch_roemisch_woerterbuch = {
-            91: 'XCI'
+            , 91: 'XCI'
             , 92: 'XCII'
             , 93: 'XCIII'
             , 94: 'XCIV'
@@ -137,7 +126,14 @@ class roemische_zahl_test(unittest.TestCase):   # Definiere die Test Klasse "roe
             , 97: 'XCVII'
             , 98: 'XCVIII'
             , 99: 'XCIX'
-            , 100: 'C'
+        }
+        for arabische_zahl, roemische_zahl in arabisch_roemisch_woerterbuch.items():
+            ergebnis = berechne_roemische_zahl(arabische_zahl)
+            self.assertEqual(ergebnis, roemische_zahl)
+    
+    def teste_roemische_zahl_100_bis_1000(self):
+        arabisch_roemisch_woerterbuch = {
+            100: 'C'
             , 101: 'CI'
             , 102: 'CII'
             , 103: 'CIII'
@@ -1042,7 +1038,6 @@ class roemische_zahl_test(unittest.TestCase):   # Definiere die Test Klasse "roe
         for arabische_zahl, roemische_zahl in arabisch_roemisch_woerterbuch.items():
             ergebnis = berechne_roemische_zahl(arabische_zahl)
             self.assertEqual(ergebnis, roemische_zahl)
-    '''
 
 if __name__ == '__main__':  # Die obigen Funktionen werden nur dann in der Kommandozeile ausgeführt...
     unittest.main()         # ... wenn man sie hier in der __main__ Funktion aufruft

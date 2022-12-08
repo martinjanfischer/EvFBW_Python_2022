@@ -5,41 +5,52 @@
 def berechne_roemische_zahl(arabische_zahl):
     roemische_zahl = ''         # Definiere Variable "roemische_zahl" die einen leeren Zeichenketten-Text enthält
     
-    # 'C', 'CD', 'D', 'CM', 100, 400, 500, 900
+    # 1000 ist 'M'
+    while arabische_zahl>=1000:
+        roemische_zahl += 'M'
+        arabische_zahl -= 1000
     
-    # 'X', 'XL', 'L', 'XC', 10, 40, 50, 90
-    if arabische_zahl==10:      # Wenn die Variable "arabische_zahl" gleich 10 ist ...
-        roemische_zahl += 'X'   # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'X'
+    # 100 ist 'C', 400 ist 'CD', 500 ist 'D', 900 ist 'CM'
+    if arabische_zahl>=900:
+        roemische_zahl += 'CM'
+        arabische_zahl -= 900
+    if arabische_zahl>=500:
+        roemische_zahl += 'D'
+        arabische_zahl -= 500
+    if arabische_zahl>=400:
+        roemische_zahl += 'CD'
+        arabische_zahl -= 400
+    while arabische_zahl>=100:
+        roemische_zahl += 'C'
+        arabische_zahl -= 100
+    
+    # 10 ist 'X', 40 ist 'XL', 50 ist 'L', 90 ist 'XC'
+    if arabische_zahl>=90:
+        roemische_zahl += 'XC'
+        arabische_zahl -= 90
+    if arabische_zahl>=50:
+        roemische_zahl += 'L'
+        arabische_zahl -= 50
+    if arabische_zahl>=40:
+        roemische_zahl += 'XL'
+        arabische_zahl -= 40
+    while arabische_zahl>=10:
+        roemische_zahl += 'X'
         arabische_zahl -= 10
     
-    # 'I', 'IV', 'V', 'IX', 1, 4, 5, 9
-    if arabische_zahl==9:       # Wenn die Variable "arabische_zahl" gleich 9 ist ...
-        roemische_zahl += 'IX'  # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'IX'
-        arabische_zahl -= 9
-    if arabische_zahl==8:       # Wenn die Variable "arabische_zahl" gleich 8 ist ...
-        roemische_zahl += 'VIII'# ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'VIII'
-        arabische_zahl -= 8
-    if arabische_zahl==7:       # Wenn die Variable "arabische_zahl" gleich 7 ist ...
-        roemische_zahl += 'VII' # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'VII'
-        arabische_zahl -= 7
-    if arabische_zahl==6:       # Wenn die Variable "arabische_zahl" gleich 6 ist ...
-        roemische_zahl += 'VI'  # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'VI'
-        arabische_zahl -= 6
-    if arabische_zahl==5:       # Wenn die Variable "arabische_zahl" gleich 5 ist ...
-        roemische_zahl += 'V'   # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'V'
-        arabische_zahl -= 5
-    if arabische_zahl==4:       # Wenn die Variable "arabische_zahl" gleich 4 ist ...
-        roemische_zahl += 'IV'  # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'IV'
-        arabische_zahl -= 4
-    if arabische_zahl==3:       # Wenn die Variable "arabische_zahl" gleich 3 ist ...
-        roemische_zahl += 'III' # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'III'
-        arabische_zahl -= 3
-    if arabische_zahl==2:       # Wenn die Variable "arabische_zahl" gleich 2 ist ...
-        roemische_zahl += 'II'  # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'II'
-        arabische_zahl -= 2
-    if arabische_zahl==1:       # Wenn die Variable "arabische_zahl" gleich 1 ist ...
-        roemische_zahl += 'I'   # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
-        arabische_zahl -= 1
+    # 1 ist 'I', 4 ist 'IV', 5 ist 'V', 9 ist 'IX'
+    if arabische_zahl>=9:       # Wenn die Variable "arabische_zahl" größer oder gleich 9 ist ...
+        roemische_zahl += 'IX'  # ... dann hänge an die Variable "roemische_zahl" den Zeichenketten-Text 'IX' an
+        arabische_zahl -= 9     # ... und ziehe von der Variablen "arabische_zahl" den Wert 9 ab
+    if arabische_zahl>=5:       # Wenn die Variable "arabische_zahl" größer oder gleich 5 ist ...
+        roemische_zahl += 'V'   # ... dann hänge an die Variable "roemische_zahl" den Zeichenketten-Text 'V' an
+        arabische_zahl -= 5     # ... und ziehe von der Variablen "arabische_zahl" den Wert 5 ab
+    if arabische_zahl>=4:       # Wenn die Variable "arabische_zahl" größer oder gleich 4 ist ...
+        roemische_zahl += 'IV'  # ... dann hänge an die Variable "roemische_zahl" den Zeichenketten-Text 'IV' an
+        arabische_zahl -= 4     # ... und ziehe von der Variablen "arabische_zahl" den Wert 4 ab
+    while arabische_zahl>=1:    # Schleife: Solange die Variable "arabische_zahl" größer oder gleich 1 ist ...
+        roemische_zahl += 'I'   # ... dann hänge an die Variable "roemische_zahl" den Zeichenketten-Text 'I' an
+        arabische_zahl -= 1     # ... und ziehe von der Variablen "arabische_zahl" den Wert 1 ab
     
     return roemische_zahl       # Gebe den Wert von der Variablen "roemische_zahl" zurück
 
