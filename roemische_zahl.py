@@ -6,18 +6,18 @@ def berechne_roemische_zahl_hilfs_funktion(arabische_zahl, roemische_zahl,
     roemische_ziffer_1, roemische_ziffer_4, roemische_ziffer_5, roemische_ziffer_9,
     arabische_ziffer_1, arabische_ziffer_4, arabische_ziffer_5, arabische_ziffer_9
     ):
-    if (arabische_zahl >= arabische_ziffer_9):
-        roemische_zahl += roemische_ziffer_9
-        arabische_zahl -= arabische_ziffer_9
-    elif (arabische_zahl >= arabische_ziffer_5):
-        roemische_zahl += roemische_ziffer_5
-        arabische_zahl -= arabische_ziffer_5
-    elif (arabische_zahl >= arabische_ziffer_4):
-        roemische_zahl += roemische_ziffer_4
-        arabische_zahl -= arabische_ziffer_4
-    while (arabische_zahl >= arabische_ziffer_1):
-        roemische_zahl += roemische_ziffer_1
-        arabische_zahl -= arabische_ziffer_1
+    if (arabische_zahl >= arabische_ziffer_9):      # Wenn die Variable "arabische_zahl" größer oder gleich 9 ist ...
+        roemische_zahl += roemische_ziffer_9        # ... dann hänge an die Variable "roemische_zahl" den Zeichenketten-Text 'IX' an
+        arabische_zahl -= arabische_ziffer_9        # ... und ziehe von der Variablen "arabische_zahl" den Wert 9 ab
+    elif (arabische_zahl >= arabische_ziffer_5):    # Wenn die Variable "arabische_zahl" größer oder gleich 5 ist ...
+        roemische_zahl += roemische_ziffer_5        # ... und ziehe von der Variablen "arabische_zahl" den Wert 5 ab
+        arabische_zahl -= arabische_ziffer_5        # ... und ziehe von der Variablen "arabische_zahl" den Wert 5 ab
+    elif (arabische_zahl >= arabische_ziffer_4):    # Wenn die Variable "arabische_zahl" größer oder gleich 4 ist ...
+        roemische_zahl += roemische_ziffer_4        # ... dann hänge an die Variable "roemische_zahl" den Zeichenketten-Text 'IV' an
+        arabische_zahl -= arabische_ziffer_4        # ... und ziehe von der Variablen "arabische_zahl" den Wert 4 ab
+    while (arabische_zahl >= arabische_ziffer_1):   # Schleife: Solange die Variable "arabische_zahl" größer oder gleich 1 ist ...
+        roemische_zahl += roemische_ziffer_1        # ... dann hänge an die Variable "roemische_zahl" den Zeichenketten-Text 'I' an
+        arabische_zahl -= arabische_ziffer_1        # ... und ziehe von der Variablen "arabische_zahl" den Wert 1 ab
     
     return arabische_zahl, roemische_zahl # Gebe zwei Werte zurück
 
