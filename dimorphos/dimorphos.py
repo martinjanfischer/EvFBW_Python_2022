@@ -10,9 +10,12 @@ import pygame
 class Dimorphos:
     
     def __init__(self):     # Konstruktor Funktion: Bereite alle Mitglied-Variablen und Ressourcen dieser Klasse vor
+        # initialisiere_pygame
         pygame.init()
         pygame.display.set_caption("Dimorphos")
         pygame.key.set_repeat(1, 10)    # Halte Taste Gedrückt für Wiederholte Dauer-Eingabe: benutze den Wert 10 als Intervall um den Ablauf zu beschleunigen.
+        
+        self.endlos_schleife_laeuft_weiter = True   # Diese Mitglied-Variable kann durch Eingabe auf False gesetzt werden
         self.leinwand = pygame.display.set_mode((985, 570))
         self.clock = pygame.time.Clock()
         
@@ -26,8 +29,7 @@ class Dimorphos:
     
     def endlos_schleife(self):      # Die wichtigste Funktion des Spiels
         
-        self.laeuft_weiter = True   # Diese Mitglied-Variable kann durch Eingabe auf False gesetzt werden
-        while self.laeuft_weiter:
+        while self.endlos_schleife_laeuft_weiter:
             zeitschritt = pygame.time.get_ticks() / 1000
             self._behandle_eingaben()
             self._behandle_spiele_logik()
@@ -39,7 +41,7 @@ class Dimorphos:
                 event.type == pygame.KEYDOWN
                 and event.key == pygame.K_ESCAPE    # ESC-Taste gedrückt
             ):
-                self.laeuft_weiter = False          # Breche die Endos-Schleife ab
+                self.endlos_schleife_laeuft_weiter = False # Breche die Endos-Schleife ab
     
     def _behandle_spiele_logik(self):
         pass
