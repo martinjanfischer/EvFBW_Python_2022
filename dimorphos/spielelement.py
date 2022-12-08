@@ -12,7 +12,7 @@ class SpielElement:
     def zeichne(self, oberflaeche):
         pass
     
-    def bewege(self, oberflaeche):
+    def bewege(self, oberflaeche, zeitschritt):
         pass
     
     def kollidiert(self, anderes_element):
@@ -45,7 +45,7 @@ class Laser(SpielElement):
     def __init__(self, position, geschwindigkeit):
         pass
     
-    def bewege(self, oberflaeche):
+    def bewege(self, oberflaeche, zeitschritt):
         pass
     
     def zeichne(self, oberflaeche):
