@@ -5,9 +5,14 @@
 def berechne_roemische_zahl(arabische_zahl):
     roemische_zahl = ''         # Definiere Variable "roemische_zahl" die einen leeren Zeichenketten-Text enthält
     
+    # 'C', 'CD', 'D', 'CM', 100, 400, 500, 900
+    
+    # 'X', 'XL', 'L', 'XC', 10, 40, 50, 90
     if arabische_zahl==10:      # Wenn die Variable "arabische_zahl" gleich 10 ist ...
         roemische_zahl += 'X'   # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'X'
         arabische_zahl -= 10
+    
+    # 'I', 'IV', 'V', 'IX', 1, 4, 5, 9
     if arabische_zahl==9:       # Wenn die Variable "arabische_zahl" gleich 9 ist ...
         roemische_zahl += 'IX'  # ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'IX'
         arabische_zahl -= 9
