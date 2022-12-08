@@ -6,6 +6,8 @@
 #        zeichne_spiele_elemente()
 
 import pygame
+from spielelement import SpielElement
+from spielelement import Asteroid, Raumschiff
 
 class Dimorphos:
     
