@@ -1,43 +1,53 @@
 # Implementierung eines Spiels
-#    initialisiere_pygame()
+#    pygame.init()
 #    while True:
-#        behandle_eingaben()
-#        behandle_spiele_logik()
-#        zeichne_spiele_elemente()
+#        _behandle_eingaben()
+#        _behandle_spiele_logik()
+#        _zeichne_spiele_elemente()
 
 import pygame
+from pygame.math import Vector2
 from spielelement import SpielElement
-from spielelement import Asteroid, Raumschiff
+from nuetzliches import lade_bild, zufaellige_position, zeige_text
 
-class Dimorphos:
-    
-    def __init__(self):     # Konstruktor Funktion: Bereite alle Mitglied-Variablen und Ressourcen dieser Klasse vor
-        # initialisiere_pygame
-        pygame.init()
-        pygame.display.set_caption("Dimorphos")
-        pygame.key.set_repeat(1, 10)    # Halte Taste Gedrückt für Wiederholte Dauer-Eingabe: benutze den Wert 10 als Intervall um den Ablauf zu beschleunigen.
-        
-        self.endlos_schleife_laeuft_weiter = True   # Diese Mitglied-Variable kann durch Eingabe auf False gesetzt werden
-        self.leinwand = pygame.display.set_mode((985, 570))
-        self.clock = pygame.time.Clock()
-        
-        self._initialisiere_spiel_elemente()
-    
-    def __del__(self):      # Destruktor-Funktion
-        pygame.quit()       # Beende pygame
-    
-    def _initialisiere_spiel_elemente(self):
+class Dimorphos:    # Diese Klasse ist das Spiel
+
+    def __init__(self):     # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
         pass
-    
-    def endlos_schleife(self):      # Die wichtigste Funktion des Spiels
+
+    def __enter__(self):    # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
+        pygame.init()       # starte das pygame Modul
+        pygame.display.set_caption("Dimorphos") # Text am oberen Fenster Rahmen
+        pygame.key.set_repeat(1, 10)            # Halte Taste Gedrückt für Wiederholte Dauer-Eingabe: benutze den Wert 10 als Intervall um den Ablauf zu beschleunigen.
         
+        self.endlos_schleife_laeuft_weiter = True   # Diese Mitglied Variable kann durch Eingabe auf False gesetzt werden
+        self.leinwand = pygame.display.set_mode((985, 570)) # Anzahl Bildpunkte/Pixel waagerecht und senkrecht
+        self.clock = pygame.time.Clock()            # Zeitgeber
+        
+        self._initialisiere_spiel_elemente()        # Erzeuge Raumschiff, Asteroiden, Laser
+
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):          # Destruktor Funktion
+        del self.spielelement   # Lösche Dummy SpielElement Objekt der Mitglied Variablen
+        pygame.quit()           # Stoppe das pygame Modul
+
+    def __del__(self):  # Destruktor Funktion
+        pass
+
+    def _initialisiere_spiel_elemente(self):
+        # Das ist nur ein Dummy SpielElement Objekt
+        self.spielelement = SpielElement(Vector2(400, 300), lade_bild("asteroid"), Vector2(0))
+    
+    def endlos_schleife(self):          # Die wichtigste öffentliche Mitglied Funktion des Spiels
+        # Implementierung eines Spiels
         while self.endlos_schleife_laeuft_weiter:
             zeitschritt = pygame.time.get_ticks() / 1000
             self._behandle_eingaben()
             self._behandle_spiele_logik()
             self._zeichne_spiele_elemente()
     
-    def _behandle_eingaben(self):
+    def _behandle_eingaben(self):       # Private Mitglied Funktion für Eingabebehandlung
         for event in pygame.event.get():            # Durchlaufe alle Fenster-Eingabe-Ereignisse
             if event.type == pygame.QUIT or (       # Fensterknopf X geklickt oder
                 event.type == pygame.KEYDOWN
@@ -45,9 +55,9 @@ class Dimorphos:
             ):
                 self.endlos_schleife_laeuft_weiter = False # Breche die Endos-Schleife ab
     
-    def _behandle_spiele_logik(self):
+    def _behandle_spiele_logik(self):   # Private Mitglied Funktion für Spielelogik
         pass
     
-    def _zeichne_spiele_elemente(self):
-        pygame.display.flip()   # Doppelpuffer: Zeichne in einem Nichtsichtbaren Speicher, während der andere Speicher dargestellt wird
-        self.clock.tick(60)     # Bildwiederholrate: Zeichne alle 60 Millisekunden neu, das macht ca 16,66 Bilder pro Sekunde
+    def _zeichne_spiele_elemente(self): # Private Mitglied Funktion für das Zeichnen
+        pygame.display.flip()           # Doppelpuffer: Zeichne in einem Nichtsichtbaren Speicher, während der andere Speicher dargestellt wird
+        self.clock.tick(60)             # Bildwiederholrate: Zeichne alle 60 Millisekunden neu, das macht ca 16,66 Bilder pro Sekunde

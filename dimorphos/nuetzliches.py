@@ -1,16 +1,17 @@
 from pygame import Color
+from pygame.math import Vector2
 
-def lade_sprite(datei_name, mit_transparenz=True):
-    pass
+def lade_bild(datei_name, mit_transparenz=True):
+    return None
 
 def zyklische_position(position, oberflaeche):
-    pass
+    return Vector2(0, 0)
 
 def zufaellige_position(oberflaeche):
-    pass
+    return Vector2(0, 0)
 
 def zufaellige_geschwindigkeit(min_geschwindigkeit, max_geschwindigkeit):
-    pass
+    return Vector2(0, 0)
 
 def zeige_text(oberflaeche, text, schrift, farbe=Color("tomato")):
     pass

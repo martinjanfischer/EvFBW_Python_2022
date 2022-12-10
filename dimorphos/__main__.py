@@ -1,9 +1,9 @@
 from dimorphos import Dimorphos
 
 if __name__ == "__main__":      # Hauptfunktion
-    dimorphos = Dimorphos()     # Instanziiere Spielklasse und speichere Objekt in Variablen
-    dimorphos.endlos_schleife() # Führe Endlos-Ereignis-Nachrichten-Schleife aus
-    del dimorphos               # Lösche Objekt wenn Endlosschleife unterbrochen wurde
+    with Dimorphos() as dimorphos:  # Instanziiere Spielklasse und speichere Objekt in Variablen
+        dimorphos.endlos_schleife() # Führe Endlos-Ereignis-Nachrichten-Schleife aus
+        del dimorphos               # Lösche Objekt wenn Endlosschleife unterbrochen wurde
 
 '''
 Anforderungen
