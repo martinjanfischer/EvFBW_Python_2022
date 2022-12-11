@@ -23,6 +23,7 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         self.endlos_schleife_laeuft_weiter = True   # Diese Mitglied Variable kann durch Eingabe auf False gesetzt werden
         self.leinwand = pygame.display.set_mode((985, 570)) # Anzahl Bildpunkte/Pixel waagerecht und senkrecht
         self.clock = pygame.time.Clock()            # Zeitgeber
+        self.letzte_zeit = pygame.time.get_ticks() / 1000
         
         self._initialisiere_spiel_elemente()        # Erzeuge Raumschiff, Asteroiden, Laser
 
@@ -42,12 +43,15 @@ class Dimorphos:    # Diese Klasse ist das Spiel
     def endlos_schleife(self):          # Die wichtigste öffentliche Mitglied Funktion des Spiels
         # Implementierung eines Spiels
         while self.endlos_schleife_laeuft_weiter:
-            zeitschritt = pygame.time.get_ticks() / 1000
-            self._behandle_eingaben()
-            self._behandle_spiele_logik()
+            aktuelle_zeit = pygame.time.get_ticks() / 1000  # Millisekunden umrechnen in Sekunden
+            zeitschritt = aktuelle_zeit - self.letzte_zeit
+            self.letzte_zeit = aktuelle_zeit
+            self._behandle_eingaben(zeitschritt)
+            self._behandle_spiele_logik(zeitschritt)
             self._zeichne_spiele_elemente()
+            self.clock.tick(60)         # Bildwiederholrate: Zeichne alle 60 Millisekunden neu, das macht ca 16,66 Bilder pro Sekunde
     
-    def _behandle_eingaben(self):       # Private Mitglied Funktion für Eingabebehandlung
+    def _behandle_eingaben(self, zeitschritt):      # Private Mitglied Funktion für Eingabebehandlung
         for event in pygame.event.get():            # Durchlaufe alle Fenster-Eingabe-Ereignisse
             if event.type == pygame.QUIT or (       # Fensterknopf X geklickt oder
                 event.type == pygame.KEYDOWN
@@ -55,9 +59,8 @@ class Dimorphos:    # Diese Klasse ist das Spiel
             ):
                 self.endlos_schleife_laeuft_weiter = False # Breche die Endos-Schleife ab
     
-    def _behandle_spiele_logik(self):   # Private Mitglied Funktion für Spielelogik
+    def _behandle_spiele_logik(self, zeitschritt):  # Private Mitglied Funktion für Spielelogik
         pass
     
     def _zeichne_spiele_elemente(self): # Private Mitglied Funktion für das Zeichnen
         pygame.display.flip()           # Doppelpuffer: Zeichne in einem Nichtsichtbaren Speicher, während der andere Speicher dargestellt wird
-        self.clock.tick(60)             # Bildwiederholrate: Zeichne alle 60 Millisekunden neu, das macht ca 16,66 Bilder pro Sekunde
