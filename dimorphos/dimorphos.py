@@ -38,15 +38,16 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         pass
     
     def _hole_spiel_elemente(self):
-        spiel_elemente = [*self.asteroiden]
+        spiel_elemente = [*self.asteroiden, *self.laser]
         if self.raumschiff:
             spiel_elemente.append(self.raumschiff)
         return spiel_elemente
     
     def _initialisiere_spiel_elemente(self):
         self.anzahl_asteroiden = 6
+        self.laser = []
         w, h = self.leinwand.get_size()
-        self.raumschiff = Raumschiff(Vector2(w / 2, h / 2), None)
+        self.raumschiff = Raumschiff(Vector2(w / 2, h / 2), self.laser.append)
         self.asteroiden = []
         for _ in range(self.anzahl_asteroiden):
             while True:
@@ -85,10 +86,15 @@ class Dimorphos:    # Diese Klasse ist das Spiel
                 self.raumschiff.drehe(uhrzeigersinn=False)
             if wurde_taste_gedrueckt[pygame.K_UP]:
                 self.raumschiff.beschleunige(zeitschritt)
+            if wurde_taste_gedrueckt[pygame.K_SPACE]:
+                self.raumschiff.schiesse()
     
     def _behandle_spiele_logik(self, zeitschritt):  # Private Mitglied Funktion für Spielelogik
         for spielelement in self._hole_spiel_elemente():
             spielelement.bewege(self.leinwand, zeitschritt)
+        for laser in self.laser[:]:
+            if not self.leinwand.get_rect().collidepoint(laser.position):
+                self.laser.remove(laser)
     
     def _zeichne_spiele_elemente(self): # Private Mitglied Funktion für das Zeichnen
         self.leinwand.blit(self.hintergrund, (0, 0))

@@ -1,5 +1,6 @@
 from pygame.locals import BLEND_ADD
 from pygame.math import Vector2
+from pygame.time import get_ticks
 from pygame.transform import rotozoom
 from nuetzliches import lade_bild, zufaellige_geschwindigkeit, zyklische_position
 
@@ -40,6 +41,7 @@ und hat andere Eigenschaften
 class Raumschiff(SpielElement):
     MANEUVRIERFAEHIGKEIT = 3
     BESCHLEUNIGUNG = 100
+    LASER_GESCHWINDIGKEIT = 200
     def __init__(self, position, erzeuge_laser_rueckruf_funktion):      # Konstruktor Funktion
         super().__init__(position, lade_bild("raumschiff"), Vector2(0)) # Aufruf Basis Klassen Konstruktor Funktion
         # kopiere den originalen AUFWAERTS vector
@@ -47,7 +49,8 @@ class Raumschiff(SpielElement):
         self.erzeuge_laser_rueckruf_funktion = erzeuge_laser_rueckruf_funktion
         self.bild_antrieb = lade_bild("nachbrenner")
         self.beschleunigt = False
-        pass
+        self.schuss_periode = 200
+        self.letzter_schuss_zeitstempel = get_ticks()
     
     def zeichne(self, oberflaeche):         # Verändere Mitglied Funktion der Klasse SpielElement
         # Raumschiff
@@ -74,7 +77,11 @@ class Raumschiff(SpielElement):
         self.beschleunigt = True
     
     def schiesse(self):                     # Nur Raumschiff hat diese Mitglied Funktion
-        pass
+        if get_ticks() - self.letzter_schuss_zeitstempel > self.schuss_periode:
+            self.letzter_schuss_zeitstempel = get_ticks()
+            laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT + self.geschwindigkeit
+            laser = Laser(self.position, laser_geschwindigkeit)
+            self.erzeuge_laser_rueckruf_funktion(laser)
 
 
 '''
@@ -114,7 +121,12 @@ class Laser(SpielElement):
         super().__init__(position, lade_bild("laser"), geschwindigkeit) # Aufruf Basis Klassen Konstruktor Funktion
     
     def zeichne(self, oberflaeche):                 # Verändere Mitglied Funktion der Klasse SpielElement
-        pass
+        winkel = self.geschwindigkeit.angle_to(AUFWAERTS)
+        gedrehte_oberflaeche = rotozoom(self.bild, winkel, 1.0)
+        gedrehte_oberflaeche_groesse = Vector2(gedrehte_oberflaeche.get_size())
+        blit_position = self.position - gedrehte_oberflaeche_groesse * 0.5
+        oberflaeche.blit(gedrehte_oberflaeche, blit_position, special_flags=BLEND_ADD)
     
     def bewege(self, oberflaeche, zeitschritt):     # Verändere Mitglied Funktion der Klasse SpielElement
-        pass
+        schritt = self.geschwindigkeit * zeitschritt
+        self.position = self.position + schritt
