@@ -21,10 +21,11 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         pygame.key.set_repeat(1, 10)            # Halte Taste Gedrückt für Wiederholte Dauer-Eingabe: benutze den Wert 10 als Intervall um den Ablauf zu beschleunigen.
         
         self.endlos_schleife_laeuft_weiter = True   # Diese Mitglied Variable kann durch Eingabe auf False gesetzt werden
-        self.leinwand = pygame.display.set_mode((985, 570)) # Anzahl Bildpunkte/Pixel waagerecht und senkrecht
+        self.leinwand = pygame.display.set_mode((1280, 720)) # Anzahl Bildpunkte/Pixel waagerecht und senkrecht
         self.clock = pygame.time.Clock()            # Zeitgeber
         self.letzte_zeit = pygame.time.get_ticks() / 1000
         
+        self.hintergrund = lade_bild("weltraum", False)
         self._initialisiere_spiel_elemente()        # Erzeuge Raumschiff, Asteroiden, Laser
     
         return self
@@ -42,7 +43,8 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         return spiel_elemente
     
     def _initialisiere_spiel_elemente(self):
-        self.raumschiff = Raumschiff(Vector2(400, 300), None)
+        w, h = self.leinwand.get_size()
+        self.raumschiff = Raumschiff(Vector2(w / 2, h / 2), None)
     
     def endlos_schleife(self):          # Die wichtigste öffentliche Mitglied Funktion des Spiels
         # Implementierung eines Spiels
@@ -79,6 +81,7 @@ class Dimorphos:    # Diese Klasse ist das Spiel
             spielelement.bewege(self.leinwand, zeitschritt)
     
     def _zeichne_spiele_elemente(self): # Private Mitglied Funktion für das Zeichnen
+        self.leinwand.blit(self.hintergrund, (0, 0))
         for spielelement in self._hole_spiel_elemente():
             spielelement.zeichne(self.leinwand)
         pygame.display.flip()           # Doppelpuffer: Zeichne in einem Nichtsichtbaren Speicher, während der andere Speicher dargestellt wird
