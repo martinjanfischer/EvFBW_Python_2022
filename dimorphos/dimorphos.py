@@ -90,8 +90,19 @@ class Dimorphos:    # Diese Klasse ist das Spiel
                 self.raumschiff.schiesse()
     
     def _behandle_spiele_logik(self, zeitschritt):  # Private Mitglied Funktion für Spielelogik
+        # Bewege alle SpielElemente pro Bild ein wenig weiter
         for spielelement in self._hole_spiel_elemente():
             spielelement.bewege(self.leinwand, zeitschritt)
+        
+        # Treffer: Laser auf Asteroid, entferne beide
+        for laser in self.laser[:]:
+            for asteroid in self.asteroiden[:]:
+                if asteroid.kollidiert(laser):
+                    self.asteroiden.remove(asteroid)
+                    self.laser.remove(laser)
+                    break
+        
+        # Entferne Laser am Bildrand
         for laser in self.laser[:]:
             if not self.leinwand.get_rect().collidepoint(laser.position):
                 self.laser.remove(laser)

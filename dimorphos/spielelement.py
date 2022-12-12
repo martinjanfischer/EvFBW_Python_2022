@@ -29,7 +29,8 @@ class SpielElement:
         self.position = zyklische_position(self.position + schritt, oberflaeche)
     
     def kollidiert(self, anderes_element):      # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
-        pass
+        distanz = self.position.distance_to(anderes_element.position)
+        return distanz < self.radius + anderes_element.radius
 
 
 AUFWAERTS = Vector2(0, -1)  # Globale Variable
