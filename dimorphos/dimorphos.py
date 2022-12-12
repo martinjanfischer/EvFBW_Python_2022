@@ -12,6 +12,8 @@ from nuetzliches import lade_bild, zufaellige_position, zeige_text
 
 class Dimorphos:    # Diese Klasse ist das Spiel
     MIN_ASTEROIDEN_DISTANZ = 250
+    SPIEL_VORBEI_GEWONNEN = "Gewonnen!"
+    SPIEL_VORBEI_VERLOREN = "Verloren!"
     
     def __init__(self):     # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
         pass
@@ -25,6 +27,10 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         self.leinwand = pygame.display.set_mode((1280, 720)) # Anzahl Bildpunkte/Pixel waagerecht und senkrecht
         self.clock = pygame.time.Clock()            # Zeitgeber
         self.letzte_zeit = pygame.time.get_ticks() / 1000
+        
+        self.spiel_vorbei_schrift = pygame.font.Font(None, 64)
+        self.spiel_vorbei_text = ""
+        self.spiel_vorbei_farbe = pygame.Color(255, 255, 255, 255)
         
         self.hintergrund = lade_bild("weltraum", False)
         self._initialisiere_spiel_elemente()        # Erzeuge Raumschiff, Asteroiden, Laser
@@ -44,6 +50,7 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         return spiel_elemente
     
     def _initialisiere_spiel_elemente(self):
+        self.spiel_vorbei_text = ""
         self.anzahl_asteroiden = 6
         self.laser = []
         w, h = self.leinwand.get_size()
@@ -77,8 +84,10 @@ class Dimorphos:    # Diese Klasse ist das Spiel
             ):
                 self.endlos_schleife_laeuft_weiter = False # Breche die Endos-Schleife ab
         
-        # Raumschiff Steuerung
+        # Hole Tastatur Eingaben
         wurde_taste_gedrueckt = pygame.key.get_pressed()
+        
+        # Raumschiff Steuerung
         if self.raumschiff:
             if wurde_taste_gedrueckt[pygame.K_RIGHT]:
                 self.raumschiff.drehe(uhrzeigersinn=True)
@@ -88,6 +97,14 @@ class Dimorphos:    # Diese Klasse ist das Spiel
                 self.raumschiff.beschleunige(zeitschritt)
             if wurde_taste_gedrueckt[pygame.K_SPACE]:
                 self.raumschiff.schiesse()
+        
+        # Neues Spiel?
+        if wurde_taste_gedrueckt[pygame.K_RETURN]:
+            if (
+                (self.raumschiff == None and self.spiel_vorbei_text == self.SPIEL_VORBEI_VERLOREN)
+                or (self.raumschiff and self.spiel_vorbei_text == self.SPIEL_VORBEI_GEWONNEN)
+                ):
+                self._initialisiere_spiel_elemente()
     
     def _behandle_spiele_logik(self, zeitschritt):  # Private Mitglied Funktion für Spielelogik
         # Bewege alle SpielElemente pro Bild ein wenig weiter
@@ -106,9 +123,25 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         for laser in self.laser[:]:
             if not self.leinwand.get_rect().collidepoint(laser.position):
                 self.laser.remove(laser)
+        
+        # Kollision: Raumschiff mit Asteroid, entferne Raumschiff
+        if self.raumschiff:
+           for asteroid in self.asteroiden:
+               if asteroid.kollidiert(self.raumschiff):
+                   self.raumschiff = None
+                   self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
+                   self.spiel_vorbei_farbe = pygame.Color("tomato")
+                   break
+        
+        # Gewonnen: Keine Asteroiden übrig
+        if not self.asteroiden and self.raumschiff:
+            self.spiel_vorbei_text = self.SPIEL_VORBEI_GEWONNEN
+            self.spiel_vorbei_farbe = pygame.Color("gold")
     
     def _zeichne_spiele_elemente(self): # Private Mitglied Funktion für das Zeichnen
         self.leinwand.blit(self.hintergrund, (0, 0))
         for spielelement in self._hole_spiel_elemente():
             spielelement.zeichne(self.leinwand)
+        if self.spiel_vorbei_text:
+            zeige_text(self.leinwand, self.spiel_vorbei_text, self.spiel_vorbei_schrift, self.spiel_vorbei_farbe)
         pygame.display.flip()           # Doppelpuffer: Zeichne in einem Nichtsichtbaren Speicher, während der andere Speicher dargestellt wird
