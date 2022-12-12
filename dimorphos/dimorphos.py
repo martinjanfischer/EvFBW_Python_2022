@@ -7,10 +7,11 @@
 
 import pygame
 from pygame.math import Vector2
-from spielelement import SpielElement, Raumschiff
+from spielelement import SpielElement, Raumschiff, Asteroid
 from nuetzliches import lade_bild, zufaellige_position, zeige_text
 
 class Dimorphos:    # Diese Klasse ist das Spiel
+    MIN_ASTEROIDEN_DISTANZ = 250
     
     def __init__(self):     # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
         pass
@@ -37,14 +38,23 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         pass
     
     def _hole_spiel_elemente(self):
-        spiel_elemente = []
+        spiel_elemente = [*self.asteroiden]
         if self.raumschiff:
             spiel_elemente.append(self.raumschiff)
         return spiel_elemente
     
     def _initialisiere_spiel_elemente(self):
+        self.anzahl_asteroiden = 6
         w, h = self.leinwand.get_size()
         self.raumschiff = Raumschiff(Vector2(w / 2, h / 2), None)
+        self.asteroiden = []
+        for _ in range(self.anzahl_asteroiden):
+            while True:
+                position = zufaellige_position(self.leinwand)
+                distanz = position.distance_to(self.raumschiff.position)
+                if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
+                    break
+            self.asteroiden.append(Asteroid(position))
     
     def endlos_schleife(self):          # Die wichtigste öffentliche Mitglied Funktion des Spiels
         # Implementierung eines Spiels

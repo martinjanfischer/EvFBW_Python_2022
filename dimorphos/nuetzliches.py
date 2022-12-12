@@ -1,3 +1,4 @@
+import random
 from pygame import Color
 from pygame.image import load
 from pygame.math import Vector2
@@ -16,10 +17,15 @@ def zyklische_position(position, oberflaeche):
     return Vector2(x % w, y % h)
 
 def zufaellige_position(oberflaeche):
-    return Vector2(0, 0)
+    return Vector2(
+        random.randrange(oberflaeche.get_width()),
+        random.randrange(oberflaeche.get_height()),
+    )
 
 def zufaellige_geschwindigkeit(min_geschwindigkeit, max_geschwindigkeit):
-    return Vector2(0, 0)
+    geschwindigkeit = random.uniform(min_geschwindigkeit, max_geschwindigkeit)
+    winkel = random.randrange(0, 360)
+    return Vector2(geschwindigkeit, 0).rotate(winkel)
 
 def zeige_text(oberflaeche, text, schrift, farbe=Color("tomato")):
     pass
