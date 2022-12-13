@@ -17,16 +17,13 @@ class SpielElement:
             self.radius = 1                                 # Alle SpielElement Klassen haben ebenfalls diese Mitglied Variable: Radius für Kollisionen
     
     def zeichne(self, oberflaeche):             # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
-        blit_position = self.position - Vector2(self.radius)
-        oberflaeche.blit(self.bild, blit_position)
+        pass
     
     def bewege(self, oberflaeche, zeitschritt): # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
-        schritt = self.geschwindigkeit * zeitschritt
-        self.position = zyklische_position(self.position + schritt, oberflaeche)
+        pass
     
     def kollidiert(self, anderes_element):      # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
-        distanz = self.position.distance_to(anderes_element.position)
-        return distanz < self.radius + anderes_element.radius
+        return False
 
 
 AUFWAERTS = Vector2(0, -1)  # Globale Variable
