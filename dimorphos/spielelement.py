@@ -1,4 +1,7 @@
+from pygame.locals import BLEND_ADD
 from pygame.math import Vector2
+from pygame.transform import rotozoom
+from nuetzliches import lade_bild, zyklische_position
 
 '''
 Diese Klasse ist eine Basis für 
@@ -17,10 +20,12 @@ class SpielElement:
             self.radius = 1                                 # Alle SpielElement Klassen haben ebenfalls diese Mitglied Variable: Radius für Kollisionen
     
     def zeichne(self, oberflaeche):             # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
-        pass
+        blit_position = self.position - Vector2(self.radius)
+        oberflaeche.blit(self.bild, blit_position)
     
     def bewege(self, oberflaeche, zeitschritt): # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
-        pass
+        schritt = self.geschwindigkeit * zeitschritt
+        self.position = zyklische_position(self.position + schritt, oberflaeche)
     
     def kollidiert(self, anderes_element):      # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
         return False
@@ -33,14 +38,39 @@ Die Klasse Raumschiff ist ein SpielElement
 und hat andere Eigenschaften 
 '''
 class Raumschiff(SpielElement):
+    MANEUVRIERFAEHIGKEIT = 3
+    BESCHLEUNIGUNG = 100
+    
     def __init__(self, position, erzeuge_laser_rueckruf_funktion):      # Konstruktor Funktion
-        super().__init__(position, None, Vector2(0)) # Aufruf Basis Klassen Konstruktor Funktion
+        super().__init__(position, lade_bild("raumschiff"), Vector2(0)) # Aufruf Basis Klassen Konstruktor Funktion
+        # kopiere den originalen AUFWAERTS vector
+        self.richtung = Vector2(AUFWAERTS)
+        self.bild_antrieb = lade_bild("nachbrenner")
+        self.beschleunigt = False
+    
+    def zeichne(self, oberflaeche):         # Verändere Mitglied Funktion der Klasse SpielElement
+        # Raumschiff
+        winkel = self.richtung.angle_to(AUFWAERTS)
+        gedrehte_oberflaeche = rotozoom(self.bild, winkel, 1.0)
+        gedrehte_oberflaeche_groesse = Vector2(gedrehte_oberflaeche.get_size())
+        blit_position = self.position - gedrehte_oberflaeche_groesse * 0.5
+        oberflaeche.blit(gedrehte_oberflaeche, blit_position)
+        # Antrieb
+        if self.beschleunigt == True:
+            gedrehte_oberflaeche_antrieb = rotozoom(self.bild_antrieb, winkel, 1.0)
+            gedrehte_oberflaeche_antrieb_groesse = Vector2(gedrehte_oberflaeche_antrieb.get_size())
+            blit_position_antrieb = self.position - gedrehte_oberflaeche_antrieb_groesse * 0.5
+            oberflaeche.blit(gedrehte_oberflaeche_antrieb, blit_position_antrieb, special_flags=BLEND_ADD)
+            self.beschleunigt = False
     
     def drehe(self, uhrzeigersinn=True):    # Nur Raumschiff hat diese Mitglied Funktion
-        pass
+        vorzeichen = 1 if uhrzeigersinn else -1
+        winkel = self.MANEUVRIERFAEHIGKEIT * vorzeichen
+        self.richtung.rotate_ip(winkel)
     
     def beschleunige(self, zeitschritt):    # Nur Raumschiff hat diese Mitglied Funktion
-        pass
+        self.geschwindigkeit += self.richtung * self.BESCHLEUNIGUNG * zeitschritt
+        self.beschleunigt = True
     
     def schiesse(self):                     # Nur Raumschiff hat diese Mitglied Funktion
         pass

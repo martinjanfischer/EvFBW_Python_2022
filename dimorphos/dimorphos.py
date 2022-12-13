@@ -7,7 +7,7 @@
 
 import pygame
 from pygame.math import Vector2
-from spielelement import SpielElement
+from spielelement import SpielElement, Raumschiff
 
 class Dimorphos:    # Diese Klasse ist das Spiel
     
@@ -25,20 +25,25 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         self.letzte_zeit = pygame.time.get_ticks() / 1000
         
         self._initialisiere_spiel_elemente()        # Erzeuge Raumschiff, Asteroiden, Laser
-    
+        
         return self
     
     def __exit__(self, exc_type, exc_value, traceback):          # Destruktor Funktion
-        del self.spielelement   # Lösche Dummy SpielElement Objekt der Mitglied Variablen
         pygame.quit()           # Stoppe das pygame Modul
     
     def __del__(self):  # Destruktor Funktion
         pass
     
+    def _hole_spiel_elemente(self):
+        spiel_elemente = []
+        if self.raumschiff:
+            spiel_elemente.append(self.raumschiff)
+        return spiel_elemente
+    
     def _initialisiere_spiel_elemente(self):
         # Das ist nur ein Dummy SpielElement Objekt
         pixel_waagerecht, pixel_senkrecht = self.leinwand.get_size()
-        self.spielelement = SpielElement(Vector2(pixel_waagerecht / 2, pixel_senkrecht / 2), None, Vector2(0))
+        self.raumschiff = Raumschiff(Vector2(pixel_waagerecht / 2, pixel_senkrecht / 2), None)
     
     def endlos_schleife(self):          # Die wichtigste öffentliche Mitglied Funktion des Spiels
         # Implementierung eines Spiels
@@ -59,9 +64,26 @@ class Dimorphos:    # Diese Klasse ist das Spiel
                 and event.key == pygame.K_ESCAPE    # ESC-Taste gedrückt
             ):
                 self.endlos_schleife_laeuft_weiter = False # Breche die Endos-Schleife ab
+        
+        # Hole Tastatur Eingaben
+        wurde_taste_gedrueckt = pygame.key.get_pressed()
+        
+        # Raumschiff Steuerung
+        if self.raumschiff:
+            if wurde_taste_gedrueckt[pygame.K_RIGHT]:
+                self.raumschiff.drehe(uhrzeigersinn=True)
+            elif wurde_taste_gedrueckt[pygame.K_LEFT]:
+                self.raumschiff.drehe(uhrzeigersinn=False)
+            if wurde_taste_gedrueckt[pygame.K_UP]:
+                self.raumschiff.beschleunige(zeitschritt)
     
     def _behandle_spiele_logik(self, zeitschritt):  # Private Mitglied Funktion für Spielelogik
-        pass
+        # Bewege alle SpielElemente pro Bild ein wenig weiter
+        for spielelement in self._hole_spiel_elemente():
+            spielelement.bewege(self.leinwand, zeitschritt)
     
     def _zeichne_spiele_elemente(self): # Private Mitglied Funktion für das Zeichnen
+        # Zeichne alle SpielElemente in diesem Bild
+        for spielelement in self._hole_spiel_elemente():
+            spielelement.zeichne(self.leinwand)
         pygame.display.flip()           # Doppelpuffer: Zeichne in einem Nichtsichtbaren Speicher, während der andere Speicher dargestellt wird
