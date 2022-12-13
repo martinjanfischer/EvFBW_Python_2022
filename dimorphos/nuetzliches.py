@@ -1,10 +1,11 @@
+import os
 import random
 from pygame import Color
 from pygame.image import load
 from pygame.math import Vector2
 
 def lade_bild(datei_name, mit_transparenz=True):
-    datei_pfad = f'dimorphos\\bilder\\{datei_name}.png'
+    datei_pfad = os.path.dirname(__file__) + f'\\bilder\\{datei_name}.png'
     geladenes_bild = load(datei_pfad)
     if mit_transparenz:
         return geladenes_bild.convert_alpha()
