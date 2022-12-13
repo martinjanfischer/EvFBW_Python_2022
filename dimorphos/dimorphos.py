@@ -8,6 +8,7 @@
 import pygame
 from pygame.math import Vector2
 from spielelement import SpielElement, Raumschiff
+from nuetzliches import lade_bild
 
 class Dimorphos:    # Diese Klasse ist das Spiel
     
@@ -42,6 +43,7 @@ class Dimorphos:    # Diese Klasse ist das Spiel
     
     def _initialisiere_spiel_elemente(self):
         # Das ist nur ein Dummy SpielElement Objekt
+        self.hintergrund = lade_bild("weltraum", False)
         pixel_waagerecht, pixel_senkrecht = self.leinwand.get_size()
         self.raumschiff = Raumschiff(Vector2(pixel_waagerecht / 2, pixel_senkrecht / 2), None)
     
@@ -83,6 +85,9 @@ class Dimorphos:    # Diese Klasse ist das Spiel
             spielelement.bewege(self.leinwand, zeitschritt)
     
     def _zeichne_spiele_elemente(self): # Private Mitglied Funktion für das Zeichnen
+        # Zeichne Hintergrundbild neu
+        self.leinwand.blit(self.hintergrund, (0, 0))
+        
         # Zeichne alle SpielElemente in diesem Bild
         for spielelement in self._hole_spiel_elemente():
             spielelement.zeichne(self.leinwand)
