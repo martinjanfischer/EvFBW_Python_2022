@@ -103,6 +103,14 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         for spielelement in self._hole_spiel_elemente():
             spielelement.bewege(self.leinwand, zeitschritt)
         
+        # Treffer: Laser auf Asteroid, entferne beide
+        for laser in self.laser[:]:
+            for asteroid in self.asteroiden[:]:
+                if asteroid.kollidiert(laser):
+                    self.asteroiden.remove(asteroid)
+                    self.laser.remove(laser)
+                    break
+        
         # Entferne Laser am Bildrand
         for laser in self.laser[:]:
             if not self.leinwand.get_rect().collidepoint(laser.position):
