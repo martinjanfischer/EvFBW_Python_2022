@@ -223,6 +223,7 @@ Neben der Klasse Dimorphos dass das eigentliche Spiel darstellt,
 haben wir weitere Kassen, die die Spielelemente darstellen,
 wie zum Beispiel das Raumschiff, die Asteroiden und die Laserstrahlen.
 Wir werden feststellen, dass alle diese Klassen gemeinsame Eigenschaften haben werden.
+
 ![Klassen ohne Vererbung](dimorphos/klassen_ohne_vererbung.png)
 
 Wir können die Gemeinsamkeiten alle dieser Klassen 
@@ -233,4 +234,5 @@ und die Klassen Raumschiff, Asteroid und Laser
 erben alle von der Klasse SpielElement.
 Dadurch verringert sich die Menge an Quelltext.
 Außerdem dürfen wir Funktionen der Basisklasse in den erbenden Klassen auch verändern.
+
 ![Klassen mit Vererbung](dimorphos/klassen_mit_vererbung.png)
