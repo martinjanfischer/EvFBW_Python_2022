@@ -20,20 +20,20 @@ Wir installieren die Module über das Programm Pip.
 Um alle in dem Kurs benötigten Module zu installieren
 musst Du das folgende Kommando ausführen
 ```
-    pip install -r zusatz_module.txt
+    pip install -r requirements.txt
 ```
 
 Um alle in dem Kurs benötigten Module wieder zu deinstallieren
 musst Du das folgende Kommando ausführen
 ```
-    pip uninstall -r zusatz_module.txt
+    pip uninstall -r requirements.txt
 ```
 
 Ihr könnt jederzeit den Inhalt dieser Datei 
 mit allen in dem Kurs aktuell benötigten Modulen ersetzen.
 Dazu musst Du das folgende Kommando ausführen
 ```
-    pip freeze > zusatz_module.txt
+    pip freeze > requirements.txt
 ```
 
 ## 10. & 17. November & 8. Dezember 2022
