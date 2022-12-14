@@ -217,3 +217,20 @@ und die darin enthaltene Objekt Orientierte Programmierung besser kennenzulernen
 
 Falls ihr ein Verständnis für das Programm entwickelt habt,
 könnt ihr gerne anfangen gezielt eine Funktion des Spiels zu verändern.
+
+### Klassen
+Neben der Klasse Dimorphos dass das eigentliche Spiel darstellt,
+haben wir weitere Kassen, die die Spielelemente darstellen,
+wie zum Beispiel das Raumschiff, die Asteroiden und die Laserstrahlen.
+Wir werden feststellen, dass alle diese Klassen gemeinsame Eigenschaften haben werden.
+![Klassen ohne Vererbung](https://github.com/martinjanfischer/EvFBW_Python_2022/tree/main/dimorphos/klassen_ohne_vererbung.png?raw=true)
+
+Wir können die Gemeinsamkeiten alle dieser Klassen 
+in einer sogenannten Basisklasse zusammenfassen
+und dann die Technik der Vererbung nutzen.
+Diese Basisklasse nennen wir SpielElement
+und die Klassen Raumschiff, Asteroid und Laser 
+erben alle von der Klasse SpielElement.
+Dadurch verringert sich die Menge an Quelltext.
+Außerdem dürfen wir Funktionen der Basisklasse in den erbenden Klassen auch verändern.
+![Klassen mit Vererbung](https://github.com/martinjanfischer/EvFBW_Python_2022/tree/main/dimorphos/klassen_mit_vererbung.png?raw=true)
