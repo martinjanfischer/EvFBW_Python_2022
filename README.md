@@ -3,13 +3,13 @@ Python Programmierkurs 2022 für Jugendliche beim Evangelischen Familienbildungs
 
 ## Software
 Wir arbeiten auf Windows 10 Computern und installieren dort
-- das Python Übersetzer Programm von
+- das __Python__ Übersetzer Programm von
 [www.python.org](https://www.python.org/downloads/)
-- den Textbearbeitungs Programm Notepad++ von
+- das Textbearbeitungs Programm __Notepad++__ von
 [notepad-plus-plus.org](https://notepad-plus-plus.org/downloads/)
-- das Bildbearbeitungs Programm The Gimp von
+- das Bildbearbeitungs Programm __The Gimp__ von
 [www.gimp.org](https://www.gimp.org/)
-- die Community Version der Entwicklungsumgebung PyCharm von
+- die Community Version der Entwicklungsumgebung __PyCharm__ von
 [www.jetbrains.com](https://www.jetbrains.com/pycharm/download/#section=windows)
 
 ## Zusatz Module
@@ -199,7 +199,7 @@ Falls nicht müssen wir die Datei requirements.txt öffnen
 und dann die Installation von pygame von dort veranlassen.
 
 Sobald PyCharm alles installiert hat, 
-werden für die Datei __main__.py zwei Knöpfe in der Werkzeugleiste aktiviert,
+werden für die Datei ```__main__.py``` zwei Knöpfe in der Werkzeugleiste aktiviert,
 ein grünes Dreieck und ein grüner Käfer.
 Mit dem Dreieck können wir das Programm einfach ausführen.
 Mit dem grünen Käfer können wir das Programm im Debugger von PyCharm starten.
