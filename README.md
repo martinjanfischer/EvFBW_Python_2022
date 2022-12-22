@@ -2,15 +2,16 @@
 Python Programmierkurs 2022 für Jugendliche beim Evangelischen Familienbildungswerk
 
 ## Software
-Wir arbeiten auf Windows 10 Computern und installieren dort
-- das __Python__ Übersetzer Programm von
+Wir arbeiten auf Windows Computern.
+
+Installiere das Python Übersetzer Programm von
 [www.python.org](https://www.python.org/downloads/)
-- das Textbearbeitungs Programm __Notepad++__ von
+
+Installiere den Textbearbeitungs Programm Notepad++ von
 [notepad-plus-plus.org](https://notepad-plus-plus.org/downloads/)
-- das Bildbearbeitungs Programm __The Gimp__ von
+
+Installiere das Bildbearbeitungs Programm The Gimp von
 [www.gimp.org](https://www.gimp.org/)
-- die Community Version der Entwicklungsumgebung __PyCharm__ von
-[www.jetbrains.com](https://www.jetbrains.com/pycharm/download/#section=windows)
 
 ## Zusatz Module
 Unsere Python Skripte benötigen zusätzliche Software.
@@ -134,6 +135,7 @@ Dadurch öffnet sich ein Vergleichsfenster (Diff)
 mit dem sehen können wie sich die ausgewählte Datei verändert hat.
 
 #### 1. Ausgangspunkt: Spiel mit schwarzem Fenster
+Commit [Kursvorbereitung, Spiel, Reset](https://github.com/martinjanfischer/EvFBW_Python_2022/commit/a6bc3375ecf7a51b79bf9790ee8d79568f2fd86b)
 ```
 SHA-1: a6bc3375ecf7a51b79bf9790ee8d79568f2fd86b
 
@@ -141,6 +143,7 @@ SHA-1: a6bc3375ecf7a51b79bf9790ee8d79568f2fd86b
 ```
 
 #### 2. Spiel mit Raumschiff
+Commit [Kursvorbereitung, Spiel, Raumschiff](https://github.com/martinjanfischer/EvFBW_Python_2022/commit/2ada1f93baddd01cca98f07f7be16078d50219a8)
 ```
 SHA-1: 2ada1f93baddd01cca98f07f7be16078d50219a8
 
@@ -148,6 +151,7 @@ SHA-1: 2ada1f93baddd01cca98f07f7be16078d50219a8
 ```
 
 #### 3. Spiel mit Raumschiff und Weltraum
+Commit [Kursvorbereitung, Spiel, Weltraum](https://github.com/martinjanfischer/EvFBW_Python_2022/commit/156ee926dcf48a567327e6427485f7a9270689ad)
 ```
 SHA-1: 156ee926dcf48a567327e6427485f7a9270689ad
 
@@ -155,6 +159,7 @@ SHA-1: 156ee926dcf48a567327e6427485f7a9270689ad
 ```
 
 #### 4. Spiel mit Raumschiff, Weltraum und Asteroiden
+Commit [Kursvorbereitung, Spiel, Asteroid](https://github.com/martinjanfischer/EvFBW_Python_2022/commit/f3472a42df05d912aed4501fa388a4f1db94a7ee)
 ```
 SHA-1: f3472a42df05d912aed4501fa388a4f1db94a7ee
 
@@ -162,6 +167,7 @@ SHA-1: f3472a42df05d912aed4501fa388a4f1db94a7ee
 ```
 
 #### 5. Spiel mit Raumschiff, Weltraum, Asteroiden und Laser
+Commit [Kursvorbereitung, Spiel, Laser](https://github.com/martinjanfischer/EvFBW_Python_2022/commit/cf14ea267c8ad0544a5bd8f5c3b823952e64b5d5)
 ```
 SHA-1: cf14ea267c8ad0544a5bd8f5c3b823952e64b5d5
 
@@ -169,6 +175,7 @@ SHA-1: cf14ea267c8ad0544a5bd8f5c3b823952e64b5d5
 ```
 
 #### 6. Laser können Asteroiden zerstören
+Commit [Kursvorbereitung, Spiel, Treffer: Laser auf Asteroid](https://github.com/martinjanfischer/EvFBW_Python_2022/commit/299d6ceaaa9bb37abcc3d7fa29e3dd149b6ae315)
 ```
 SHA-1: 299d6ceaaa9bb37abcc3d7fa29e3dd149b6ae315
 
@@ -176,6 +183,7 @@ SHA-1: 299d6ceaaa9bb37abcc3d7fa29e3dd149b6ae315
 ```
 
 #### 7. Asteroiden können das Raumschiff zerstören
+Commit [Kursvorbereitung, Spiel, Kollision: Raumschiff mit Asteroid, Game Over Text](https://github.com/martinjanfischer/EvFBW_Python_2022/commit/3670c8879a6144f0683f14f4d0b8426a96b884b4)
 ```
 SHA-1: 3670c8879a6144f0683f14f4d0b8426a96b884b4
 
@@ -199,7 +207,7 @@ Falls nicht müssen wir die Datei requirements.txt öffnen
 und dann die Installation von pygame von dort veranlassen.
 
 Sobald PyCharm alles installiert hat, 
-werden für die Datei ```__main__.py``` zwei Knöpfe in der Werkzeugleiste aktiviert,
+werden für die Datei __main__.py zwei Knöpfe in der Werkzeugleiste aktiviert,
 ein grünes Dreieck und ein grüner Käfer.
 Mit dem Dreieck können wir das Programm einfach ausführen.
 Mit dem grünen Käfer können wir das Programm im Debugger von PyCharm starten.
