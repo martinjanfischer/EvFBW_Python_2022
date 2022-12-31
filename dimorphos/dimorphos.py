@@ -5,6 +5,7 @@
 #        _behandle_spiele_logik()
 #        _zeichne_spiele_elemente()
 
+import os
 import pygame
 from pygame.math import Vector2
 from spielelement import SpielElement, Raumschiff, Asteroid
@@ -14,6 +15,7 @@ class Dimorphos:    # Diese Klasse ist das Spiel
     MIN_ASTEROIDEN_DISTANZ = 250
     SPIEL_VORBEI_GEWONNEN = "Gewonnen!"
     SPIEL_VORBEI_VERLOREN = "Verloren!"
+    DIMORPHOS_APPDATA_PATH = os.path.join(os.getenv('APPDATA'), 'EvFBW_dimorphos_2022')
     
     def __init__(self):     # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
         pass
@@ -33,11 +35,16 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         self.spiel_vorbei_text = ""
         self.spiel_vorbei_farbe = pygame.Color(255, 255, 255, 255)
         
+        # Highsore
+        self.highscore = {}
+        self._lade_highscore()
+        
         self._initialisiere_spiel_elemente()        # Erzeuge Raumschiff, Asteroiden, Laser
         
         return self
     
     def __exit__(self, exc_type, exc_value, traceback):          # Destruktor Funktion
+        self._schreibe_highscore()
         pygame.quit()           # Stoppe das pygame Modul
     
     def __del__(self):  # Destruktor Funktion
@@ -161,3 +168,38 @@ class Dimorphos:    # Diese Klasse ist das Spiel
             zeige_text(self.leinwand, self.spiel_vorbei_text, self.spiel_vorbei_schrift, self.spiel_vorbei_farbe)
         
         pygame.display.flip()           # Doppelpuffer: Zeichne in einem Nichtsichtbaren Speicher, während der andere Speicher dargestellt wird
+    
+    def _lade_highscore(self):
+        # Prüfe Pfade
+        if not os.path.exists(self.DIMORPHOS_APPDATA_PATH):
+            return
+        pfad_highscore = os.path.join(self.DIMORPHOS_APPDATA_PATH, "highscore.txt")
+        if not os.path.isfile(pfad_highscore):
+            return
+        # Lade
+        self.highscore.clear()
+        with open(pfad_highscore, encoding='utf8', mode='r') as datei_highscore:
+            for zeile in datei_highscore:
+                (punkte, name) = zeile.split()
+                self.highscore[int(punkte)] = name
+        # Standardwerte
+        if not self.highscore:
+            self.highscore = {
+                1000000 : "Martin",
+                100000 : "Martin",
+                10000 : "Martin",
+                1000 : "Martin",
+                100 : "Martin",
+                10 : "Martin",
+                1 : "Martin"
+            }
+    
+    def _schreibe_highscore(self):
+        # Prüfe Pfade
+        if not os.path.exists(self.DIMORPHOS_APPDATA_PATH):
+            os.makedirs(self.DIMORPHOS_APPDATA_PATH)
+        pfad_highscore = os.path.join(self.DIMORPHOS_APPDATA_PATH, "highscore.txt")
+        # Schreibe
+        with open(pfad_highscore, encoding='utf8', mode='w') as datei_highscore:
+            for punkte, name in self.highscore.items():
+                datei_highscore.write(str(punkte) + ' ' + str(name) + '\n')
