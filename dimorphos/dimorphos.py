@@ -7,14 +7,9 @@
 
 import os
 import pygame
-from pygame.math import Vector2
-from spielelement import SpielElement, Raumschiff, Asteroid
-from nuetzliches import lade_bild, zufaellige_position, zeige_text
+from ansicht import StartAnsicht, LevelAnsicht
 
 class Dimorphos:    # Diese Klasse ist das Spiel
-    MIN_ASTEROIDEN_DISTANZ = 250
-    SPIEL_VORBEI_GEWONNEN = "Gewonnen!"
-    SPIEL_VORBEI_VERLOREN = "Verloren!"
     DIMORPHOS_APPDATA_PATH = os.path.join(os.getenv('APPDATA'), 'EvFBW_dimorphos_2022')
     
     def __init__(self):     # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
@@ -26,20 +21,18 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         pygame.key.set_repeat(1, 10)            # Halte Taste Gedrückt für Wiederholte Dauer-Eingabe: benutze den Wert 10 als Intervall um den Ablauf zu beschleunigen.
         
         self.endlos_schleife_laeuft_weiter = True   # Diese Mitglied Variable kann durch Eingabe auf False gesetzt werden
-        self.leinwand = pygame.display.set_mode((1280, 720)) # Anzahl Bildpunkte/Pixel waagerecht und senkrecht
         self.clock = pygame.time.Clock()            # Zeitgeber
         self.letzte_zeit = pygame.time.get_ticks() / 1000
         
-        # Text
-        self.spiel_vorbei_schrift = pygame.font.Font(None, 64)
-        self.spiel_vorbei_text = ""
-        self.spiel_vorbei_farbe = pygame.Color(255, 255, 255, 255)
+        # Ansichten
+        self.ansichten = []
+        self.ansichten.append(StartAnsicht())
+        self.ansichten.append(LevelAnsicht())
+        self.aktuelle_ansicht = 0
         
         # Highsore
         self.highscore = {}
         self._lade_highscore()
-        
-        self._initialisiere_spiel_elemente()        # Erzeuge Raumschiff, Asteroiden, Laser
         
         return self
     
@@ -49,37 +42,6 @@ class Dimorphos:    # Diese Klasse ist das Spiel
     
     def __del__(self):  # Destruktor Funktion
         pass
-    
-    def _hole_spiel_elemente(self):
-        spiel_elemente = [*self.asteroiden, *self.laser]
-        if self.raumschiff:
-            spiel_elemente.append(self.raumschiff)
-        return spiel_elemente
-    
-    def _initialisiere_spiel_elemente(self):
-        # Laser
-        self.laser = []
-        
-        # Weltraum
-        self.hintergrund = lade_bild("weltraum", False)
-        
-        # Raumschiff
-        pixel_waagerecht, pixel_senkrecht = self.leinwand.get_size()
-        self.raumschiff = Raumschiff(Vector2(pixel_waagerecht / 2, pixel_senkrecht / 2), self.laser.append)
-        
-        # Asteroiden
-        self.asteroiden = []
-        self.anzahl_asteroiden = 6
-        for _ in range(self.anzahl_asteroiden):
-            while True:
-                position = zufaellige_position(self.leinwand)
-                distanz = position.distance_to(self.raumschiff.position)
-                if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
-                    break
-            self.asteroiden.append(Asteroid(position))
-        
-        # Text
-        self.spiel_vorbei_text = ""
     
     def endlos_schleife(self):          # Die wichtigste öffentliche Mitglied Funktion des Spiels
         # Implementierung eines Spiels
@@ -93,79 +55,48 @@ class Dimorphos:    # Diese Klasse ist das Spiel
             self.clock.tick(60)         # Bildwiederholrate: Zeichne alle 60 Millisekunden neu, das macht ca 16,66 Bilder pro Sekunde
     
     def _behandle_eingaben(self, zeitschritt):      # Private Mitglied Funktion für Eingabebehandlung
-        # Programm Schließen?
+        # Eingabebehandlung Programm
         for event in pygame.event.get():            # Durchlaufe alle Fenster-Eingabe-Ereignisse
-            if event.type == pygame.QUIT or (       # Fensterknopf X geklickt oder
-                event.type == pygame.KEYDOWN
-                and event.key == pygame.K_ESCAPE    # ESC-Taste gedrückt
-            ):
+            # Programm Schließen?
+            if event.type == pygame.QUIT:           # Fensterknopf X geklickt
                 self.endlos_schleife_laeuft_weiter = False # Breche die Endos-Schleife ab
-        
-        # Hole Tastatur Eingaben
-        wurde_taste_gedrueckt = pygame.key.get_pressed()
-        
-        # Raumschiff Steuerung
-        if self.raumschiff:
-            if wurde_taste_gedrueckt[pygame.K_RIGHT]:
-                self.raumschiff.drehe(uhrzeigersinn=True)
-            elif wurde_taste_gedrueckt[pygame.K_LEFT]:
-                self.raumschiff.drehe(uhrzeigersinn=False)
-            if wurde_taste_gedrueckt[pygame.K_UP]:
-                self.raumschiff.beschleunige(zeitschritt)
-            if wurde_taste_gedrueckt[pygame.K_SPACE]:
-                self.raumschiff.schiesse()
-        
-        # Neues Spiel?
-        if wurde_taste_gedrueckt[pygame.K_RETURN]:
-            if (
-                (self.raumschiff == None and self.spiel_vorbei_text == self.SPIEL_VORBEI_VERLOREN)
-                or (self.raumschiff and self.spiel_vorbei_text == self.SPIEL_VORBEI_GEWONNEN)
+            elif event.type == pygame.KEYUP:
+                # Programm Schließen?
+                if (self.aktuelle_ansicht == 0
+                    and event.key == pygame.K_ESCAPE# ESC-Taste gedrückt
                 ):
-                self._initialisiere_spiel_elemente()
+                    self.endlos_schleife_laeuft_weiter = False # Breche die Endos-Schleife ab
+                # Aktuelles Spiel abbrechen
+                elif (self.aktuelle_ansicht == 1
+                    and event.key == pygame.K_ESCAPE# ESC-Taste gedrückt
+                ):
+                    self.aktuelle_ansicht = 0
+                    self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
+                # Starte Spiel
+                elif (self.aktuelle_ansicht == 0
+                    and event.key == pygame.K_RETURN # Enter-Taste gedrückt
+                ):
+                    self.aktuelle_ansicht = 1
+                    self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
+                # Nächstes Level
+                elif (self.aktuelle_ansicht == 1
+                    and event.key == pygame.K_RETURN # Enter-Taste gedrückt
+                ):
+                    if self.ansichten[self.aktuelle_ansicht].level_gewonnen():
+                        self.aktuelle_ansicht = 1
+                        self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
+        
+        # Eingabebehandlung Ansicht
+        if self.ansichten[self.aktuelle_ansicht]:
+            self.ansichten[self.aktuelle_ansicht].behandle_eingaben(zeitschritt)
     
     def _behandle_spiele_logik(self, zeitschritt):  # Private Mitglied Funktion für Spielelogik
-        # Bewege alle SpielElemente pro Bild ein wenig weiter
-        for spielelement in self._hole_spiel_elemente():
-            spielelement.bewege(self.leinwand, zeitschritt)
-        
-        # Treffer: Laser auf Asteroid, entferne beide
-        for laser in self.laser[:]:
-            for asteroid in self.asteroiden[:]:
-                if asteroid.kollidiert(laser):
-                    self.asteroiden.remove(asteroid)
-                    self.laser.remove(laser)
-                    break
-        
-        # Entferne Laser am Bildrand
-        for laser in self.laser[:]:
-            if not self.leinwand.get_rect().collidepoint(laser.position):
-                self.laser.remove(laser)
-        
-        # Kollision: Raumschiff mit Asteroid, entferne Raumschiff
-        if self.raumschiff:
-           for asteroid in self.asteroiden:
-               if asteroid.kollidiert(self.raumschiff):
-                   self.raumschiff = None
-                   self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
-                   self.spiel_vorbei_farbe = pygame.Color("tomato")
-                   break
-        
-        # Gewonnen: Keine Asteroiden übrig
-        if not self.asteroiden and self.raumschiff:
-            self.spiel_vorbei_text = self.SPIEL_VORBEI_GEWONNEN
-            self.spiel_vorbei_farbe = pygame.Color("gold")
+        if self.ansichten[self.aktuelle_ansicht]:
+            self.ansichten[self.aktuelle_ansicht].behandle_spiele_logik(zeitschritt)
     
     def _zeichne_spiele_elemente(self): # Private Mitglied Funktion für das Zeichnen
-        # Zeichne Hintergrundbild neu
-        self.leinwand.blit(self.hintergrund, (0, 0))
-        
-        # Zeichne alle SpielElemente in diesem Bild
-        for spielelement in self._hole_spiel_elemente():
-            spielelement.zeichne(self.leinwand)
-        
-        # Zeichne Text
-        if self.spiel_vorbei_text:
-            zeige_text(self.leinwand, self.spiel_vorbei_text, self.spiel_vorbei_schrift, self.spiel_vorbei_farbe)
+        if self.ansichten[self.aktuelle_ansicht]:
+            self.ansichten[self.aktuelle_ansicht].zeichne_spiele_elemente()
         
         pygame.display.flip()           # Doppelpuffer: Zeichne in einem Nichtsichtbaren Speicher, während der andere Speicher dargestellt wird
     

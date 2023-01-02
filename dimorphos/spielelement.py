@@ -42,7 +42,7 @@ und hat andere Eigenschaften
 class Raumschiff(SpielElement):
     MANEUVRIERFAEHIGKEIT = 3
     BESCHLEUNIGUNG = 100
-    LASER_GESCHWINDIGKEIT = 200
+    LASER_GESCHWINDIGKEIT = 500
     
     def __init__(self, position, erzeuge_laser_rueckruf_funktion):      # Konstruktor Funktion
         super().__init__(position, lade_bild("raumschiff"), Vector2(0)) # Aufruf Basis Klassen Konstruktor Funktion
@@ -84,7 +84,7 @@ class Raumschiff(SpielElement):
     def schiesse(self):                     # Nur Raumschiff hat diese Mitglied Funktion
         if get_ticks() - self.letzter_schuss_zeitstempel > self.schuss_periode:
             self.letzter_schuss_zeitstempel = get_ticks()
-            laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT + self.geschwindigkeit
+            laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT #+ self.geschwindigkeit
             laser = Laser(self.position, laser_geschwindigkeit)
             self.erzeuge_laser_rueckruf_funktion(laser)
 

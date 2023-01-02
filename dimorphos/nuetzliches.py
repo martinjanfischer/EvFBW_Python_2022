@@ -28,8 +28,8 @@ def zufaellige_geschwindigkeit(min_geschwindigkeit, max_geschwindigkeit):
     winkel = random.randrange(0, 360)
     return Vector2(geschwindigkeit, 0).rotate(winkel)
 
-def zeige_text(oberflaeche, text, schrift, farbe=Color("tomato")):
+def zeige_text(oberflaeche, text, schrift, farbe=Color("tomato"), position=Vector2(0,0)):
     text_oberflaeche = schrift.render(text, True, farbe)
     rechteck = text_oberflaeche.get_rect()
-    rechteck.center = Vector2(oberflaeche.get_size()) / 2
+    rechteck.center = position + Vector2(oberflaeche.get_size()) / 2
     oberflaeche.blit(text_oberflaeche, rechteck)
