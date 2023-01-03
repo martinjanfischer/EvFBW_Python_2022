@@ -11,6 +11,7 @@ from ansicht import StartAnsicht, LevelAnsicht
 
 class Dimorphos:    # Diese Klasse ist das Spiel
     DIMORPHOS_APPDATA_PATH = os.path.join(os.getenv('APPDATA'), 'EvFBW_dimorphos_2022')
+    TIME_CLOCK_TICK_FPS_60 = 60 # Maximale Bildwiederholrate für pygame.time.Clock.tick
     
     def __init__(self):     # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
         pass
@@ -21,7 +22,7 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         pygame.key.set_repeat(1, 10)            # Halte Taste Gedrückt für Wiederholte Dauer-Eingabe: benutze den Wert 10 als Intervall um den Ablauf zu beschleunigen.
         
         self.endlos_schleife_laeuft_weiter = True   # Diese Mitglied Variable kann durch Eingabe auf False gesetzt werden
-        self.clock = pygame.time.Clock()            # Zeitgeber
+        self.uhr = pygame.time.Clock()            # Zeitgeber
         self.letzte_zeit = pygame.time.get_ticks() / 1000
         
         # Ansichten
@@ -52,7 +53,7 @@ class Dimorphos:    # Diese Klasse ist das Spiel
             self._behandle_eingaben(zeitschritt)
             self._behandle_spiele_logik(zeitschritt)
             self._zeichne_spiele_elemente()
-            self.clock.tick(60)         # Bildwiederholrate: Zeichne alle 60 Millisekunden neu, das macht ca 16,66 Bilder pro Sekunde
+            self.uhr.tick(self.TIME_CLOCK_TICK_FPS_60)  # Bildwiederholrate
     
     def _behandle_eingaben(self, zeitschritt):      # Private Mitglied Funktion für Eingabebehandlung
         # Eingabebehandlung Programm
