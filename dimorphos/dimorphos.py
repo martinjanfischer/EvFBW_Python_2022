@@ -52,7 +52,7 @@ class Dimorphos:    # Diese Klasse ist das Spiel
             self.letzte_zeit = aktuelle_zeit
             self._behandle_eingaben(zeitschritt)
             self._behandle_spiele_logik(zeitschritt)
-            self._zeichne_spiele_elemente()
+            self._zeichne_spiele_elemente(zeitschritt)
             self.uhr.tick(self.TIME_CLOCK_TICK_FPS_60)  # Bildwiederholrate
     
     def _behandle_eingaben(self, zeitschritt):      # Private Mitglied Funktion für Eingabebehandlung
@@ -95,9 +95,9 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         if self.ansichten[self.aktuelle_ansicht]:
             self.ansichten[self.aktuelle_ansicht].behandle_spiele_logik(zeitschritt)
     
-    def _zeichne_spiele_elemente(self): # Private Mitglied Funktion für das Zeichnen
+    def _zeichne_spiele_elemente(self, zeitschritt): # Private Mitglied Funktion für das Zeichnen
         if self.ansichten[self.aktuelle_ansicht]:
-            self.ansichten[self.aktuelle_ansicht].zeichne_spiele_elemente()
+            self.ansichten[self.aktuelle_ansicht].zeichne_spiele_elemente(zeitschritt)
         
         pygame.display.flip()           # Doppelpuffer: Zeichne in einem Nichtsichtbaren Speicher, während der andere Speicher dargestellt wird
     

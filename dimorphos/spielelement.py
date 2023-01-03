@@ -2,6 +2,7 @@ from pygame.locals import BLEND_ADD
 from pygame.math import Vector2
 from pygame.time import get_ticks
 from pygame.transform import rotozoom
+from animiertebildsequenz import AnimierteBildSequenz
 from nuetzliches import lade_bild, zufaellige_geschwindigkeit, zyklische_position
 
 '''
@@ -20,7 +21,7 @@ class SpielElement:
         else:
             self.radius = 1                                 # Alle SpielElement Klassen haben ebenfalls diese Mitglied Variable: Radius für Kollisionen
     
-    def zeichne(self, oberflaeche):             # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
+    def zeichne(self, oberflaeche, zeitschritt):             # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
         blit_position = self.position - Vector2(self.radius)
         oberflaeche.blit(self.bild, blit_position)
     
@@ -57,7 +58,7 @@ class Raumschiff(SpielElement):
         self.schuss_periode = 200
         self.letzter_schuss_zeitstempel = get_ticks()
     
-    def zeichne(self, oberflaeche):         # Verändere Mitglied Funktion der Klasse SpielElement
+    def zeichne(self, oberflaeche, zeitschritt):         # Verändere Mitglied Funktion der Klasse SpielElement
         # Raumschiff
         winkel = self.richtung.angle_to(AUFWAERTS)
         gedrehte_oberflaeche = rotozoom(self.bild, winkel, 1.0)
@@ -111,7 +112,7 @@ class Asteroid(SpielElement):
         super().bewege(oberflaeche, zeitschritt)
         self.winkel += self.dreh_geschwindigkeit * zeitschritt
     
-    def zeichne(self, oberflaeche):         # Verändere Mitglied Funktion der Klasse SpielElement
+    def zeichne(self, oberflaeche, zeitschritt):         # Verändere Mitglied Funktion der Klasse SpielElement
         gedrehte_oberflaeche = rotozoom(self.bild, self.winkel, 1.0)
         gedrehte_oberflaeche_groesse = Vector2(gedrehte_oberflaeche.get_size())
         blit_position = self.position - gedrehte_oberflaeche_groesse * 0.5
@@ -126,7 +127,7 @@ class Laser(SpielElement):
     def __init__(self, position, geschwindigkeit):  # Konstruktor Funktion
         super().__init__(position, lade_bild("laser"), geschwindigkeit) # Aufruf Basis Klassen Konstruktor Funktion
     
-    def zeichne(self, oberflaeche):                 # Verändere Mitglied Funktion der Klasse SpielElement
+    def zeichne(self, oberflaeche, zeitschritt):                 # Verändere Mitglied Funktion der Klasse SpielElement
         winkel = self.geschwindigkeit.angle_to(AUFWAERTS)
         gedrehte_oberflaeche = rotozoom(self.bild, winkel, 1.0)
         gedrehte_oberflaeche_groesse = Vector2(gedrehte_oberflaeche.get_size())
@@ -136,3 +137,45 @@ class Laser(SpielElement):
     def bewege(self, oberflaeche, zeitschritt):     # Verändere Mitglied Funktion der Klasse SpielElement
         schritt = self.geschwindigkeit * zeitschritt
         self.position = self.position + schritt
+
+
+'''
+Die Klasse Explosion ist ein SpielElement
+und hat andere Eigenschaften 
+'''
+class Explosion(SpielElement):
+    BLACK = (0, 0, 0)
+    
+    def __init__(self, position, geschwindigkeit):  # Konstruktor Funktion
+        super().__init__(position, lade_bild("explosion"), geschwindigkeit) # Aufruf Basis Klassen Konstruktor Funktion
+        self.explosion = AnimierteBildSequenz(self.bild)
+        
+        self.anzahl_einzel_bilder = 5
+        self.einzel_bilder = []
+        for einzel_bild_nummer in range(self.anzahl_einzel_bilder):
+            self.einzel_bilder.append(self.explosion.einzel_bild(einzel_bild_nummer, 64, 64, 2, self.BLACK))
+        
+        self.einzel_bild_nummer = 0
+        self.zeitschritt_einzel_bild = 0
+        self.animation_fps = 8
+        self.zeitschritt_einzel_bild_schwelle = 1 / self.animation_fps
+        
+        if self.bild is not None:
+            self.radius = self.einzel_bilder[0].get_width() / 2
+        else:
+            self.radius = 1
+    
+    def zeichne(self, oberflaeche, zeitschritt):                 # Verändere Mitglied Funktion der Klasse SpielElement
+        #show frame image
+        blit_position = self.position - Vector2(self.radius)
+        oberflaeche.blit(self.einzel_bilder[self.einzel_bild_nummer], blit_position, special_flags=BLEND_ADD)
+        if (self.zeitschritt_einzel_bild <= self.zeitschritt_einzel_bild_schwelle):
+            self.zeitschritt_einzel_bild += zeitschritt
+        else:
+            self.zeitschritt_einzel_bild = 0
+            self.einzel_bild_nummer += 1
+            if self.einzel_bild_nummer >= self.anzahl_einzel_bilder:
+                self.einzel_bild_nummer = self.anzahl_einzel_bilder - 1
+            '''
+            self.einzel_bild_nummer %= self.anzahl_einzel_bilder
+            '''

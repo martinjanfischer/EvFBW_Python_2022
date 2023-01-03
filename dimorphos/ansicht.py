@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-from spielelement import SpielElement, Raumschiff, Asteroid
+from spielelement import SpielElement, Raumschiff, Asteroid, Explosion
 from nuetzliches import lade_bild, zufaellige_position, zeige_text
 
 class Ansicht:
@@ -13,7 +13,7 @@ class Ansicht:
     def behandle_spiele_logik(self, zeitschritt):  # Öffentliche Mitglied Funktion für Spielelogik
         pass
     
-    def zeichne_spiele_elemente(self): # Öffentliche Mitglied Funktion für das Zeichnen
+    def zeichne_spiele_elemente(self, zeitschritt): # Öffentliche Mitglied Funktion für das Zeichnen
         pass
 
 class StartAnsicht(Ansicht):
@@ -54,13 +54,13 @@ class StartAnsicht(Ansicht):
         for spielelement in self._hole_spiel_elemente():
             spielelement.bewege(self.leinwand, zeitschritt)
     
-    def zeichne_spiele_elemente(self): # Öffentliche Mitglied Funktion für das Zeichnen
+    def zeichne_spiele_elemente(self, zeitschritt): # Öffentliche Mitglied Funktion für das Zeichnen
         # Zeichne Hintergrundbild neu
         self.leinwand.blit(self.hintergrund, (0, 0))
         
         # Zeichne alle SpielElemente in diesem Bild
         for spielelement in self._hole_spiel_elemente():
-            spielelement.zeichne(self.leinwand)
+            spielelement.zeichne(self.leinwand, zeitschritt)
         
         # Zeichne Text
         zeige_text(self.leinwand, self.spiel_titel_text, self.spiel_titel_schrift, self.spiel_titel_farbe)
@@ -107,11 +107,14 @@ class LevelAnsicht(Ansicht):
                     break
             self.asteroiden.append(Asteroid(position))
         
+        # Explosionen
+        self.explosionen = []
+        
         # Text
         self.spiel_vorbei_text = ""
     
     def _hole_spiel_elemente(self):
-        spiel_elemente = [*self.asteroiden, *self.laser]
+        spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen]
         if self.raumschiff:
             spiel_elemente.append(self.raumschiff)
         return spiel_elemente
@@ -153,6 +156,7 @@ class LevelAnsicht(Ansicht):
         if self.raumschiff:
            for asteroid in self.asteroiden:
                if asteroid.kollidiert(self.raumschiff):
+                   self.explosionen.append(Explosion(self.raumschiff.position, self.raumschiff.geschwindigkeit))
                    self.raumschiff = None
                    self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
                    self.spiel_vorbei_farbe = pygame.Color("tomato")
@@ -163,13 +167,13 @@ class LevelAnsicht(Ansicht):
             self.spiel_vorbei_text = self.SPIEL_VORBEI_GEWONNEN
             self.spiel_vorbei_farbe = pygame.Color("gold")
     
-    def zeichne_spiele_elemente(self): # Öffentliche Mitglied Funktion für das Zeichnen
+    def zeichne_spiele_elemente(self, zeitschritt): # Öffentliche Mitglied Funktion für das Zeichnen
         # Zeichne Hintergrundbild neu
         self.leinwand.blit(self.hintergrund, (0, 0))
         
         # Zeichne alle SpielElemente in diesem Bild
         for spielelement in self._hole_spiel_elemente():
-            spielelement.zeichne(self.leinwand)
+            spielelement.zeichne(self.leinwand, zeitschritt)
         
         # Zeichne Text
         if self.spiel_vorbei_text:
