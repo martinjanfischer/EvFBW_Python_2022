@@ -67,4 +67,7 @@ Anforderungen
         - Schaden aufnehmen, Zerstörung wenn vollständig beschädigt
         - Verschiedene Größen
         - Gegnerische Raumschiffe
+
+Links
+- https://github.com/russs123/pygame_tutorials
 '''
