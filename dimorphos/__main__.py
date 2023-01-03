@@ -69,5 +69,7 @@ Anforderungen
         - Gegnerische Raumschiffe
 
 Links
-- https://github.com/russs123/pygame_tutorials
+- Coding with Russ
+	- https://www.youtube.com/watch?v=nXOVcOBqFwM
+	- https://github.com/russs123/pygame_tutorials
 '''
