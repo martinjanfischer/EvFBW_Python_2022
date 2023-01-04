@@ -25,7 +25,7 @@ def zufaellige_position(oberflaeche):
 
 def zufaellige_geschwindigkeit(min_geschwindigkeit, max_geschwindigkeit):
     geschwindigkeit = random.uniform(min_geschwindigkeit, max_geschwindigkeit)
-    winkel = random.randrange(0, 360)
+    winkel = random.uniform(0, 360)
     return Vector2(geschwindigkeit, 0).rotate(winkel)
 
 def zeige_text(oberflaeche, text, schrift, farbe=Color("tomato"), position=Vector2(0,0)):

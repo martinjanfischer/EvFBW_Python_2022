@@ -99,12 +99,13 @@ class Asteroid(SpielElement):
     GESCHWINDIGKEIT_MAXIMUM = 100
     DREH_GESCHWINDIGKEIT_MAXIMUM = 300
     
-    def __init__(self, position):   # Konstruktor Funktion
+    def __init__(self, position, groesse=1):   # Konstruktor Funktion
         geschwindigkeit = zufaellige_geschwindigkeit(
             self.GESCHWINDIGKEIT_MINIMUM, self.GESCHWINDIGKEIT_MAXIMUM)
         dreh_geschwindigkeit = zufaellige_geschwindigkeit(
             - self.DREH_GESCHWINDIGKEIT_MAXIMUM, self.DREH_GESCHWINDIGKEIT_MAXIMUM)
         self.dreh_geschwindigkeit = dreh_geschwindigkeit.x
+        self.groesse = groesse
         self.winkel = 0
         super().__init__(position, lade_bild("asteroid"), geschwindigkeit)
     
@@ -113,7 +114,7 @@ class Asteroid(SpielElement):
         self.winkel += self.dreh_geschwindigkeit * zeitschritt
     
     def zeichne(self, oberflaeche, zeitschritt):         # Verändere Mitglied Funktion der Klasse SpielElement
-        gedrehte_oberflaeche = rotozoom(self.bild, self.winkel, 1.0)
+        gedrehte_oberflaeche = rotozoom(self.bild, self.winkel, self.groesse)
         gedrehte_oberflaeche_groesse = Vector2(gedrehte_oberflaeche.get_size())
         blit_position = self.position - gedrehte_oberflaeche_groesse * 0.5
         oberflaeche.blit(gedrehte_oberflaeche, blit_position)

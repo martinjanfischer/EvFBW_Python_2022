@@ -1,4 +1,5 @@
 import pygame
+import random
 from pygame.math import Vector2
 from spielelement import SpielElement, Raumschiff, Asteroid, Explosion
 from nuetzliches import lade_bild, zufaellige_position, zeige_text
@@ -40,7 +41,7 @@ class StartAnsicht(Ansicht):
         self.anzahl_asteroiden = 6
         for _ in range(self.anzahl_asteroiden):
             position = zufaellige_position(self.leinwand)
-            self.asteroiden.append(Asteroid(position))
+            self.asteroiden.append(Asteroid(position, random.uniform(.5, 5)))
     
     def _hole_spiel_elemente(self):
         spiel_elemente = [*self.asteroiden]
