@@ -3,7 +3,7 @@ from pygame.locals import BLEND_ADD
 from pygame.math import Vector2
 
 class AnimierteBildSequenz():
-    def __init__(self, animierte_bild_sequenz, anzahl_einzel_bilder, anzahl_pixel_horizontal, anzahl_pixel_vertikal):
+    def __init__(self, animierte_bild_sequenz, anzahl_einzel_bilder, bilder_pro_sekunde, anzahl_pixel_horizontal, anzahl_pixel_vertikal):
         self.animierte_bild_sequenz = animierte_bild_sequenz
         self.anzahl_einzel_bilder = anzahl_einzel_bilder
         self.anzahl_pixel_horizontal = anzahl_pixel_horizontal
@@ -15,8 +15,9 @@ class AnimierteBildSequenz():
         
         self.einzel_bild_nummer = 0
         self.zeitschritt_einzel_bild = 0
-        self.animation_fps = 8
-        self.zeitschritt_einzel_bild_schwelle = 1 / self.animation_fps
+        if bilder_pro_sekunde <= 0:
+            bilder_pro_sekunde = 1
+        self.zeitschritt_einzel_bild_schwelle = 1 / bilder_pro_sekunde
     
     def erstelle_einzel_bild(self, einzel_bild_nummer):
         einzel_bild = pygame.Surface((self.anzahl_pixel_horizontal, self.anzahl_pixel_vertikal)).convert_alpha()

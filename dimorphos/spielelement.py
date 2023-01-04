@@ -21,15 +21,15 @@ class SpielElement:
         else:
             self.radius = 1                                 # Alle SpielElement Klassen haben ebenfalls diese Mitglied Variable: Radius für Kollisionen
     
-    def zeichne(self, oberflaeche, zeitschritt):             # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
+    def zeichne(self, oberflaeche, zeitschritt):            # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
         blit_position = self.position - Vector2(self.radius)
         oberflaeche.blit(self.bild, blit_position)
     
-    def bewege(self, oberflaeche, zeitschritt): # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
+    def bewege(self, oberflaeche, zeitschritt):             # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
         schritt = self.geschwindigkeit * zeitschritt
         self.position = zyklische_position(self.position + schritt, oberflaeche)
     
-    def kollidiert(self, anderes_element):      # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
+    def kollidiert(self, anderes_element):                  # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
         distanz = self.position.distance_to(anderes_element.position)
         return distanz < self.radius + anderes_element.radius
 
@@ -108,7 +108,7 @@ class Asteroid(SpielElement):
         self.winkel = 0
         super().__init__(position, lade_bild("asteroid"), geschwindigkeit)
     
-    def bewege(self, oberflaeche, zeitschritt): # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
+    def bewege(self, oberflaeche, zeitschritt):          # Verändere Mitglied Funktion der Klasse SpielElement
         super().bewege(oberflaeche, zeitschritt)
         self.winkel += self.dreh_geschwindigkeit * zeitschritt
     
@@ -127,7 +127,7 @@ class Laser(SpielElement):
     def __init__(self, position, geschwindigkeit):  # Konstruktor Funktion
         super().__init__(position, lade_bild("laser"), geschwindigkeit) # Aufruf Basis Klassen Konstruktor Funktion
     
-    def zeichne(self, oberflaeche, zeitschritt):                 # Verändere Mitglied Funktion der Klasse SpielElement
+    def zeichne(self, oberflaeche, zeitschritt):    # Verändere Mitglied Funktion der Klasse SpielElement
         winkel = self.geschwindigkeit.angle_to(AUFWAERTS)
         gedrehte_oberflaeche = rotozoom(self.bild, winkel, 1.0)
         gedrehte_oberflaeche_groesse = Vector2(gedrehte_oberflaeche.get_size())
@@ -150,7 +150,7 @@ class Explosion(SpielElement):
         super().__init__(position, lade_bild("explosion"), geschwindigkeit) # Aufruf Basis Klassen Konstruktor Funktion
         
         # Animierte Bild Sequenz einer Explosion
-        self.explosion = AnimierteBildSequenz(self.bild, 5, 64, 64)
+        self.explosion = AnimierteBildSequenz(self.bild, 5, 8, 64, 64)
         
         if self.bild is not None:
             self.radius = self.explosion.anzahl_pixel_horizontal / 2
@@ -160,8 +160,8 @@ class Explosion(SpielElement):
     def zeichne(self, oberflaeche, zeitschritt):                 # Verändere Mitglied Funktion der Klasse SpielElement
         self.explosion.zeichne_einzel_bild(oberflaeche, self.position, self.radius, 4, self.BLACK, True)
     
-    def bewege(self, oberflaeche, zeitschritt): # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
-        super().bewege(oberflaeche, zeitschritt) # Aufruf Basis Klassen Funktion
+    def bewege(self, oberflaeche, zeitschritt):                  # Verändere Mitglied Funktion der Klasse SpielElement
+        super().bewege(oberflaeche, zeitschritt)                 # Aufruf Basis Klassen Funktion
         
         # Nächste Einzelbild Nummer
         self.explosion.naechste_einzel_bild_nummer(zeitschritt, False)
