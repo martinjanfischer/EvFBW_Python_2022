@@ -165,4 +165,4 @@ class Explosion(SpielElement):
         super().bewege(oberflaeche, zeitschritt)                 # Aufruf Basis Klassen Funktion
         
         # Nächste Einzelbild Nummer
-        self.explosion.naechste_einzel_bild_nummer(zeitschritt, False)
+        self.explosion.naechste_einzel_bild_nummer(zeitschritt)

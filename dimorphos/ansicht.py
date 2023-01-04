@@ -155,13 +155,18 @@ class LevelAnsicht(Ansicht):
         
         # Kollision: Raumschiff mit Asteroid, entferne Raumschiff
         if self.raumschiff:
-           for asteroid in self.asteroiden:
-               if asteroid.kollidiert(self.raumschiff):
-                   self.explosionen.append(Explosion(self.raumschiff.position, self.raumschiff.geschwindigkeit))
-                   self.raumschiff = None
-                   self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
-                   self.spiel_vorbei_farbe = pygame.Color("tomato")
-                   break
+            for asteroid in self.asteroiden:
+                if asteroid.kollidiert(self.raumschiff):
+                    # Explosion
+                    position = self.raumschiff.position
+                    geschwindigkeit = 0.5 * self.raumschiff.geschwindigkeit + 0.5 * asteroid.geschwindigkeit
+                    self.explosion(position, geschwindigkeit)
+                    
+                    # Entferne Raumschiff
+                    self.raumschiff = None
+                    self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
+                    self.spiel_vorbei_farbe = pygame.Color("tomato")
+                    break
         
         # Gewonnen: Keine Asteroiden übrig
         if not self.asteroiden and self.raumschiff:
@@ -182,3 +187,15 @@ class LevelAnsicht(Ansicht):
     
     def level_gewonnen(self):
         return (self.raumschiff and self.spiel_vorbei_text == self.SPIEL_VORBEI_GEWONNEN)
+    
+    def explosion(self, position, geschwindigkeit):
+        neue_explosion = True
+        for i, e in enumerate(self.explosionen):
+            if e.explosion.beendet():
+                e.explosion.reset()
+                e.position = position
+                e.geschwindigkeit = geschwindigkeit
+                neue_explosion = False
+                break
+        if neue_explosion:
+            self.explosionen.append(Explosion(position, geschwindigkeit))

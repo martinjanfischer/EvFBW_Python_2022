@@ -3,6 +3,8 @@ from pygame.locals import BLEND_ADD
 from pygame.math import Vector2
 
 class AnimierteBildSequenz():
+    zyklisch = False
+    
     def __init__(self, animierte_bild_sequenz, anzahl_einzel_bilder, bilder_pro_sekunde, anzahl_pixel_horizontal, anzahl_pixel_vertikal):
         self.animierte_bild_sequenz = animierte_bild_sequenz
         self.anzahl_einzel_bilder = anzahl_einzel_bilder
@@ -13,8 +15,7 @@ class AnimierteBildSequenz():
         for einzel_bild_nummer in range(self.anzahl_einzel_bilder):
             self.einzel_bilder.append(self.erstelle_einzel_bild(einzel_bild_nummer))
         
-        self.einzel_bild_nummer = 0
-        self.zeitschritt_einzel_bild = 0
+        self.reset()
         if bilder_pro_sekunde <= 0:
             bilder_pro_sekunde = 1
         self.zeitschritt_einzel_bild_schwelle = 1 / bilder_pro_sekunde
@@ -24,13 +25,13 @@ class AnimierteBildSequenz():
         einzel_bild.blit(self.animierte_bild_sequenz, (0, 0), ((einzel_bild_nummer * self.anzahl_pixel_horizontal), 0, self.anzahl_pixel_horizontal, self.anzahl_pixel_vertikal))
         return einzel_bild
     
-    def naechste_einzel_bild_nummer(self, zeitschritt, zyklisch):
+    def naechste_einzel_bild_nummer(self, zeitschritt):
         if (self.zeitschritt_einzel_bild <= self.zeitschritt_einzel_bild_schwelle):
             self.zeitschritt_einzel_bild += zeitschritt
         else:
             self.zeitschritt_einzel_bild = 0
             self.einzel_bild_nummer += 1
-            if zyklisch:
+            if self.zyklisch:
                 self.einzel_bild_nummer %= self.anzahl_einzel_bilder
             else:
                 if self.einzel_bild_nummer >= self.anzahl_einzel_bilder:
@@ -45,3 +46,14 @@ class AnimierteBildSequenz():
             oberflaeche.blit(einzel_bild, blit_position, special_flags=BLEND_ADD)
         else:
             oberflaeche.blit(einzel_bild, blit_position)
+    
+    def beendet(self):
+        if self.zyklisch:
+            return False
+        else:
+            return self.einzel_bild_nummer < self.anzahl_einzel_bilder
+    
+    def reset(self):
+        if not self.zyklisch:
+            self.einzel_bild_nummer = 0
+            self.zeitschritt_einzel_bild = 0
