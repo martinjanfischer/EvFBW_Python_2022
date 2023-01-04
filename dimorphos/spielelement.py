@@ -148,34 +148,20 @@ class Explosion(SpielElement):
     
     def __init__(self, position, geschwindigkeit):  # Konstruktor Funktion
         super().__init__(position, lade_bild("explosion"), geschwindigkeit) # Aufruf Basis Klassen Konstruktor Funktion
-        self.explosion = AnimierteBildSequenz(self.bild)
         
-        self.anzahl_einzel_bilder = 5
-        self.einzel_bilder = []
-        for einzel_bild_nummer in range(self.anzahl_einzel_bilder):
-            self.einzel_bilder.append(self.explosion.einzel_bild(einzel_bild_nummer, 64, 64, 2, self.BLACK))
-        
-        self.einzel_bild_nummer = 0
-        self.zeitschritt_einzel_bild = 0
-        self.animation_fps = 8
-        self.zeitschritt_einzel_bild_schwelle = 1 / self.animation_fps
+        # Animierte Bild Sequenz einer Explosion
+        self.explosion = AnimierteBildSequenz(self.bild, 5, 64, 64)
         
         if self.bild is not None:
-            self.radius = self.einzel_bilder[0].get_width() / 2
+            self.radius = self.explosion.anzahl_pixel_horizontal / 2
         else:
             self.radius = 1
     
     def zeichne(self, oberflaeche, zeitschritt):                 # Verändere Mitglied Funktion der Klasse SpielElement
-        #show frame image
-        blit_position = self.position - Vector2(self.radius)
-        oberflaeche.blit(self.einzel_bilder[self.einzel_bild_nummer], blit_position, special_flags=BLEND_ADD)
-        if (self.zeitschritt_einzel_bild <= self.zeitschritt_einzel_bild_schwelle):
-            self.zeitschritt_einzel_bild += zeitschritt
-        else:
-            self.zeitschritt_einzel_bild = 0
-            self.einzel_bild_nummer += 1
-            if self.einzel_bild_nummer >= self.anzahl_einzel_bilder:
-                self.einzel_bild_nummer = self.anzahl_einzel_bilder - 1
-            '''
-            self.einzel_bild_nummer %= self.anzahl_einzel_bilder
-            '''
+        self.explosion.zeichne_einzel_bild(oberflaeche, self.position, self.radius, 4, self.BLACK, True)
+    
+    def bewege(self, oberflaeche, zeitschritt): # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
+        super().bewege(oberflaeche, zeitschritt) # Aufruf Basis Klassen Funktion
+        
+        # Nächste Einzelbild Nummer
+        self.explosion.naechste_einzel_bild_nummer(zeitschritt, False)
