@@ -3,6 +3,7 @@ import random
 from pygame.image import load
 from pygame import Color
 from pygame.math import Vector2
+from pygame.mixer import Sound
 
 def lade_bild(datei_name, mit_transparenz=True):
     datei_pfad = os.path.dirname(__file__) + f'\\bilder\\{datei_name}.png'
@@ -11,6 +12,11 @@ def lade_bild(datei_name, mit_transparenz=True):
         return geladenes_bild.convert_alpha()
     else:
         return geladenes_bild.convert()
+
+def lade_ton(datei_name):
+    datei_pfad = os.path.dirname(__file__) + f'\\ton\\{datei_name}.wav'
+    geladener_ton = Sound(datei_pfad)
+    return geladener_ton
 
 def zyklische_position(position, oberflaeche):
     x, y = position

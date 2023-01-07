@@ -1,6 +1,7 @@
 import pygame
 import random
 from pygame.math import Vector2
+from pygame.mixer import Sound
 from spielelement import SpielElement, Raumschiff, Asteroid, Explosion
 from nuetzliches import lade_bild, zufaellige_position, zeige_text
 
@@ -189,13 +190,17 @@ class LevelAnsicht(Ansicht):
         return (self.raumschiff and self.spiel_vorbei_text == self.SPIEL_VORBEI_GEWONNEN)
     
     def explosion(self, position, geschwindigkeit):
-        neue_explosion = True
+        explosion = None
         for i, e in enumerate(self.explosionen):
             if e.explosion.beendet():
                 e.explosion.reset()
                 e.position = position
                 e.geschwindigkeit = geschwindigkeit
-                neue_explosion = False
+                explosion = e
                 break
-        if neue_explosion:
-            self.explosionen.append(Explosion(position, geschwindigkeit))
+        if not explosion:
+            explosion = Explosion(position, geschwindigkeit)
+            self.explosionen.append(explosion)
+        if explosion:
+            Sound.play(explosion.ton_explosion)
+

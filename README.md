@@ -11,6 +11,8 @@ Wir arbeiten auf Windows 10 Computern und installieren dort
 [www.gimp.org](https://www.gimp.org/)
 - die Community Version der Entwicklungsumgebung __PyCharm__ von
 [www.jetbrains.com](https://www.jetbrains.com/pycharm/download/#section=windows)
+- die Audio Software __Audacity__ von
+[www.audacityteam.org](https://www.audacityteam.org/download/windows/)
 
 ## Zusatz Module
 Unsere Python Skripte benötigen zusätzliche Software.
