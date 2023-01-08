@@ -1,6 +1,5 @@
 from pygame.locals import BLEND_ADD
 from pygame.math import Vector2
-from pygame.mixer import Sound
 from pygame.time import get_ticks
 from pygame.transform import rotozoom
 from animiertebildsequenz import AnimierteBildSequenz
@@ -58,8 +57,6 @@ class Raumschiff(SpielElement):
         self.erzeuge_laser_rueckruf_funktion = erzeuge_laser_rueckruf_funktion
         self.schuss_periode = 200
         self.letzter_schuss_zeitstempel = get_ticks()
-        
-        self.ton_laser = lade_ton("laser")
     
     def zeichne(self, oberflaeche, zeitschritt):         # Verändere Mitglied Funktion der Klasse SpielElement
         # Raumschiff
@@ -91,7 +88,6 @@ class Raumschiff(SpielElement):
             laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT #+ self.geschwindigkeit
             laser = Laser(self.position, laser_geschwindigkeit)
             self.erzeuge_laser_rueckruf_funktion(laser)
-            Sound.play(self.ton_laser)
 
 
 '''
