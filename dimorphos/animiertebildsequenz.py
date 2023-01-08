@@ -37,11 +37,12 @@ class AnimierteBildSequenz():
                 if self.einzel_bild_nummer >= self.anzahl_einzel_bilder:
                     self.einzel_bild_nummer = self.anzahl_einzel_bilder - 1
     
-    def zeichne_einzel_bild(self, oberflaeche, position, radius, skalierung, farbe, additive_farbmischung):
-        blit_position = position - Vector2(radius * skalierung)
+    def zeichne_einzel_bild(self, oberflaeche, position, winkel, radius, skalierung, farbe, additive_farbmischung):
         einzel_bild = self.einzel_bilder[self.einzel_bild_nummer]
         einzel_bild.set_colorkey(farbe)
         einzel_bild = pygame.transform.scale(einzel_bild, (self.anzahl_pixel_horizontal * skalierung, self.anzahl_pixel_vertikal * skalierung))
+        einzel_bild = pygame.transform.rotozoom(einzel_bild, winkel, 1.0)
+        blit_position = position - Vector2(einzel_bild.get_size()) * 0.5
         if additive_farbmischung:
             oberflaeche.blit(einzel_bild, blit_position, special_flags=BLEND_ADD)
         else:

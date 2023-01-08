@@ -161,7 +161,7 @@ class Explosion(SpielElement):
         self.ton_explosion = lade_ton("explosion")
     
     def zeichne(self, oberflaeche, zeitschritt):                 # Verändere Mitglied Funktion der Klasse SpielElement
-        self.explosion.zeichne_einzel_bild(oberflaeche, self.position, self.radius, 4, self.BLACK, True)
+        self.explosion.zeichne_einzel_bild(oberflaeche, self.position, 0, self.radius, 4, self.BLACK, True)
     
     def bewege(self, oberflaeche, zeitschritt):                  # Verändere Mitglied Funktion der Klasse SpielElement
         super().bewege(oberflaeche, zeitschritt)                 # Aufruf Basis Klassen Funktion
