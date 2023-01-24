@@ -7,7 +7,9 @@
 
 import os
 import pygame
+from pygame.math import Vector2
 from ansicht import StartAnsicht, LevelAnsicht
+from spielelement import Raumschiff
 
 class Dimorphos:    # Diese Klasse ist das Spiel
     DIMORPHOS_APPDATA_PATH = os.path.join(os.getenv('APPDATA'), 'EvFBW_dimorphos_2022')
@@ -26,9 +28,22 @@ class Dimorphos:    # Diese Klasse ist das Spiel
         self.letzte_zeit = pygame.time.get_ticks() / 1000
         
         # Ansichten
+        start_ansicht = StartAnsicht()
+        level_ansicht = LevelAnsicht()
+        
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff"))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff"))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff"))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff"))
+        
+        level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
+        
+        start_ansicht.initialisiere_spiel_elemente()
+        level_ansicht.initialisiere_spiel_elemente()
+        
         self.ansichten = []
-        self.ansichten.append(StartAnsicht())
-        self.ansichten.append(LevelAnsicht())
+        self.ansichten.append(start_ansicht)
+        self.ansichten.append(level_ansicht)
         self.aktuelle_ansicht = 0
         
         # Highsore
@@ -77,6 +92,9 @@ class Dimorphos:    # Diese Klasse ist das Spiel
                 elif (self.aktuelle_ansicht == 0
                     and event.key == pygame.K_RETURN # Enter-Taste gedrückt
                 ):
+                    start_ansicht = self.ansichten[0]
+                    level_ansicht = self.ansichten[1]
+                    level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
                     self.aktuelle_ansicht = 1
                     self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 # Nächstes Level
@@ -84,8 +102,14 @@ class Dimorphos:    # Diese Klasse ist das Spiel
                     and event.key == pygame.K_RETURN # Enter-Taste gedrückt
                 ):
                     if self.ansichten[self.aktuelle_ansicht].level_gewonnen():
+                        start_ansicht = self.ansichten[0]
+                        level_ansicht = self.ansichten[1]
+                        level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
                         self.aktuelle_ansicht = 1
                         self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
+                
+            if self.ansichten[self.aktuelle_ansicht]:
+                self.ansichten[self.aktuelle_ansicht].behandle_eingabe_ereignis(event, zeitschritt)
         
         # Eingabebehandlung Ansicht
         if self.ansichten[self.aktuelle_ansicht]:

@@ -44,9 +44,10 @@ class Raumschiff(SpielElement):
     MANEUVRIERFAEHIGKEIT = 3
     BESCHLEUNIGUNG = 100
     LASER_GESCHWINDIGKEIT = 500
+    SCHWARZ = (0, 0, 0)
     
-    def __init__(self, position, erzeuge_laser_rueckruf_funktion):      # Konstruktor Funktion
-        super().__init__(position, lade_bild("raumschiff"), Vector2(0)) # Aufruf Basis Klassen Konstruktor Funktion
+    def __init__(self, position, raumschiff_bilddatei_name):      # Konstruktor Funktion
+        super().__init__(position, lade_bild(raumschiff_bilddatei_name), Vector2(0)) # Aufruf Basis Klassen Konstruktor Funktion
         
         # kopiere den originalen AUFWAERTS vector
         self.richtung = Vector2(AUFWAERTS)
@@ -54,7 +55,6 @@ class Raumschiff(SpielElement):
         self.beschleunigt = False
         
         # Laser
-        self.erzeuge_laser_rueckruf_funktion = erzeuge_laser_rueckruf_funktion
         self.schuss_periode = 200
         self.letzter_schuss_zeitstempel = get_ticks()
     
@@ -85,9 +85,11 @@ class Raumschiff(SpielElement):
     def schiesse(self):                     # Nur Raumschiff hat diese Mitglied Funktion
         if get_ticks() - self.letzter_schuss_zeitstempel > self.schuss_periode:
             self.letzter_schuss_zeitstempel = get_ticks()
-            laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT #+ self.geschwindigkeit
+            laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT
             laser = Laser(self.position, laser_geschwindigkeit)
-            self.erzeuge_laser_rueckruf_funktion(laser)
+            return laser
+        else:
+            return None
 
 
 '''
@@ -145,7 +147,7 @@ Die Klasse Explosion ist ein SpielElement
 und hat andere Eigenschaften 
 '''
 class Explosion(SpielElement):
-    BLACK = (0, 0, 0)
+    SCHWARZ = (0, 0, 0)
     
     def __init__(self, position, geschwindigkeit):  # Konstruktor Funktion
         super().__init__(position, lade_bild("explosion"), geschwindigkeit) # Aufruf Basis Klassen Konstruktor Funktion
@@ -161,7 +163,7 @@ class Explosion(SpielElement):
         self.ton_explosion = lade_ton("explosion")
     
     def zeichne(self, oberflaeche, zeitschritt):                 # Verändere Mitglied Funktion der Klasse SpielElement
-        self.explosion.zeichne_einzel_bild(oberflaeche, self.position, 0, self.radius, 4, self.BLACK, True)
+        self.explosion.zeichne_einzel_bild(oberflaeche, self.position, 0, self.radius, 4, self.SCHWARZ, True)
     
     def bewege(self, oberflaeche, zeitschritt):                  # Verändere Mitglied Funktion der Klasse SpielElement
         super().bewege(oberflaeche, zeitschritt)                 # Aufruf Basis Klassen Funktion

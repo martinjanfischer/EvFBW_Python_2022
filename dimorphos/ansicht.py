@@ -2,12 +2,15 @@ import pygame
 import random
 from pygame.math import Vector2
 from pygame.mixer import Sound
-from spielelement import SpielElement, Raumschiff, Asteroid, Explosion
+from spielelement import SpielElement, Asteroid, Explosion
 from nuetzliches import lade_bild, zufaellige_position, zeige_text
 
 class Ansicht:
     def __init__(self):
         self.leinwand = pygame.display.set_mode((1280, 720)) # Anzahl Bildpunkte/Pixel waagerecht und senkrecht
+    
+    def initialisiere_spiel_elemente(self):
+        pass
     
     def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         pass
@@ -17,6 +20,8 @@ class Ansicht:
     
     def zeichne_spiele_elemente(self, zeitschritt): # Öffentliche Mitglied Funktion für das Zeichnen
         pass
+
+AUFWAERTS = Vector2(0, -1)  # Globale Variable
 
 class StartAnsicht(Ansicht):
     def __init__(self):
@@ -34,9 +39,18 @@ class StartAnsicht(Ansicht):
         # Weltraum
         self.hintergrund = lade_bild("weltraum", False)
         
-        self.initialisiere_spiel_elemente()        # Erzeuge Raumschiff, Asteroiden, Laser
+        # Raumschiffe
+        self.ausgewaehltes_raumschiff = 0
+        self.raumschiffe = []
+        
+        # Asteroiden
+        self.asteroiden = []
+        self.anzahl_asteroiden = 6
     
     def initialisiere_spiel_elemente(self):
+        # Raumschiffe
+        self._positioniere_raumschiffe()
+        
         # Asteroiden
         self.asteroiden = []
         self.anzahl_asteroiden = 6
@@ -45,9 +59,25 @@ class StartAnsicht(Ansicht):
             self.asteroiden.append(Asteroid(position, random.uniform(.5, 5)))
     
     def _hole_spiel_elemente(self):
-        spiel_elemente = [*self.asteroiden]
-        return spiel_elemente
+        if self.asteroiden and self.raumschiffe:
+            spiel_elemente = [*self.asteroiden, *self.raumschiffe]
+            return spiel_elemente
+        else:
+            return []
     
+    def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
+        # Raumschiff wählen
+        if event.type == pygame.KEYUP:
+            # Raumschiff wählen
+            if (event.key == pygame.K_RIGHT):
+                if self.ausgewaehltes_raumschiff < len(self.raumschiffe) - 1:
+                    self.ausgewaehltes_raumschiff += 1
+                    self._positioniere_raumschiffe()
+            elif (event.key == pygame.K_LEFT):
+                if self.ausgewaehltes_raumschiff > 0:
+                    self.ausgewaehltes_raumschiff -= 1
+                    self._positioniere_raumschiffe()
+        
     def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         pass
     
@@ -71,6 +101,16 @@ class StartAnsicht(Ansicht):
     
     def kann_ansicht_wechseln(self):
         return True
+    
+    def _positioniere_raumschiffe(self):
+        pixel_waagerecht, pixel_senkrecht = self.leinwand.get_size()
+        for i in range(0, len(self.raumschiffe)):
+            self.raumschiffe[i].position = Vector2(
+                (0.5 + (i - self.ausgewaehltes_raumschiff) * 0.1) * pixel_waagerecht,
+                0.6 * pixel_senkrecht
+                )
+            self.raumschiffe[i].geschwindigkeit = Vector2(0, 0)
+            self.raumschiffe[i].richtung = Vector2(AUFWAERTS)
 
 class LevelAnsicht(Ansicht):
     MIN_ASTEROIDEN_DISTANZ = 250
@@ -88,19 +128,28 @@ class LevelAnsicht(Ansicht):
         # Weltraum
         self.hintergrund = lade_bild("weltraum", False)
         
-        self.initialisiere_spiel_elemente()        # Erzeuge Raumschiff, Asteroiden, Laser
+        # Laser
+        self.laser = []
+        
+        # Raumschiff
+        self.raumschiff = None
+        
+        # Asteroiden
+        self.asteroiden = []
+        self.anzahl_asteroiden = 6
+        
+        # Explosionen
+        self.explosionen = []
+        
+        # Text
+        self.spiel_vorbei_text = ""
     
     def initialisiere_spiel_elemente(self):
         # Laser
         self.laser = []
         
-        # Raumschiff
-        pixel_waagerecht, pixel_senkrecht = self.leinwand.get_size()
-        self.raumschiff = Raumschiff(Vector2(pixel_waagerecht / 2, pixel_senkrecht / 2), self.laser.append)
-        
         # Asteroiden
         self.asteroiden = []
-        self.anzahl_asteroiden = 6
         for _ in range(self.anzahl_asteroiden):
             while True:
                 position = zufaellige_position(self.leinwand)
@@ -120,6 +169,9 @@ class LevelAnsicht(Ansicht):
         if self.raumschiff:
             spiel_elemente.append(self.raumschiff)
         return spiel_elemente
+
+    def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
+        pass
     
     def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         # Hole Tastatur Eingaben
@@ -134,7 +186,9 @@ class LevelAnsicht(Ansicht):
             if wurde_taste_gedrueckt[pygame.K_UP]:
                 self.raumschiff.beschleunige(zeitschritt)
             if wurde_taste_gedrueckt[pygame.K_SPACE]:
-                self.raumschiff.schiesse()
+                laser = self.raumschiff.schiesse()
+                if laser:
+                    self.laser.append(laser)
     
     def behandle_spiele_logik(self, zeitschritt):  # Öffentliche Mitglied Funktion für Spielelogik
         # Bewege alle SpielElemente pro Bild ein wenig weiter
