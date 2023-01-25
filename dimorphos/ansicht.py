@@ -6,24 +6,29 @@ from spielelement import SpielElement, Asteroid, Explosion
 from nuetzliches import lade_bild, zufaellige_position, zeige_text
 
 class Ansicht:
+    """Diese Klasse ist eine Basis für StartAnsicht und LevelAnsicht und hat alle gemeinsamen Eigenschaften leinwand"""
+    
     def __init__(self):
         self.leinwand = pygame.display.set_mode((1280, 720)) # Anzahl Bildpunkte/Pixel waagerecht und senkrecht
     
-    def initialisiere_spiel_elemente(self):
+    def initialisiere_spiel_elemente(self):         # Öffentliche Mitglied Funktion für Vorbereitung
         pass
     
-    def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
+    def behandle_eingaben(self, zeitschritt):       # Öffentliche Mitglied Funktion für Eingabebehandlung
         pass
     
-    def behandle_spiele_logik(self, zeitschritt):  # Öffentliche Mitglied Funktion für Spielelogik
+    def behandle_spiele_logik(self, zeitschritt):   # Öffentliche Mitglied Funktion für Spielelogik
         pass
     
     def zeichne_spiele_elemente(self, zeitschritt): # Öffentliche Mitglied Funktion für das Zeichnen
         pass
 
-AUFWAERTS = Vector2(0, -1)  # Globale Variable
 
 class StartAnsicht(Ansicht):
+    """Die Klasse StartAnsicht ist eine Ansicht und hat andere Eigenschaften"""
+    
+    AUFWAERTS = Vector2(0, -1)
+    
     def __init__(self):
         super().__init__() # Aufruf Basis Klassen Konstruktor Funktion
         
@@ -39,11 +44,11 @@ class StartAnsicht(Ansicht):
         # Weltraum
         self.hintergrund = lade_bild("weltraum", False)
         
-        # Raumschiffe
+        # Leere Raumschiff Liste
         self.ausgewaehltes_raumschiff = 0
         self.raumschiffe = []
         
-        # Asteroiden
+        # Leere Asteroiden Liste
         self.asteroiden = []
         self.anzahl_asteroiden = 6
     
@@ -51,28 +56,32 @@ class StartAnsicht(Ansicht):
         # Raumschiffe
         self._positioniere_raumschiffe()
         
-        # Asteroiden
+        # Neue Asteroiden mit zufälliger Platzierung und Geschwindigkeit
         self.asteroiden = []
-        self.anzahl_asteroiden = 6
         for _ in range(self.anzahl_asteroiden):
+            # Finde eine zufällige Position für den Asteroiden
             position = zufaellige_position(self.leinwand)
+            # Füge Asteroid zur Liste hinzu
             self.asteroiden.append(Asteroid(position, random.uniform(.5, 5)))
     
     def _hole_spiel_elemente(self):
+        # Liste mit allen Spiel Elementen
         if self.asteroiden and self.raumschiffe:
             spiel_elemente = [*self.asteroiden, *self.raumschiffe]
             return spiel_elemente
+        # Leere Liste
         else:
             return []
     
     def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         # Raumschiff wählen
         if event.type == pygame.KEYUP:
-            # Raumschiff wählen
+            # Bewege Raumschiffe nach Links wenn die Rechte Pfeiltaste gedrückt wurde
             if (event.key == pygame.K_RIGHT):
                 if self.ausgewaehltes_raumschiff < len(self.raumschiffe) - 1:
                     self.ausgewaehltes_raumschiff += 1
                     self._positioniere_raumschiffe()
+            # Bewege Raumschiffe nach Rechts wenn die Linke Pfeiltaste gedrückt wurde
             elif (event.key == pygame.K_LEFT):
                 if self.ausgewaehltes_raumschiff > 0:
                     self.ausgewaehltes_raumschiff -= 1
@@ -103,6 +112,8 @@ class StartAnsicht(Ansicht):
         return True
     
     def _positioniere_raumschiffe(self):
+        # Anzahl Raumschiffe minus Nummer des Aktuell Ausgewählten Raumschiffes
+        # gibt die Verschiebungsrichtung vor
         pixel_waagerecht, pixel_senkrecht = self.leinwand.get_size()
         for i in range(0, len(self.raumschiffe)):
             self.raumschiffe[i].position = Vector2(
@@ -110,9 +121,12 @@ class StartAnsicht(Ansicht):
                 0.6 * pixel_senkrecht
                 )
             self.raumschiffe[i].geschwindigkeit = Vector2(0, 0)
-            self.raumschiffe[i].richtung = Vector2(AUFWAERTS)
+            self.raumschiffe[i].richtung = Vector2(self.AUFWAERTS)
+
 
 class LevelAnsicht(Ansicht):
+    """Die Klasse LevelAnsicht ist eine Ansicht und hat andere Eigenschaften"""
+    
     MIN_ASTEROIDEN_DISTANZ = 250
     SPIEL_VORBEI_GEWONNEN = "Gewonnen!"
     SPIEL_VORBEI_VERLOREN = "Verloren!"
@@ -128,43 +142,47 @@ class LevelAnsicht(Ansicht):
         # Weltraum
         self.hintergrund = lade_bild("weltraum", False)
         
-        # Laser
+        # Leere Laser Liste
         self.laser = []
         
-        # Raumschiff
+        # Kein Raumschiff
         self.raumschiff = None
         
-        # Asteroiden
+        # Leere Asteroiden Liste
         self.asteroiden = []
         self.anzahl_asteroiden = 6
         
-        # Explosionen
+        # Leere Explosionen Liste
         self.explosionen = []
         
-        # Text
+        # Leerer Text
         self.spiel_vorbei_text = ""
     
     def initialisiere_spiel_elemente(self):
-        # Laser
+        # Leere Laser Liste
         self.laser = []
         
-        # Asteroiden
+        # Neue Asteroiden mit zufälliger Platzierung und Geschwindigkeit
         self.asteroiden = []
         for _ in range(self.anzahl_asteroiden):
+            # Finde eine zufällige Position für den Asteroiden
+            # mit einem gewissen Abstand zum Raumschiff
             while True:
                 position = zufaellige_position(self.leinwand)
                 distanz = position.distance_to(self.raumschiff.position)
                 if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
                     break
+            # Füge Asteroid zur Liste hinzu
             self.asteroiden.append(Asteroid(position))
         
-        # Explosionen
+        # Leere Explosionen Liste
         self.explosionen = []
         
-        # Text
+        # Leerer Text
         self.spiel_vorbei_text = ""
     
     def _hole_spiel_elemente(self):
+        # Liste mit allen Spiel Elementen
         spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen]
         if self.raumschiff:
             spiel_elemente.append(self.raumschiff)
@@ -179,14 +197,19 @@ class LevelAnsicht(Ansicht):
         
         # Raumschiff Steuerung
         if self.raumschiff:
+            # Drehe Raumschiff
             if wurde_taste_gedrueckt[pygame.K_RIGHT]:
                 self.raumschiff.drehe(uhrzeigersinn=True)
+            # Drehe Raumschiff
             elif wurde_taste_gedrueckt[pygame.K_LEFT]:
                 self.raumschiff.drehe(uhrzeigersinn=False)
+            # Schub nach vorne
             if wurde_taste_gedrueckt[pygame.K_UP]:
                 self.raumschiff.beschleunige(zeitschritt)
+            # Schiesse
             if wurde_taste_gedrueckt[pygame.K_SPACE]:
                 laser = self.raumschiff.schiesse()
+                # Füge Laser in Liste hinzu
                 if laser:
                     self.laser.append(laser)
     
@@ -241,9 +264,12 @@ class LevelAnsicht(Ansicht):
             zeige_text(self.leinwand, self.spiel_vorbei_text, self.spiel_vorbei_schrift, self.spiel_vorbei_farbe)
     
     def level_gewonnen(self):
+        # Du Gewinnst wenn das Raumschiff noch existiert und der Text anzeigt dass Du gewonnen hast
+        # Du Verlierst wenn das Raumschiff nicht existiert oder der Text nicht anzeigt dass Du gewonnen hast
         return (self.raumschiff and self.spiel_vorbei_text == self.SPIEL_VORBEI_GEWONNEN)
     
     def explosion(self, position, geschwindigkeit):
+        # Finde in der Explosionen Liste eine unbenutzte Explosion
         explosion = None
         for i, e in enumerate(self.explosionen):
             if e.explosion.beendet():
@@ -252,9 +278,11 @@ class LevelAnsicht(Ansicht):
                 e.geschwindigkeit = geschwindigkeit
                 explosion = e
                 break
+        # Erzeuge eine neue Explosion wenn es keine unbenutzte Explosion gibt
         if not explosion:
             explosion = Explosion(position, geschwindigkeit)
             self.explosionen.append(explosion)
+        # Spiele den Ton für die Explosion ab wenn Du eine Explosion hast
         if explosion:
             Sound.play(explosion.ton_explosion)
 

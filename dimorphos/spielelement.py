@@ -5,13 +5,9 @@ from pygame.transform import rotozoom
 from animiertebildsequenz import AnimierteBildSequenz
 from nuetzliches import lade_bild, lade_ton, zufaellige_geschwindigkeit, zyklische_position
 
-'''
-Diese Klasse ist eine Basis für 
-Raumschiff, Asteroid, Laser 
-und hat alle gemeinsamen Eigenschaften 
-position, radius, geschwindigkeit, bild
-'''
 class SpielElement:
+    """Diese Klasse ist eine Basis für Raumschiff, Asteroid, Laser und hat alle gemeinsamen Eigenschaften position, radius, geschwindigkeit, bild"""
+    
     def __init__(self, position, bild, geschwindigkeit):    # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
         self.position = Vector2(position)                   # Alle SpielElement Klassen haben ebenfalls diese Mitglied Variable: 2D Position
         self.geschwindigkeit = Vector2(geschwindigkeit)     # Alle SpielElement Klassen haben ebenfalls diese Mitglied Variable: 2D Geschwindigkeit
@@ -36,11 +32,9 @@ class SpielElement:
 
 AUFWAERTS = Vector2(0, -1)  # Globale Variable
 
-'''
-Die Klasse Raumschiff ist ein SpielElement
-und hat andere Eigenschaften 
-'''
 class Raumschiff(SpielElement):
+    """Die Klasse Raumschiff ist ein SpielElement und hat andere Eigenschaften"""
+    
     MANEUVRIERFAEHIGKEIT = 3
     BESCHLEUNIGUNG = 100
     LASER_GESCHWINDIGKEIT = 500
@@ -92,11 +86,9 @@ class Raumschiff(SpielElement):
             return None
 
 
-'''
-Die Klasse Asteroid ist ein SpielElement
-und hat andere Eigenschaften 
-'''
 class Asteroid(SpielElement):
+    """Die Klasse Asteroid ist ein SpielElement und hat andere Eigenschaften"""
+    
     GESCHWINDIGKEIT_MINIMUM = 30
     GESCHWINDIGKEIT_MAXIMUM = 100
     DREH_GESCHWINDIGKEIT_MAXIMUM = 300
@@ -122,11 +114,9 @@ class Asteroid(SpielElement):
         oberflaeche.blit(gedrehte_oberflaeche, blit_position)
 
 
-'''
-Die Klasse Laser ist ein SpielElement
-und hat andere Eigenschaften 
-'''
 class Laser(SpielElement):
+    """Die Klasse Laser ist ein SpielElement und hat andere Eigenschaften"""
+    
     def __init__(self, position, geschwindigkeit):  # Konstruktor Funktion
         super().__init__(position, lade_bild("laser"), geschwindigkeit) # Aufruf Basis Klassen Konstruktor Funktion
     
@@ -142,11 +132,9 @@ class Laser(SpielElement):
         self.position = self.position + schritt
 
 
-'''
-Die Klasse Explosion ist ein SpielElement
-und hat andere Eigenschaften 
-'''
 class Explosion(SpielElement):
+    """Die Klasse Explosion ist ein SpielElement und hat andere Eigenschaften"""
+    
     SCHWARZ = (0, 0, 0)
     
     def __init__(self, position, geschwindigkeit):  # Konstruktor Funktion

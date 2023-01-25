@@ -11,40 +11,47 @@ from pygame.math import Vector2
 from ansicht import StartAnsicht, LevelAnsicht
 from spielelement import Raumschiff
 
-class Dimorphos:    # Diese Klasse ist das Spiel
+class Dimorphos:
+    """Diese Klasse ist das Spiel"""
+    
     DIMORPHOS_APPDATA_PATH = os.path.join(os.getenv('APPDATA'), 'EvFBW_dimorphos_2022')
     TIME_CLOCK_TICK_FPS_60 = 60 # Maximale Bildwiederholrate für pygame.time.Clock.tick
+    START_ANSICHT = 0
+    LEVEL_ANSICHT = 1
     
     def __init__(self):     # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
         pass
     
     def __enter__(self):    # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
+        # pygame Vorbereitung
         pygame.init()       # starte das pygame Modul
         pygame.display.set_caption("Dimorphos") # Text am oberen Fenster Rahmen
         pygame.key.set_repeat(1, 10)            # Halte Taste Gedrückt für Wiederholte Dauer-Eingabe: benutze den Wert 10 als Intervall um den Ablauf zu beschleunigen.
         
+        # Steuerung der Endlos Schleife und der FPS Bildwiederholrate
         self.endlos_schleife_laeuft_weiter = True   # Diese Mitglied Variable kann durch Eingabe auf False gesetzt werden
-        self.uhr = pygame.time.Clock()            # Zeitgeber
+        self.uhr = pygame.time.Clock()              # Zeitgeber
         self.letzte_zeit = pygame.time.get_ticks() / 1000
         
         # Ansichten
         start_ansicht = StartAnsicht()
         level_ansicht = LevelAnsicht()
         
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff"))
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff"))
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff"))
+        # Füge neue Raumschiffe in die Raumschiff-Liste der Start Ansicht hinzu
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff"))
         
+        # Die Level Ansicht bekommt das ausgewählte Raumschiff der Start Ansicht
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
         
+        # Bereite beide Anischten vor
         start_ansicht.initialisiere_spiel_elemente()
         level_ansicht.initialisiere_spiel_elemente()
         
+        # Füge die Ansichten in die Ansicht Liste der Spiele Klasse Dimorphos hinzu
         self.ansichten = []
         self.ansichten.append(start_ansicht)
         self.ansichten.append(level_ansicht)
-        self.aktuelle_ansicht = 0
+        self.aktuelle_ansicht = self.START_ANSICHT
         
         # Highsore
         self.highscore = {}
@@ -61,6 +68,10 @@ class Dimorphos:    # Diese Klasse ist das Spiel
     
     def endlos_schleife(self):          # Die wichtigste öffentliche Mitglied Funktion des Spiels
         # Implementierung eines Spiels
+        #    while True:
+        #        _behandle_eingaben()
+        #        _behandle_spiele_logik()
+        #        _zeichne_spiele_elemente()
         while self.endlos_schleife_laeuft_weiter:
             aktuelle_zeit = pygame.time.get_ticks() / 1000  # Millisekunden umrechnen in Sekunden
             zeitschritt = aktuelle_zeit - self.letzte_zeit
@@ -78,34 +89,34 @@ class Dimorphos:    # Diese Klasse ist das Spiel
                 self.endlos_schleife_laeuft_weiter = False # Breche die Endos-Schleife ab
             elif event.type == pygame.KEYUP:
                 # Programm Schließen?
-                if (self.aktuelle_ansicht == 0
+                if (self.aktuelle_ansicht == self.START_ANSICHT
                     and event.key == pygame.K_ESCAPE# ESC-Taste gedrückt
                 ):
                     self.endlos_schleife_laeuft_weiter = False # Breche die Endos-Schleife ab
                 # Aktuelles Spiel abbrechen
-                elif (self.aktuelle_ansicht == 1
+                elif (self.aktuelle_ansicht == self.LEVEL_ANSICHT
                     and event.key == pygame.K_ESCAPE# ESC-Taste gedrückt
                 ):
-                    self.aktuelle_ansicht = 0
+                    self.aktuelle_ansicht = self.START_ANSICHT
                     self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 # Starte Spiel
-                elif (self.aktuelle_ansicht == 0
+                elif (self.aktuelle_ansicht == self.START_ANSICHT
                     and event.key == pygame.K_RETURN # Enter-Taste gedrückt
                 ):
-                    start_ansicht = self.ansichten[0]
-                    level_ansicht = self.ansichten[1]
+                    start_ansicht = self.ansichten[self.START_ANSICHT]
+                    level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
                     level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
-                    self.aktuelle_ansicht = 1
+                    self.aktuelle_ansicht = self.LEVEL_ANSICHT
                     self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 # Nächstes Level
-                elif (self.aktuelle_ansicht == 1
+                elif (self.aktuelle_ansicht == self.LEVEL_ANSICHT
                     and event.key == pygame.K_RETURN # Enter-Taste gedrückt
                 ):
                     if self.ansichten[self.aktuelle_ansicht].level_gewonnen():
-                        start_ansicht = self.ansichten[0]
-                        level_ansicht = self.ansichten[1]
+                        start_ansicht = self.ansichten[self.START_ANSICHT]
+                        level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
                         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
-                        self.aktuelle_ansicht = 1
+                        self.aktuelle_ansicht = self.LEVEL_ANSICHT
                         self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 
             if self.ansichten[self.aktuelle_ansicht]:
