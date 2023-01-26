@@ -1,0 +1,141 @@
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <div class="mermaid">
+    
+        classDiagram
+          class AnimierteBildSequenz {
+            animierte_bild_sequenz
+            anzahl_einzel_bilder
+            anzahl_pixel_horizontal
+            anzahl_pixel_vertikal
+            einzel_bild_nummer : int
+            einzel_bilder : list
+            zeitschritt_einzel_bild : int
+            zeitschritt_einzel_bild_schwelle
+            zyklisch : bool
+            beendet()
+            erstelle_einzel_bild(einzel_bild_nummer)
+            naechste_einzel_bild_nummer(zeitschritt)
+            reset()
+            zeichne_einzel_bild(oberflaeche, position, winkel, radius, skalierung, farbe, additive_farbmischung)
+          }
+          class Ansicht {
+            leinwand
+            behandle_eingaben(zeitschritt)
+            behandle_spiele_logik(zeitschritt)
+            initialisiere_spiel_elemente()
+            zeichne_spiele_elemente(zeitschritt)
+          }
+          class Asteroid {
+            DREH_GESCHWINDIGKEIT_MAXIMUM : int
+            GESCHWINDIGKEIT_MAXIMUM : int
+            GESCHWINDIGKEIT_MINIMUM : int
+            dreh_geschwindigkeit
+            groesse : int
+            winkel : int
+            bewege(oberflaeche, zeitschritt)
+            zeichne(oberflaeche, zeitschritt)
+          }
+          class Dimorphos {
+            DIMORPHOS_APPDATA_PATH
+            LEVEL_ANSICHT : int
+            START_ANSICHT : int
+            TIME_CLOCK_TICK_FPS_60 : int
+            aktuelle_ansicht : int
+            ansichten : list
+            endlos_schleife_laeuft_weiter : bool
+            highscore : dict
+            letzte_zeit
+            uhr
+            endlos_schleife()
+          }
+          class Explosion {
+            SCHWARZ : tuple
+            explosion
+            radius : int
+            ton_explosion
+            bewege(oberflaeche, zeitschritt)
+            zeichne(oberflaeche, zeitschritt)
+          }
+          class Laser {
+            position
+            bewege(oberflaeche, zeitschritt)
+            zeichne(oberflaeche, zeitschritt)
+          }
+          class LevelAnsicht {
+            MIN_ASTEROIDEN_DISTANZ : int
+            SPIEL_VORBEI_GEWONNEN : str
+            SPIEL_VORBEI_VERLOREN : str
+            anzahl_asteroiden : int
+            asteroiden : list
+            explosionen : list
+            hintergrund
+            laser : list
+            raumschiff : NoneType
+            spiel_vorbei_farbe
+            spiel_vorbei_schrift : Font
+            spiel_vorbei_text : str
+            behandle_eingabe_ereignis(event, zeitschritt)
+            behandle_eingaben(zeitschritt)
+            behandle_spiele_logik(zeitschritt)
+            explosion(position, geschwindigkeit)
+            initialisiere_spiel_elemente()
+            level_gewonnen()
+            zeichne_spiele_elemente(zeitschritt)
+          }
+          class Raumschiff {
+            BESCHLEUNIGUNG : int
+            LASER_GESCHWINDIGKEIT : int
+            MANEUVRIERFAEHIGKEIT : int
+            SCHWARZ : tuple
+            beschleunigt : bool
+            bild_antrieb
+            geschwindigkeit
+            letzter_schuss_zeitstempel
+            richtung
+            schuss_periode : int
+            beschleunige(zeitschritt)
+            drehe(uhrzeigersinn)
+            schiesse()
+            zeichne(oberflaeche, zeitschritt)
+          }
+          class SpielElement {
+            bild
+            geschwindigkeit
+            position
+            radius : int
+            bewege(oberflaeche, zeitschritt)
+            kollidiert(anderes_element)
+            zeichne(oberflaeche, zeitschritt)
+          }
+          class StartAnsicht {
+            AUFWAERTS
+            anzahl_asteroiden : int
+            asteroiden : list
+            ausgewaehltes_raumschiff : int
+            hintergrund
+            raumschiffe : list
+            spiel_start_farbe
+            spiel_start_schrift : Font
+            spiel_start_text : str
+            spiel_titel_farbe
+            spiel_titel_schrift : Font
+            spiel_titel_text : str
+            behandle_eingabe_ereignis(event, zeitschritt)
+            behandle_eingaben(zeitschritt)
+            behandle_spiele_logik(zeitschritt)
+            initialisiere_spiel_elemente()
+            kann_ansicht_wechseln()
+            zeichne_spiele_elemente(zeitschritt)
+          }
+          LevelAnsicht --|> Ansicht
+          StartAnsicht --|> Ansicht
+          Asteroid --|> SpielElement
+          Explosion --|> SpielElement
+          Laser --|> SpielElement
+          Raumschiff --|> SpielElement
+  
+       </div>
+  </body>
+</html>
