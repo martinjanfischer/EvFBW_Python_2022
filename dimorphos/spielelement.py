@@ -40,7 +40,7 @@ class Raumschiff(SpielElement):
     LASER_GESCHWINDIGKEIT = 500
     SCHWARZ = (0, 0, 0)
     
-    def __init__(self, position, raumschiff_bilddatei_name):      # Konstruktor Funktion
+    def __init__(self, position, raumschiff_bilddatei_name, positionen_laser):      # Konstruktor Funktion
         super().__init__(position, lade_bild(raumschiff_bilddatei_name), Vector2(0)) # Aufruf Basis Klassen Konstruktor Funktion
         
         # kopiere den originalen AUFWAERTS vector
@@ -51,6 +51,7 @@ class Raumschiff(SpielElement):
         # Laser
         self.schuss_periode = 200
         self.letzter_schuss_zeitstempel = get_ticks()
+        self.positionen_laser = positionen_laser            # In Pixel Koordinaten
     
     def zeichne(self, oberflaeche, zeitschritt):         # Verändere Mitglied Funktion der Klasse SpielElement
         # Raumschiff
@@ -71,19 +72,25 @@ class Raumschiff(SpielElement):
         vorzeichen = 1 if uhrzeigersinn else -1
         winkel = self.MANEUVRIERFAEHIGKEIT * vorzeichen
         self.richtung.rotate_ip(winkel)
+        for position_laser in self.positionen_laser:
+            position_laser.rotate_ip(winkel)
     
     def beschleunige(self, zeitschritt):    # Nur Raumschiff hat diese Mitglied Funktion
         self.geschwindigkeit += self.richtung * self.BESCHLEUNIGUNG * zeitschritt
         self.beschleunigt = True
     
     def schiesse(self):                     # Nur Raumschiff hat diese Mitglied Funktion
+        # Laser Liste
         if get_ticks() - self.letzter_schuss_zeitstempel > self.schuss_periode:
             self.letzter_schuss_zeitstempel = get_ticks()
             laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT
-            laser = Laser(self.position, laser_geschwindigkeit)
+            laser = []
+            for position_laser in self.positionen_laser:
+                laser.append(Laser(self.position + position_laser, laser_geschwindigkeit))
             return laser
+        # Leere Liste
         else:
-            return None
+            return []
 
 
 class Asteroid(SpielElement):

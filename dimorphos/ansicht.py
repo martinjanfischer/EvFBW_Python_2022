@@ -183,9 +183,10 @@ class LevelAnsicht(Ansicht):
     
     def _hole_spiel_elemente(self):
         # Liste mit allen Spiel Elementen
-        spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen]
         if self.raumschiff:
-            spiel_elemente.append(self.raumschiff)
+            spiel_elemente = [*self.asteroiden, self.raumschiff, *self.laser, *self.explosionen]
+        else:
+            spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen]
         return spiel_elemente
 
     def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
@@ -210,8 +211,8 @@ class LevelAnsicht(Ansicht):
             if wurde_taste_gedrueckt[pygame.K_SPACE]:
                 laser = self.raumschiff.schiesse()
                 # Füge Laser in Liste hinzu
-                if laser:
-                    self.laser.append(laser)
+                for l in laser:
+                    self.laser.append(l)
     
     def behandle_spiele_logik(self, zeitschritt):  # Öffentliche Mitglied Funktion für Spielelogik
         # Bewege alle SpielElemente pro Bild ein wenig weiter

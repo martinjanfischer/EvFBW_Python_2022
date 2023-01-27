@@ -38,7 +38,7 @@ class Dimorphos:
         level_ansicht = LevelAnsicht()
         
         # Füge neue Raumschiffe in die Raumschiff-Liste der Start Ansicht hinzu
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff"))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff", [Vector2(0, -25)]))
         
         # Die Level Ansicht bekommt das ausgewählte Raumschiff der Start Ansicht
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
