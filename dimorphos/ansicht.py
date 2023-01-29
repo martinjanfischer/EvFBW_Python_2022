@@ -223,6 +223,12 @@ class LevelAnsicht(Ansicht):
         for laser in self.laser[:]:
             for asteroid in self.asteroiden[:]:
                 if asteroid.kollidiert(laser):
+                    # Explosion
+                    position = asteroid.position
+                    geschwindigkeit = 0.5 * laser.geschwindigkeit + 0.5 * asteroid.geschwindigkeit
+                    self.explosion(position, geschwindigkeit)
+                    
+                    # Entferne Laser und Asteroid
                     self.asteroiden.remove(asteroid)
                     self.laser.remove(laser)
                     break
