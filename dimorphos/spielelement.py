@@ -54,6 +54,10 @@ class Raumschiff(SpielElement):
         self.letzter_schuss_zeitstempel = get_ticks()
         self.positionen_laser = positionen_laser            # In Pixel Koordinaten
         self.ton_laser = lade_ton("laser")
+        
+        # Mündungsfeuer
+        self.bild_muendungsfeuer = lade_bild("muendungsfeuer")
+        self.zeichne_muendungsfeuer = False
     
     def zeichne(self, oberflaeche, zeitschritt):         # Verändere Mitglied Funktion der Klasse SpielElement
         # Raumschiff
@@ -69,6 +73,14 @@ class Raumschiff(SpielElement):
             blit_position_antrieb = self.position - gedrehte_oberflaeche_antrieb_groesse * 0.5
             oberflaeche.blit(gedrehte_oberflaeche_antrieb, blit_position_antrieb, special_flags=BLEND_ADD)
             self.beschleunigt = False
+        # Mündungsfeuer
+        if self.zeichne_muendungsfeuer:
+            self.zeichne_muendungsfeuer = False
+            gedrehte_oberflaeche_muendungsfeuer = rotozoom(self.bild_muendungsfeuer, winkel, 1.0)
+            gedrehte_oberflaeche_muendungsfeuer_groesse = Vector2(gedrehte_oberflaeche_muendungsfeuer.get_size())
+            blit_position_muendungsfeuer = self.position - gedrehte_oberflaeche_muendungsfeuer_groesse * 0.5
+            oberflaeche.blit(gedrehte_oberflaeche_muendungsfeuer, blit_position_muendungsfeuer, special_flags=BLEND_ADD)
+        
     
     def drehe(self, uhrzeigersinn=True):    # Nur Raumschiff hat diese Mitglied Funktion
         vorzeichen = 1 if uhrzeigersinn else -1
@@ -85,6 +97,7 @@ class Raumschiff(SpielElement):
         # Laser Liste
         if get_ticks() - self.letzter_schuss_zeitstempel > self.schuss_periode:
             self.letzter_schuss_zeitstempel = get_ticks()
+            self.zeichne_muendungsfeuer = True
             Sound.play(self.ton_laser)
             laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT
             laser = []
