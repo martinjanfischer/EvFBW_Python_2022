@@ -49,6 +49,11 @@ class Raumschiff(SpielElement):
         self.bild_antrieb = lade_bild("nachbrenner")
         self.beschleunigt = False
         
+        # Positionslichter
+        self.bild_positionslichter = lade_bild("positionslichter")
+        self.positionslichter = AnimierteBildSequenz(self.bild_positionslichter, 8, 2, 64, 64)
+        self.positionslichter.zyklisch = True
+        
         # Laser
         self.schuss_periode = 200
         self.letzter_schuss_zeitstempel = get_ticks()
@@ -73,6 +78,8 @@ class Raumschiff(SpielElement):
             blit_position_antrieb = self.position - gedrehte_oberflaeche_antrieb_groesse * 0.5
             oberflaeche.blit(gedrehte_oberflaeche_antrieb, blit_position_antrieb, special_flags=BLEND_ADD)
             self.beschleunigt = False
+        # Positionslichter
+        self.positionslichter.zeichne_einzel_bild(oberflaeche, self.position, winkel, self.radius, 1, self.SCHWARZ, True)
         # Mündungsfeuer
         if self.zeichne_muendungsfeuer:
             self.zeichne_muendungsfeuer = False
@@ -81,6 +88,12 @@ class Raumschiff(SpielElement):
             blit_position_muendungsfeuer = self.position - gedrehte_oberflaeche_muendungsfeuer_groesse * 0.5
             oberflaeche.blit(gedrehte_oberflaeche_muendungsfeuer, blit_position_muendungsfeuer, special_flags=BLEND_ADD)
         
+    
+    def bewege(self, oberflaeche, zeitschritt):                  # Verändere Mitglied Funktion der Klasse SpielElement
+        super().bewege(oberflaeche, zeitschritt)                 # Aufruf Basis Klassen Funktion
+        
+        # Nächste Einzelbild Nummer
+        self.positionslichter.naechste_einzel_bild_nummer(zeitschritt)
     
     def drehe(self, uhrzeigersinn=True):    # Nur Raumschiff hat diese Mitglied Funktion
         vorzeichen = 1 if uhrzeigersinn else -1
