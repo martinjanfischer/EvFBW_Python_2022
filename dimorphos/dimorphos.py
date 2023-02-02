@@ -41,6 +41,7 @@ class Dimorphos:
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff", [Vector2(0, -25)]))
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_sui", [Vector2(-11, -1),Vector2(11, -1)]))
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_von_konrad", [Vector2(16, -25),Vector2(-16, -25), Vector2(39,-12), Vector2(-39,-12)]))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff.perfect_grafic", [Vector2(0, -25)]))
 
         # Die Level Ansicht bekommt das ausgewählte Raumschiff der Start Ansicht
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]

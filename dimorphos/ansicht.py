@@ -42,7 +42,7 @@ class StartAnsicht(Ansicht):
         self.spiel_start_farbe = pygame.Color(0, 255, 0, 255)
         
         # Weltraum
-        self.hintergrund = lade_bild("weltraum", False)
+        self.hintergrund = lade_bild("hintergrund.magenta", False)
         
         # Leere Raumschiff Liste
         self.ausgewaehltes_raumschiff = 0
@@ -140,7 +140,7 @@ class LevelAnsicht(Ansicht):
         self.spiel_vorbei_farbe = pygame.Color(255, 255, 255, 255)
         
         # Weltraum
-        self.hintergrund = lade_bild("weltraum", False)
+        self.hintergrund = lade_bild("hintergrund.magenta", False)
         
         # Leere Laser Liste
         self.laser = []
