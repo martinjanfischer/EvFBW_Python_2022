@@ -99,8 +99,6 @@ class Raumschiff(SpielElement):
         vorzeichen = 1 if uhrzeigersinn else -1
         winkel = self.MANEUVRIERFAEHIGKEIT * vorzeichen
         self.richtung.rotate_ip(winkel)
-        for position_laser in self.positionen_laser:
-            position_laser.rotate_ip(winkel)
     
     def beschleunige(self, zeitschritt):    # Nur Raumschiff hat diese Mitglied Funktion
         self.geschwindigkeit += self.richtung * self.BESCHLEUNIGUNG * zeitschritt
@@ -112,10 +110,11 @@ class Raumschiff(SpielElement):
             self.letzter_schuss_zeitstempel = get_ticks()
             self.zeichne_muendungsfeuer = True
             Sound.play(self.ton_laser)
+            winkel = self.richtung.angle_to(AUFWAERTS)
             laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT
             laser = []
             for position_laser in self.positionen_laser:
-                laser.append(Laser(self.position + position_laser, laser_geschwindigkeit))
+                laser.append(Laser(self.position + position_laser.rotate(-winkel), laser_geschwindigkeit))
             return laser
         # Leere Liste
         else:
