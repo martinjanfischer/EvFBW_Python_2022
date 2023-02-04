@@ -9,6 +9,7 @@ import os
 import pygame
 from pygame.math import Vector2
 from ansicht import StartAnsicht, LevelAnsicht
+from level import Level
 from spielelement import Raumschiff
 
 class Dimorphos:
@@ -45,6 +46,12 @@ class Dimorphos:
         
         # Die Level Ansicht bekommt das ausgewählte Raumschiff der Start Ansicht
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
+        
+        # Bereite Level vor
+        level_ansicht.level.append(Level(3,0.5,10,50,200))
+        level_ansicht.level.append(Level())
+        level_ansicht.level.append(Level(9,1.5,80,150,380))
+        level_ansicht.aktuelles_level = 0
         
         # Bereite beide Anischten vor
         start_ansicht.initialisiere_spiel_elemente()
@@ -100,6 +107,9 @@ class Dimorphos:
                 elif (self.aktuelle_ansicht == self.LEVEL_ANSICHT
                     and event.key == pygame.K_ESCAPE# ESC-Taste gedrückt
                 ):
+                    start_ansicht = self.ansichten[self.START_ANSICHT]
+                    level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
+                    level_ansicht.aktuelles_level = 0
                     self.aktuelle_ansicht = self.START_ANSICHT
                     self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 # Starte Spiel
@@ -111,7 +121,7 @@ class Dimorphos:
                     level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
                     self.aktuelle_ansicht = self.LEVEL_ANSICHT
                     self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
-                # Nächstes Level
+                # Level Gewonnen: Nächstes Level
                 elif (self.aktuelle_ansicht == self.LEVEL_ANSICHT
                     and event.key == pygame.K_RETURN # Enter-Taste gedrückt
                 ):
@@ -119,7 +129,12 @@ class Dimorphos:
                         start_ansicht = self.ansichten[self.START_ANSICHT]
                         level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
                         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
-                        self.aktuelle_ansicht = self.LEVEL_ANSICHT
+                        if level_ansicht.aktuelles_level < len(level_ansicht.level) - 1:
+                            self.aktuelle_ansicht = self.LEVEL_ANSICHT
+                            level_ansicht.aktuelles_level += 1
+                        else:
+                            self.aktuelle_ansicht = self.START_ANSICHT
+                            level_ansicht.aktuelles_level = 0
                         self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 
             if self.ansichten[self.aktuelle_ansicht]:

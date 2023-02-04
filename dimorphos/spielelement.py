@@ -124,15 +124,16 @@ class Raumschiff(SpielElement):
 class Asteroid(SpielElement):
     """Die Klasse Asteroid ist ein SpielElement und hat andere Eigenschaften"""
     
-    GESCHWINDIGKEIT_MINIMUM = 30
-    GESCHWINDIGKEIT_MAXIMUM = 100
-    DREH_GESCHWINDIGKEIT_MAXIMUM = 300
-    
-    def __init__(self, position, groesse=1):   # Konstruktor Funktion
+    def __init__(self, position,
+        groesse=1,
+        geschwindigkeit_minimum=30,
+        geschwindigkeit_maximum=100,
+        dreh_geschwindigkeit_maximum=300
+        ):   # Konstruktor Funktion
         geschwindigkeit = zufaellige_geschwindigkeit(
-            self.GESCHWINDIGKEIT_MINIMUM, self.GESCHWINDIGKEIT_MAXIMUM)
+            geschwindigkeit_minimum, geschwindigkeit_maximum)
         dreh_geschwindigkeit = zufaellige_geschwindigkeit(
-            - self.DREH_GESCHWINDIGKEIT_MAXIMUM, self.DREH_GESCHWINDIGKEIT_MAXIMUM)
+            - dreh_geschwindigkeit_maximum, dreh_geschwindigkeit_maximum)
         self.dreh_geschwindigkeit = dreh_geschwindigkeit.x
         self.groesse = groesse
         self.winkel = 0

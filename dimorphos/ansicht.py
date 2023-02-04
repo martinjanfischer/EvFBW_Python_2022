@@ -2,6 +2,7 @@ import pygame
 import random
 from pygame.math import Vector2
 from pygame.mixer import Sound
+from level import Level
 from spielelement import SpielElement, Asteroid, Explosion
 from nuetzliches import lade_bild, zufaellige_position, zeige_text
 
@@ -150,21 +151,26 @@ class LevelAnsicht(Ansicht):
         
         # Leere Asteroiden Liste
         self.asteroiden = []
-        self.anzahl_asteroiden = 6
         
         # Leere Explosionen Liste
         self.explosionen = []
         
         # Leerer Text
         self.spiel_vorbei_text = ""
+        
+        # Leere Level Liste
+        self.level = []
+        self.aktuelles_level = 0
     
     def initialisiere_spiel_elemente(self):
+        aktuelles_level = self.level[self.aktuelles_level]
+        
         # Leere Laser Liste
         self.laser = []
         
         # Neue Asteroiden mit zufälliger Platzierung und Geschwindigkeit
         self.asteroiden = []
-        for _ in range(self.anzahl_asteroiden):
+        for _ in range(aktuelles_level.asteroiden_anzahl):
             # Finde eine zufällige Position für den Asteroiden
             # mit einem gewissen Abstand zum Raumschiff
             while True:
@@ -173,7 +179,15 @@ class LevelAnsicht(Ansicht):
                 if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
                     break
             # Füge Asteroid zur Liste hinzu
-            self.asteroiden.append(Asteroid(position))
+            self.asteroiden.append(
+                Asteroid(
+                    position,
+                    aktuelles_level.asteroiden_groesse,
+                    aktuelles_level.asteroiden_geschwindigkeit_minimum,
+                    aktuelles_level.asteroiden_geschwindigkeit_maximum,
+                    aktuelles_level.asteroiden_dreh_geschwindigkeit_maximum
+                )
+            )
         
         # Leere Explosionen Liste
         self.explosionen = []
