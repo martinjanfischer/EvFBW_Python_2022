@@ -275,6 +275,9 @@ class LevelAnsicht(Ansicht):
                     self.laser.remove(laser)
                     break
             
+            if not laser:
+                continue:
+            
             for alien in self.aliens[:]:
                 if laser.von_spieler and alien.kollidiert(laser):
                     # Explosion
@@ -286,6 +289,9 @@ class LevelAnsicht(Ansicht):
                     self.aliens.remove(alien)
                     self.laser.remove(laser)
                     break
+            
+            if not laser:
+                continue:
             
             if not laser.von_spieler and self.raumschiff and self.raumschiff.kollidiert(laser):
                 # Explosion
