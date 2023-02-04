@@ -27,8 +27,11 @@ class SpielElement:
         self.position = zyklische_position(self.position + schritt, oberflaeche)
     
     def kollidiert(self, anderes_element):                  # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
-        distanz = self.position.distance_to(anderes_element.position)
-        return distanz < self.radius + anderes_element.radius
+        if anderes_element:
+            distanz = self.position.distance_to(anderes_element.position)
+            return distanz < self.radius + anderes_element.radius
+        else:
+            return False
 
 
 AUFWAERTS = Vector2(0, -1)  # Globale Variable
@@ -38,7 +41,6 @@ class Raumschiff(SpielElement):
     
     MANEUVRIERFAEHIGKEIT = 3
     BESCHLEUNIGUNG = 100
-    LASER_GESCHWINDIGKEIT = 500
     SCHWARZ = (0, 0, 0)
     
     def __init__(self, position, raumschiff_bilddatei_name, positionen_laser):      # Konstruktor Funktion
@@ -87,7 +89,6 @@ class Raumschiff(SpielElement):
             gedrehte_oberflaeche_muendungsfeuer_groesse = Vector2(gedrehte_oberflaeche_muendungsfeuer.get_size())
             blit_position_muendungsfeuer = self.position - gedrehte_oberflaeche_muendungsfeuer_groesse * 0.5
             oberflaeche.blit(gedrehte_oberflaeche_muendungsfeuer, blit_position_muendungsfeuer, special_flags=BLEND_ADD)
-        
     
     def bewege(self, oberflaeche, zeitschritt):                  # Verändere Mitglied Funktion der Klasse SpielElement
         super().bewege(oberflaeche, zeitschritt)                 # Aufruf Basis Klassen Funktion
@@ -111,10 +112,9 @@ class Raumschiff(SpielElement):
             self.zeichne_muendungsfeuer = True
             Sound.play(self.ton_laser)
             winkel = self.richtung.angle_to(AUFWAERTS)
-            laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT
             laser = []
             for position_laser in self.positionen_laser:
-                laser.append(Laser(self.position + position_laser.rotate(-winkel), laser_geschwindigkeit))
+                laser.append(Laser(self.position + position_laser.rotate(-winkel), self.richtung, True))
             return laser
         # Leere Liste
         else:
@@ -153,8 +153,12 @@ class Asteroid(SpielElement):
 class Laser(SpielElement):
     """Die Klasse Laser ist ein SpielElement und hat andere Eigenschaften"""
     
-    def __init__(self, position, geschwindigkeit):  # Konstruktor Funktion
-        super().__init__(position, lade_bild("laser"), geschwindigkeit) # Aufruf Basis Klassen Konstruktor Funktion
+    GESCHWINDIGKEIT = 500
+    
+    def __init__(self, position, richtung, von_spieler):  # Konstruktor Funktion
+        super().__init__(position, lade_bild("laser"), richtung * self.GESCHWINDIGKEIT) # Aufruf Basis Klassen Konstruktor Funktion
+        
+        self.von_spieler = von_spieler
     
     def zeichne(self, oberflaeche, zeitschritt):    # Verändere Mitglied Funktion der Klasse SpielElement
         winkel = self.geschwindigkeit.angle_to(AUFWAERTS)
@@ -194,3 +198,48 @@ class Explosion(SpielElement):
         
         # Nächste Einzelbild Nummer
         self.explosion.naechste_einzel_bild_nummer(zeitschritt)
+
+
+class AlienRaumschiff(SpielElement):
+    """Die Klasse AlienRaumschiff ist ein SpielElement und hat andere Eigenschaften"""
+    
+    SCHWARZ = (0, 0, 0)
+    
+    def __init__(self, position):   # Konstruktor Funktion
+        geschwindigkeit = zufaellige_geschwindigkeit(50, 100)
+        super().__init__(position, lade_bild("raumschiff"), geschwindigkeit)
+        
+        # Positionslichter
+        self.bild_positionslichter = lade_bild("positionslichter")
+        self.positionslichter = AnimierteBildSequenz(self.bild_positionslichter, 8, 2, 64, 64)
+        self.positionslichter.zyklisch = True
+        
+        # Laser
+        self.schuss_periode = 2000
+        self.letzter_schuss_zeitstempel = get_ticks()
+        self.ton_laser = lade_ton("laser")
+    
+    def zeichne(self, oberflaeche, zeitschritt):         # Verändere Mitglied Funktion der Klasse SpielElement
+        super().zeichne(oberflaeche, zeitschritt)                 # Aufruf Basis Klassen Funktion
+        
+        # Positionslichter
+        self.positionslichter.zeichne_einzel_bild(oberflaeche, self.position, 0, self.radius, 1, self.SCHWARZ, True)
+    
+    def bewege(self, oberflaeche, zeitschritt):                  # Verändere Mitglied Funktion der Klasse SpielElement
+        super().bewege(oberflaeche, zeitschritt)                 # Aufruf Basis Klassen Funktion
+        
+        # Nächste Einzelbild Nummer
+        self.positionslichter.naechste_einzel_bild_nummer(zeitschritt)
+    
+    def schiesse(self, ziel_position):                     # Nur AlienRaumschiff hat diese Mitglied Funktion
+        # Laser Liste
+        if get_ticks() - self.letzter_schuss_zeitstempel > self.schuss_periode:
+            self.letzter_schuss_zeitstempel = get_ticks()
+            Sound.play(self.ton_laser)
+            richtung = ziel_position - self.position
+            laser = []
+            laser.append(Laser(self.position, richtung.normalize(), False))
+            return laser
+        # Leere Liste
+        else:
+            return []

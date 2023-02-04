@@ -3,7 +3,7 @@ import random
 from pygame.math import Vector2
 from pygame.mixer import Sound
 from level import Level
-from spielelement import SpielElement, Asteroid, Explosion
+from spielelement import SpielElement, Asteroid, Explosion, AlienRaumschiff
 from nuetzliches import lade_bild, zufaellige_position, zeige_text
 
 class Ansicht:
@@ -155,6 +155,9 @@ class LevelAnsicht(Ansicht):
         # Leere Explosionen Liste
         self.explosionen = []
         
+        # Leere Aliens Liste
+        self.aliens = []
+        
         # Leerer Text
         self.spiel_vorbei_text = ""
         
@@ -189,6 +192,23 @@ class LevelAnsicht(Ansicht):
                 )
             )
         
+        # Neue Aliens mit zufälliger Platzierung und Geschwindigkeit
+        self.aliens = []
+        for _ in range(aktuelles_level.aliens_anzahl):
+            # Finde eine zufällige Position für den Aliens
+            # mit einem gewissen Abstand zum Raumschiff
+            while True:
+                position = zufaellige_position(self.leinwand)
+                distanz = position.distance_to(self.raumschiff.position)
+                if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
+                    break
+            # Füge Asteroid zur Liste hinzu
+            self.aliens.append(
+                AlienRaumschiff(
+                    position
+                )
+            )
+        
         # Leere Explosionen Liste
         self.explosionen = []
         
@@ -198,9 +218,9 @@ class LevelAnsicht(Ansicht):
     def _hole_spiel_elemente(self):
         # Liste mit allen Spiel Elementen
         if self.raumschiff:
-            spiel_elemente = [*self.asteroiden, self.raumschiff, *self.laser, *self.explosionen]
+            spiel_elemente = [*self.asteroiden, self.raumschiff, *self.laser, *self.explosionen, *self.aliens]
         else:
-            spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen]
+            spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen, *self.aliens]
         return spiel_elemente
 
     def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
@@ -233,10 +253,18 @@ class LevelAnsicht(Ansicht):
         for spielelement in self._hole_spiel_elemente():
             spielelement.bewege(self.leinwand, zeitschritt)
         
-        # Treffer: Laser auf Asteroid, entferne beide
+        # Alle Aliens schiessen
+        if self.raumschiff:
+            for alien in self.aliens:
+                laser = alien.schiesse(self.raumschiff.position)
+                # Füge Laser in Liste hinzu
+                for l in laser:
+                    self.laser.append(l)
+        
+        # Treffer: Laser auf Asteroid/Alien/Raumschiff, entferne beide
         for laser in self.laser[:]:
             for asteroid in self.asteroiden[:]:
-                if asteroid.kollidiert(laser):
+                if laser.von_spieler and asteroid.kollidiert(laser):
                     # Explosion
                     position = asteroid.position
                     geschwindigkeit = 0.5 * laser.geschwindigkeit + 0.5 * asteroid.geschwindigkeit
@@ -246,13 +274,38 @@ class LevelAnsicht(Ansicht):
                     self.asteroiden.remove(asteroid)
                     self.laser.remove(laser)
                     break
+            
+            for alien in self.aliens[:]:
+                if laser.von_spieler and alien.kollidiert(laser):
+                    # Explosion
+                    position = alien.position
+                    geschwindigkeit = 0.5 * laser.geschwindigkeit + 0.5 * alien.geschwindigkeit
+                    self.explosion(position, geschwindigkeit)
+                    
+                    # Entferne Laser und Alien
+                    self.aliens.remove(alien)
+                    self.laser.remove(laser)
+                    break
+            
+            if not laser.von_spieler and self.raumschiff and self.raumschiff.kollidiert(laser):
+                # Explosion
+                position = self.raumschiff.position
+                geschwindigkeit = 0.5 * laser.geschwindigkeit + 0.5 * self.raumschiff.geschwindigkeit
+                self.explosion(position, geschwindigkeit)
+                
+                # Entferne Laser und Raumschiff
+                self.raumschiff = None
+                self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
+                self.spiel_vorbei_farbe = pygame.Color("tomato")
+                self.laser.remove(laser)
+                break
         
         # Entferne Laser am Bildrand
         for laser in self.laser[:]:
             if not self.leinwand.get_rect().collidepoint(laser.position):
                 self.laser.remove(laser)
         
-        # Kollision: Raumschiff mit Asteroid, entferne Raumschiff
+        # Kollision: Raumschiff mit Asteroid/Alien, entferne Raumschiff
         if self.raumschiff:
             for asteroid in self.asteroiden:
                 if asteroid.kollidiert(self.raumschiff):
@@ -266,9 +319,22 @@ class LevelAnsicht(Ansicht):
                     self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
                     self.spiel_vorbei_farbe = pygame.Color("tomato")
                     break
+            
+            for alien in self.aliens:
+                if alien.kollidiert(self.raumschiff):
+                    # Explosion
+                    position = self.raumschiff.position
+                    geschwindigkeit = 0.5 * self.raumschiff.geschwindigkeit + 0.5 * alien.geschwindigkeit
+                    self.explosion(position, geschwindigkeit)
+                    
+                    # Entferne Raumschiff
+                    self.raumschiff = None
+                    self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
+                    self.spiel_vorbei_farbe = pygame.Color("tomato")
+                    break
         
         # Gewonnen: Keine Asteroiden übrig
-        if not self.asteroiden and self.raumschiff:
+        if not self.asteroiden and not self.aliens and self.raumschiff:
             self.spiel_vorbei_text = self.SPIEL_VORBEI_GEWONNEN
             self.spiel_vorbei_farbe = pygame.Color("gold")
     

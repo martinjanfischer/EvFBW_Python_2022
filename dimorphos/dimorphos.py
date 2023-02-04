@@ -48,9 +48,9 @@ class Dimorphos:
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
         
         # Bereite Level vor
-        level_ansicht.level.append(Level(3,0.5,10,50,200))
-        level_ansicht.level.append(Level())
-        level_ansicht.level.append(Level(9,1.5,80,150,380))
+        level_ansicht.level.append(Level(3,0.5,10,50,200,1))
+        level_ansicht.level.append(Level(6,1,40,100,300,2))
+        level_ansicht.level.append(Level(9,1.5,80,150,400,3))
         level_ansicht.aktuelles_level = 0
         
         # Bereite beide Anischten vor
