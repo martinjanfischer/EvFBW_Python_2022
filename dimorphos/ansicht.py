@@ -3,7 +3,7 @@ import random
 from pygame.math import Vector2
 from pygame.mixer import Sound
 from spielelement import SpielElement, Asteroid, Explosion
-from nuetzliches import lade_bild, zufaellige_position, zeige_text
+from nuetzliches import lade_bild, lade_ton, zufaellige_position, zeige_text
 
 class Ansicht:
     """Diese Klasse ist eine Basis für StartAnsicht und LevelAnsicht und hat alle gemeinsamen Eigenschaften leinwand"""
@@ -49,6 +49,7 @@ class StartAnsicht(Ansicht):
         self.raumschiffe = []
         
         # Leere Asteroiden Liste
+        self.bild_asteroid = lade_bild("asteroid")
         self.asteroiden = []
         self.anzahl_asteroiden = 6
     
@@ -62,7 +63,7 @@ class StartAnsicht(Ansicht):
             # Finde eine zufällige Position für den Asteroiden
             position = zufaellige_position(self.leinwand)
             # Füge Asteroid zur Liste hinzu
-            self.asteroiden.append(Asteroid(position, random.uniform(.5, 5)))
+            self.asteroiden.append(Asteroid(position, self.bild_asteroid, random.uniform(.5, 5)))
     
     def _hole_spiel_elemente(self):
         # Liste mit allen Spiel Elementen
@@ -149,10 +150,13 @@ class LevelAnsicht(Ansicht):
         self.raumschiff = None
         
         # Leere Asteroiden Liste
+        self.bild_asteroid = lade_bild("asteroid")
         self.asteroiden = []
         self.anzahl_asteroiden = 6
         
         # Leere Explosionen Liste
+        self.bild_explosion = lade_bild("explosion")
+        self.ton_explosion = lade_ton("explosion")
         self.explosionen = []
         
         # Leerer Text
@@ -173,7 +177,7 @@ class LevelAnsicht(Ansicht):
                 if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
                     break
             # Füge Asteroid zur Liste hinzu
-            self.asteroiden.append(Asteroid(position))
+            self.asteroiden.append(Asteroid(position, self.bild_asteroid))
         
         # Leere Explosionen Liste
         self.explosionen = []
@@ -281,7 +285,7 @@ class LevelAnsicht(Ansicht):
                 break
         # Erzeuge eine neue Explosion wenn es keine unbenutzte Explosion gibt
         if not explosion:
-            explosion = Explosion(position, geschwindigkeit)
+            explosion = Explosion(position, geschwindigkeit, self.bild_explosion, self.ton_explosion)
             self.explosionen.append(explosion)
         # Spiele den Ton für die Explosion ab wenn Du eine Explosion hast
         if explosion:
