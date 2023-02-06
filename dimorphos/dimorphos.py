@@ -10,6 +10,7 @@ import pygame
 from pygame.math import Vector2
 from ansicht import StartAnsicht, LevelAnsicht
 from level import Level
+from nuetzliches import lade_bild, lade_ton
 from spielelement import Raumschiff
 
 class Dimorphos:
@@ -39,10 +40,12 @@ class Dimorphos:
         level_ansicht = LevelAnsicht()
         
         # Füge neue Raumschiffe in die Raumschiff-Liste der Start Ansicht hinzu
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff", [Vector2(0, -25)]))
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_sui", [Vector2(-11, -1),Vector2(11, -1)]))
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_von_konrad", [Vector2(16, -25),Vector2(-16, -25), Vector2(39,-12), Vector2(-39,-12)]))
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff.perfect_grafic", [Vector2(0, -25)]))
+        self.laser_bild = lade_bild("laser")
+        self.ton_laser = lade_ton("laser")
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff", self.laser_bild, self.ton_laser, [Vector2(0, -25)]))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_sui", self.laser_bild, self.ton_laser, [Vector2(-11, -1),Vector2(11, -1)]))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_von_konrad", self.laser_bild, self.ton_laser, [Vector2(16, -25),Vector2(-16, -25), Vector2(39,-12), Vector2(-39,-12)]))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff.perfect_grafic", self.laser_bild, self.ton_laser, [Vector2(0, -25)]))
         
         # Die Level Ansicht bekommt das ausgewählte Raumschiff der Start Ansicht
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]

@@ -9,7 +9,7 @@ from nuetzliches import lade_bild, lade_ton, zufaellige_geschwindigkeit, zyklisc
 class SpielElement:
     """Diese Klasse ist eine Basis für Raumschiff, Asteroid, Laser und hat alle gemeinsamen Eigenschaften position, radius, geschwindigkeit, bild"""
     
-    def __init__(self, position, bild, geschwindigkeit):    # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
+    def __init__(self, position, geschwindigkeit, bild):    # Konstruktor Funktion: Bereite alle Mitglied Variablen und Ressourcen dieser Klasse vor
         self.position = Vector2(position)                   # Alle SpielElement Klassen haben ebenfalls diese Mitglied Variable: 2D Position
         self.geschwindigkeit = Vector2(geschwindigkeit)     # Alle SpielElement Klassen haben ebenfalls diese Mitglied Variable: 2D Geschwindigkeit
         self.bild = bild                                    # Alle SpielElement Klassen haben ebenfalls diese Mitglied Variable: Bild
@@ -43,8 +43,8 @@ class Raumschiff(SpielElement):
     BESCHLEUNIGUNG = 100
     SCHWARZ = (0, 0, 0)
     
-    def __init__(self, position, raumschiff_bilddatei_name, positionen_laser):      # Konstruktor Funktion
-        super().__init__(position, lade_bild(raumschiff_bilddatei_name), Vector2(0)) # Aufruf Basis Klassen Konstruktor Funktion
+    def __init__(self, position, raumschiff_bilddatei_name, laser_bild, ton_laser, positionen_laser):      # Konstruktor Funktion
+        super().__init__(position, Vector2(0), lade_bild(raumschiff_bilddatei_name)) # Aufruf Basis Klassen Konstruktor Funktion
         
         # kopiere den originalen AUFWAERTS vector
         self.richtung = Vector2(AUFWAERTS)
@@ -57,10 +57,11 @@ class Raumschiff(SpielElement):
         self.positionslichter.zyklisch = True
         
         # Laser
+        self.laser_bild = laser_bild
         self.schuss_periode = 200
         self.letzter_schuss_zeitstempel = get_ticks()
         self.positionen_laser = positionen_laser            # In Pixel Koordinaten
-        self.ton_laser = lade_ton("laser")
+        self.ton_laser = ton_laser
         
         # Mündungsfeuer
         self.bild_muendungsfeuer = lade_bild("muendungsfeuer")
@@ -114,7 +115,7 @@ class Raumschiff(SpielElement):
             winkel = self.richtung.angle_to(AUFWAERTS)
             laser = []
             for position_laser in self.positionen_laser:
-                laser.append(Laser(self.position + position_laser.rotate(-winkel), self.richtung, True))
+                laser.append(Laser(self.position + position_laser.rotate(-winkel), self.richtung, self.laser_bild, True))
             return laser
         # Leere Liste
         else:
@@ -124,7 +125,7 @@ class Raumschiff(SpielElement):
 class Asteroid(SpielElement):
     """Die Klasse Asteroid ist ein SpielElement und hat andere Eigenschaften"""
     
-    def __init__(self, position,
+    def __init__(self, position, bild,
         groesse=1,
         geschwindigkeit_minimum=30,
         geschwindigkeit_maximum=100,
@@ -137,7 +138,7 @@ class Asteroid(SpielElement):
         self.dreh_geschwindigkeit = dreh_geschwindigkeit.x
         self.groesse = groesse
         self.winkel = 0
-        super().__init__(position, lade_bild("asteroid"), geschwindigkeit)
+        super().__init__(position, geschwindigkeit, bild)
     
     def bewege(self, oberflaeche, zeitschritt):          # Verändere Mitglied Funktion der Klasse SpielElement
         super().bewege(oberflaeche, zeitschritt)
@@ -155,8 +156,8 @@ class Laser(SpielElement):
     
     GESCHWINDIGKEIT = 500
     
-    def __init__(self, position, richtung, von_spieler):  # Konstruktor Funktion
-        super().__init__(position, lade_bild("laser"), richtung * self.GESCHWINDIGKEIT) # Aufruf Basis Klassen Konstruktor Funktion
+    def __init__(self, position, richtung, bild, von_spieler):  # Konstruktor Funktion
+        super().__init__(position, richtung * self.GESCHWINDIGKEIT, bild) # Aufruf Basis Klassen Konstruktor Funktion
         
         self.von_spieler = von_spieler
     
@@ -177,8 +178,8 @@ class Explosion(SpielElement):
     
     SCHWARZ = (0, 0, 0)
     
-    def __init__(self, position, geschwindigkeit):  # Konstruktor Funktion
-        super().__init__(position, lade_bild("explosion"), geschwindigkeit) # Aufruf Basis Klassen Konstruktor Funktion
+    def __init__(self, position, geschwindigkeit, bild, ton):  # Konstruktor Funktion
+        super().__init__(position, geschwindigkeit, bild) # Aufruf Basis Klassen Konstruktor Funktion
         
         # Animierte Bild Sequenz einer Explosion
         self.explosion = AnimierteBildSequenz(self.bild, 5, 8, 64, 64)
@@ -188,7 +189,7 @@ class Explosion(SpielElement):
         else:
             self.radius = 1
         
-        self.ton_explosion = lade_ton("explosion")
+        self.ton_explosion = ton
     
     def zeichne(self, oberflaeche, zeitschritt):                 # Verändere Mitglied Funktion der Klasse SpielElement
         self.explosion.zeichne_einzel_bild(oberflaeche, self.position, 0, self.radius, 4, self.SCHWARZ, True)
@@ -205,9 +206,9 @@ class AlienRaumschiff(SpielElement):
     
     SCHWARZ = (0, 0, 0)
     
-    def __init__(self, position):   # Konstruktor Funktion
+    def __init__(self, position, laser_bild, ton_laser):   # Konstruktor Funktion
         geschwindigkeit = zufaellige_geschwindigkeit(50, 100)
-        super().__init__(position, lade_bild("raumschiff"), geschwindigkeit)
+        super().__init__(position, geschwindigkeit, lade_bild("raumschiff"))
         
         # Positionslichter
         self.bild_positionslichter = lade_bild("positionslichter")
@@ -215,9 +216,10 @@ class AlienRaumschiff(SpielElement):
         self.positionslichter.zyklisch = True
         
         # Laser
+        self.laser_bild = laser_bild
         self.schuss_periode = 2000
         self.letzter_schuss_zeitstempel = get_ticks()
-        self.ton_laser = lade_ton("laser")
+        self.ton_laser = ton_laser
     
     def zeichne(self, oberflaeche, zeitschritt):         # Verändere Mitglied Funktion der Klasse SpielElement
         super().zeichne(oberflaeche, zeitschritt)                 # Aufruf Basis Klassen Funktion
@@ -238,7 +240,7 @@ class AlienRaumschiff(SpielElement):
             Sound.play(self.ton_laser)
             richtung = ziel_position - self.position
             laser = []
-            laser.append(Laser(self.position, richtung.normalize(), False))
+            laser.append(Laser(self.position, richtung.normalize(), self.laser_bild, False))
             return laser
         # Leere Liste
         else:
