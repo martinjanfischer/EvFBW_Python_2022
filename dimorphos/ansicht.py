@@ -130,13 +130,12 @@ class StartAnsicht(Ansicht):
 class LevelAnsicht(Ansicht):
     """Die Klasse LevelAnsicht ist eine Ansicht und hat andere Eigenschaften"""
     
-    MIN_ASTEROIDEN_DISTANZ = 250
     SPIEL_VORBEI_GEWONNEN = "Gewonnen!"
     SPIEL_VORBEI_VERLOREN = "Verloren!"
     
     def __init__(self):
         super().__init__() # Aufruf Basis Klassen Konstruktor Funktion
-
+        
         # spielpunkte
         self.score = 0
         self.score_text = str(self.score)
@@ -183,43 +182,12 @@ class LevelAnsicht(Ansicht):
         self.laser = []
         
         # Neue Asteroiden mit zufälliger Platzierung und Geschwindigkeit
-        self.asteroiden = []
-        for _ in range(aktuelles_level.asteroiden_anzahl):
-            # Finde eine zufällige Position für den Asteroiden
-            # mit einem gewissen Abstand zum Raumschiff
-            while True:
-                position = zufaellige_position(self.leinwand)
-                distanz = position.distance_to(self.raumschiff.position)
-                if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
-                    break
-            # Füge Asteroid zur Liste hinzu
-            self.asteroiden.append(
-                Asteroid(
-                    position,
-                    self.bild_asteroid,
-                    aktuelles_level.asteroiden_groesse,
-                    aktuelles_level.asteroiden_geschwindigkeit_minimum,
-                    aktuelles_level.asteroiden_geschwindigkeit_maximum,
-                    aktuelles_level.asteroiden_dreh_geschwindigkeit_maximum
-                )
-            )
+        self.asteroiden = aktuelles_level.initialisiere_asteroiden(
+            self.leinwand, self.bild_asteroid, self.raumschiff.position)
         
         # Neue Aliens mit zufälliger Platzierung und Geschwindigkeit
-        self.aliens = []
-        for _ in range(aktuelles_level.aliens_anzahl):
-            # Finde eine zufällige Position für den Aliens
-            # mit einem gewissen Abstand zum Raumschiff
-            while True:
-                position = zufaellige_position(self.leinwand)
-                distanz = position.distance_to(self.raumschiff.position)
-                if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
-                    break
-            # Füge Asteroid zur Liste hinzu
-            self.aliens.append(
-                AlienRaumschiff(
-                    position, self.laser_bild, self.ton_laser
-                )
-            )
+        self.aliens = aktuelles_level.initialisiere_aliens(
+            self.leinwand, self.laser_bild, self.ton_laser, self.raumschiff.position)
         
         # Leere Explosionen Liste
         self.explosionen = []
@@ -234,7 +202,7 @@ class LevelAnsicht(Ansicht):
         else:
             spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen, *self.aliens]
         return spiel_elemente
-
+    
     def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         if self.raumschiff:
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
@@ -242,7 +210,7 @@ class LevelAnsicht(Ansicht):
                 # Füge Laser in Liste hinzu
                 for l in laser:
                     self.laser.append(l)
-
+    
     def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         # Hole Tastatur Eingaben
         wurde_taste_gedrueckt = pygame.key.get_pressed()
@@ -400,4 +368,3 @@ class LevelAnsicht(Ansicht):
         # Spiele den Ton für die Explosion ab wenn Du eine Explosion hast
         if explosion:
             Sound.play(explosion.ton_explosion)
-
