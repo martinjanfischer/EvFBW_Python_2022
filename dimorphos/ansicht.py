@@ -105,8 +105,9 @@ class StartAnsicht(Ansicht):
             spielelement.zeichne(self.leinwand, zeitschritt)
         
         # Zeichne Text
-        zeige_text(self.leinwand, self.spiel_titel_text, self.spiel_titel_schrift, self.spiel_titel_farbe)
-        position = Vector2(0, self.leinwand.get_height() * 1/4)
+        position = Vector2(self.leinwand.get_size()) / 2
+        zeige_text(self.leinwand, self.spiel_titel_text, self.spiel_titel_schrift, self.spiel_titel_farbe, position)
+        position = Vector2(0, self.leinwand.get_height() * 1/4) + Vector2(self.leinwand.get_size()) / 2
         zeige_text(self.leinwand, self.spiel_start_text, self.spiel_start_schrift, self.spiel_start_farbe, position)
     
     def kann_ansicht_wechseln(self):
@@ -134,6 +135,10 @@ class LevelAnsicht(Ansicht):
     
     def __init__(self):
         super().__init__() # Aufruf Basis Klassen Konstruktor Funktion
+
+        # spielpunkte
+        self.score = 0
+        self.score_text = str(self.score)
         
         # Text
         self.spiel_vorbei_schrift = pygame.font.Font(None, 64)
@@ -234,6 +239,7 @@ class LevelAnsicht(Ansicht):
                 if asteroid.kollidiert(laser):
                     self.asteroiden.remove(asteroid)
                     self.laser.remove(laser)
+                    self.score += 1
                     break
         
         # Entferne Laser am Bildrand
@@ -271,7 +277,11 @@ class LevelAnsicht(Ansicht):
         
         # Zeichne Text
         if self.spiel_vorbei_text:
-            zeige_text(self.leinwand, self.spiel_vorbei_text, self.spiel_vorbei_schrift, self.spiel_vorbei_farbe)
+            position = Vector2(self.leinwand.get_size()) / 2
+            zeige_text(self.leinwand, self.spiel_vorbei_text, self.spiel_vorbei_schrift, self.spiel_vorbei_farbe, position)
+
+        position = Vector2(self.leinwand.get_size()) / 16
+        zeige_text(self.leinwand, str(self.score), self.spiel_vorbei_schrift, pygame.Color("tomato"), position)
     
     def level_gewonnen(self):
         # Du Gewinnst wenn das Raumschiff noch existiert und der Text anzeigt dass Du gewonnen hast

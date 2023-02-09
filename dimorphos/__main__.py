@@ -11,8 +11,11 @@ Anforderungen
 - Verschiedene Level mit aufsteigender Schwierigkeit
     - Dateibasierte Definition von Leveln
     - Erhöhe Anzahl und Geschwindigkeit der Asteroiden
-    - Letztes Level
-    - Punkte Tafel bzw. Zeit Tafel
+    - Level
+        - Letztes Level
+        - Mehrere Level
+        - Endlos Level
+    - Zeit Tafel
     - Highscore: Höchstes Level, Kürzeste Zeit -> In Datei schreiben
     - Startbildschirm
 
