@@ -106,8 +106,9 @@ class StartAnsicht(Ansicht):
             spielelement.zeichne(self.leinwand, zeitschritt)
         
         # Zeichne Text
-        zeige_text(self.leinwand, self.spiel_titel_text, self.spiel_titel_schrift, self.spiel_titel_farbe)
-        position = Vector2(0, self.leinwand.get_height() * 1/4)
+        position = Vector2(self.leinwand.get_size()) / 2
+        zeige_text(self.leinwand, self.spiel_titel_text, self.spiel_titel_schrift, self.spiel_titel_farbe, position)
+        position = Vector2(0, self.leinwand.get_height() * 1/4) + Vector2(self.leinwand.get_size()) / 2
         zeige_text(self.leinwand, self.spiel_start_text, self.spiel_start_schrift, self.spiel_start_farbe, position)
     
     def kann_ansicht_wechseln(self):
@@ -135,6 +136,10 @@ class LevelAnsicht(Ansicht):
     
     def __init__(self):
         super().__init__() # Aufruf Basis Klassen Konstruktor Funktion
+
+        # spielpunkte
+        self.score = 0
+        self.score_text = str(self.score)
         
         # Text
         self.spiel_vorbei_schrift = pygame.font.Font(None, 64)
@@ -231,8 +236,13 @@ class LevelAnsicht(Ansicht):
         return spiel_elemente
 
     def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
-        pass
-    
+        if self.raumschiff:
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+                laser = self.raumschiff.schiesse()
+                # Füge Laser in Liste hinzu
+                for l in laser:
+                    self.laser.append(l)
+
     def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         # Hole Tastatur Eingaben
         wurde_taste_gedrueckt = pygame.key.get_pressed()
@@ -240,13 +250,13 @@ class LevelAnsicht(Ansicht):
         # Raumschiff Steuerung
         if self.raumschiff:
             # Drehe Raumschiff
-            if wurde_taste_gedrueckt[pygame.K_RIGHT]:
+            if wurde_taste_gedrueckt[pygame.K_d]:
                 self.raumschiff.drehe(uhrzeigersinn=True)
             # Drehe Raumschiff
-            elif wurde_taste_gedrueckt[pygame.K_LEFT]:
+            elif wurde_taste_gedrueckt[pygame.K_a]:
                 self.raumschiff.drehe(uhrzeigersinn=False)
             # Schub nach vorne
-            if wurde_taste_gedrueckt[pygame.K_UP]:
+            if wurde_taste_gedrueckt[pygame.K_w]:
                 self.raumschiff.beschleunige(zeitschritt)
             # Schiesse
             if wurde_taste_gedrueckt[pygame.K_SPACE]:
@@ -280,6 +290,7 @@ class LevelAnsicht(Ansicht):
                     # Entferne Laser und Asteroid
                     self.asteroiden.remove(asteroid)
                     self.laser.remove(laser)
+                    self.score += 1
                     break
             
             if not laser:
@@ -361,7 +372,11 @@ class LevelAnsicht(Ansicht):
         
         # Zeichne Text
         if self.spiel_vorbei_text:
-            zeige_text(self.leinwand, self.spiel_vorbei_text, self.spiel_vorbei_schrift, self.spiel_vorbei_farbe)
+            position = Vector2(self.leinwand.get_size()) / 2
+            zeige_text(self.leinwand, self.spiel_vorbei_text, self.spiel_vorbei_schrift, self.spiel_vorbei_farbe, position)
+
+        position = Vector2(self.leinwand.get_size()) / 16
+        zeige_text(self.leinwand, str(self.score), self.spiel_vorbei_schrift, pygame.Color("tomato"), position)
     
     def level_gewonnen(self):
         # Du Gewinnst wenn das Raumschiff noch existiert und der Text anzeigt dass Du gewonnen hast

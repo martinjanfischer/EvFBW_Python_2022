@@ -37,5 +37,5 @@ def zufaellige_geschwindigkeit(min_geschwindigkeit, max_geschwindigkeit):
 def zeige_text(oberflaeche, text, schrift, farbe=Color("tomato"), position=Vector2(0,0)):
     text_oberflaeche = schrift.render(text, True, farbe)
     rechteck = text_oberflaeche.get_rect()
-    rechteck.center = position + Vector2(oberflaeche.get_size()) / 2
+    rechteck.center = position
     oberflaeche.blit(text_oberflaeche, rechteck)
