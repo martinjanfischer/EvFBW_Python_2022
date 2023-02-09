@@ -194,8 +194,13 @@ class LevelAnsicht(Ansicht):
         return spiel_elemente
 
     def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
-        pass
-    
+        if self.raumschiff:
+            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+                laser = self.raumschiff.schiesse()
+                # Füge Laser in Liste hinzu
+                for l in laser:
+                    self.laser.append(l)
+
     def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         # Hole Tastatur Eingaben
         wurde_taste_gedrueckt = pygame.key.get_pressed()
@@ -203,13 +208,13 @@ class LevelAnsicht(Ansicht):
         # Raumschiff Steuerung
         if self.raumschiff:
             # Drehe Raumschiff
-            if wurde_taste_gedrueckt[pygame.K_RIGHT]:
+            if wurde_taste_gedrueckt[pygame.K_d]:
                 self.raumschiff.drehe(uhrzeigersinn=True)
             # Drehe Raumschiff
-            elif wurde_taste_gedrueckt[pygame.K_LEFT]:
+            elif wurde_taste_gedrueckt[pygame.K_a]:
                 self.raumschiff.drehe(uhrzeigersinn=False)
             # Schub nach vorne
-            if wurde_taste_gedrueckt[pygame.K_UP]:
+            if wurde_taste_gedrueckt[pygame.K_w]:
                 self.raumschiff.beschleunige(zeitschritt)
             # Schiesse
             if wurde_taste_gedrueckt[pygame.K_SPACE]:
