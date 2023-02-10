@@ -1,3 +1,4 @@
+from pygame.time import get_ticks
 from spielelement import AlienRaumschiff, Asteroid
 from nuetzliches import zufaellige_position
 
@@ -45,7 +46,7 @@ class Level:
     def initialisiere_aliens(self, oberflaeche, bild_laser, ton_laser, raumschiff_position):
         aliens = []
         for _ in range(self.aliens_anzahl):
-            # Finde eine zufällige Position für den Aliens
+            # Finde eine zufällige Position für das Alien
             # mit einem gewissen Abstand zum Raumschiff
             while True:
                 position = zufaellige_position(oberflaeche, False)
@@ -57,3 +58,62 @@ class Level:
                 AlienRaumschiff(position, bild_laser, ton_laser)
             )
         return aliens
+    
+    def spawn_asteroid(self, oberflaeche, bild_asteroid):
+        return None
+    
+    def spawn_alien(self, oberflaeche, bild_laser, ton_laser):
+        return None
+
+class AllYouCanDestroyLevel(Level):
+    def __init__(self,
+        erzeugungs_rate = 1000,
+        asteroiden_anzahl = 6,
+        asteroiden_groesse = 1,
+        asteroiden_geschwindigkeit_minimum = 30,
+        asteroiden_geschwindigkeit_maximum = 100,
+        asteroiden_dreh_geschwindigkeit_maximum = 300,
+        aliens_anzahl = 0
+    ):
+        super().__init__(
+            asteroiden_anzahl,
+            asteroiden_groesse,
+            asteroiden_geschwindigkeit_minimum,
+            asteroiden_geschwindigkeit_maximum,
+            asteroiden_dreh_geschwindigkeit_maximum,
+            aliens_anzahl
+        ) # Aufruf Basis Klassen Konstruktor Funktion
+        
+        self.erzeugungs_rate = erzeugungs_rate
+        self.letzter_erzeugter_zeitstempel = get_ticks()
+    
+    def spawn_asteroid(self, oberflaeche, bild_asteroid):                     # Nur Raumschiff hat diese Mitglied Funktion
+        # Laser Liste
+        if get_ticks() - self.letzter_erzeugter_zeitstempel > self.erzeugungs_rate:
+            self.letzter_erzeugter_zeitstempel = get_ticks()
+            # Finde eine zufällige Position für den Asteroiden
+            position = zufaellige_position(oberflaeche, True)
+            # Füge Asteroid zur Liste hinzu
+            return Asteroid(
+                position,
+                bild_asteroid,
+                self.asteroiden_groesse,
+                self.asteroiden_geschwindigkeit_minimum,
+                self.asteroiden_geschwindigkeit_maximum,
+                self.asteroiden_dreh_geschwindigkeit_maximum
+            )
+        # Leere Liste
+        else:
+            return None
+    
+    def spawn_alien(self, oberflaeche, bild_laser, ton_laser):                     # Nur Raumschiff hat diese Mitglied Funktion
+        # Laser Liste
+        if get_ticks() - self.letzter_erzeugter_zeitstempel > self.erzeugungs_rate:
+            self.letzter_erzeugter_zeitstempel = get_ticks()
+            # Finde eine zufällige Position für das Alien
+            position = zufaellige_position(oberflaeche, True)
+            # Füge Asteroid zur Liste hinzu
+            return AlienRaumschiff(position, bild_laser, ton_laser)
+        # Leere Liste
+        else:
+            return None

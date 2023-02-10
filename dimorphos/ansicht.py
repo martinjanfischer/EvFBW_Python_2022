@@ -42,6 +42,11 @@ class StartAnsicht(Ansicht):
         self.spiel_start_text = "Drücke Enter zum Start oder ESC zum Verlassen"
         self.spiel_start_farbe = pygame.Color(0, 255, 0, 255)
         
+        self.spiel_level_schrift = pygame.font.Font(None, 48)
+        self.spiel_level_texte = ["All you can destroy", "Kampagne"]
+        self.spiel_level_farbe = pygame.Color(255, 255, 0, 255)
+        self.ausgewaehltes_level = 0
+        
         # Weltraum
         self.hintergrund = lade_bild("hintergrund.magenta", False)
         
@@ -88,6 +93,9 @@ class StartAnsicht(Ansicht):
                 if self.ausgewaehltes_raumschiff > 0:
                     self.ausgewaehltes_raumschiff -= 1
                     self._positioniere_raumschiffe()
+            # Wechsele Level wenn die Pfeiltaste Rauf oder Runter gedrückt wurde
+            if (event.key == pygame.K_UP) or (event.key == pygame.K_DOWN):
+                self.ausgewaehltes_level = (self.ausgewaehltes_level + 1) % 2
         
     def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         pass
@@ -105,11 +113,22 @@ class StartAnsicht(Ansicht):
         for spielelement in self._hole_spiel_elemente():
             spielelement.zeichne(self.leinwand, zeitschritt)
         
-        # Zeichne Text
+        # Auswahlrechteck
+        ausgewaehltes_raumschiff = self.raumschiffe[self.ausgewaehltes_raumschiff]
+        rechteck = ausgewaehltes_raumschiff.bild.get_rect()
+        rechteck.center = ausgewaehltes_raumschiff.position
+        pygame.draw.rect(self.leinwand, pygame.Color("tomato"), rechteck,  2)
+        
+        # Zeichne Titel Text
         position = Vector2(self.leinwand.get_size()) / 2
+        position.y *= 3/4
         zeige_text(self.leinwand, self.spiel_titel_text, self.spiel_titel_schrift, self.spiel_titel_farbe, position)
         position = Vector2(0, self.leinwand.get_height() * 1/4) + Vector2(self.leinwand.get_size()) / 2
         zeige_text(self.leinwand, self.spiel_start_text, self.spiel_start_schrift, self.spiel_start_farbe, position)
+        
+        # Zeichne Level Text
+        position = Vector2(self.leinwand.get_size()) / 2
+        zeige_text(self.leinwand, self.spiel_level_texte[self.ausgewaehltes_level], self.spiel_level_schrift, self.spiel_level_farbe, position)
     
     def kann_ansicht_wechseln(self):
         return True
@@ -234,6 +253,8 @@ class LevelAnsicht(Ansicht):
                     self.laser.append(l)
     
     def behandle_spiele_logik(self, zeitschritt):  # Öffentliche Mitglied Funktion für Spielelogik
+        aktuelles_level = self.level[self.aktuelles_level]
+        
         # Bewege alle SpielElemente pro Bild ein wenig weiter
         for spielelement in self._hole_spiel_elemente():
             spielelement.bewege(self.leinwand, zeitschritt)
@@ -258,6 +279,8 @@ class LevelAnsicht(Ansicht):
                     # Entferne Laser und Asteroid
                     self.asteroiden.remove(asteroid)
                     self.laser.remove(laser)
+                    
+                    # Punkte
                     self.score += 1
                     break
             
@@ -324,6 +347,20 @@ class LevelAnsicht(Ansicht):
                     self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
                     self.spiel_vorbei_farbe = pygame.Color("tomato")
                     break
+        
+        # Füge neue Asteroiden hinzu
+        if len(self.asteroiden) < aktuelles_level.asteroiden_anzahl:
+            asteroid = aktuelles_level.spawn_asteroid(
+                self.leinwand, self.bild_asteroid)
+            if asteroid:
+                self.asteroiden.append(asteroid)
+        
+        # Füge neue Aliens hinzu
+        if len(self.aliens) < aktuelles_level.aliens_anzahl:
+            alien = aktuelles_level.spawn_alien(
+                self.leinwand, self.laser_bild, self.ton_laser)
+            if alien:
+                self.aliens.append(alien)
         
         # Gewonnen: Keine Asteroiden übrig
         if not self.asteroiden and not self.aliens and self.raumschiff:

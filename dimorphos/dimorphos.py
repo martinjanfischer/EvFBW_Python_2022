@@ -9,7 +9,7 @@ import os
 import pygame
 from pygame.math import Vector2
 from ansicht import StartAnsicht, LevelAnsicht
-from level import Level
+from level import AllYouCanDestroyLevel, Level
 from nuetzliches import lade_bild, lade_ton
 from spielelement import Raumschiff
 
@@ -51,6 +51,7 @@ class Dimorphos:
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
         
         # Bereite Level vor
+        level_ansicht.level.append(AllYouCanDestroyLevel(1000,6,1,30,100,300,1))
         level_ansicht.level.append(Level(3,0.5,10,50,200,1))
         level_ansicht.level.append(Level(6,1,40,100,300,2))
         level_ansicht.level.append(Level(9,1.5,80,150,400,3))
@@ -112,7 +113,7 @@ class Dimorphos:
                 ):
                     start_ansicht = self.ansichten[self.START_ANSICHT]
                     level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
-                    level_ansicht.aktuelles_level = 0
+                    level_ansicht.aktuelles_level = start_ansicht.ausgewaehltes_level
                     self.aktuelle_ansicht = self.START_ANSICHT
                     self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 # Starte Spiel
@@ -122,6 +123,7 @@ class Dimorphos:
                     start_ansicht = self.ansichten[self.START_ANSICHT]
                     level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
                     level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
+                    level_ansicht.aktuelles_level = start_ansicht.ausgewaehltes_level
                     self.aktuelle_ansicht = self.LEVEL_ANSICHT
                     self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 # Level Gewonnen: Nächstes Level
@@ -137,7 +139,7 @@ class Dimorphos:
                             level_ansicht.aktuelles_level += 1
                         else:
                             self.aktuelle_ansicht = self.START_ANSICHT
-                            level_ansicht.aktuelles_level = 0
+                            level_ansicht.aktuelles_level = start_ansicht.ausgewaehltes_level
                         self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 
             if self.ansichten[self.aktuelle_ansicht]:
