@@ -23,11 +23,18 @@ def zyklische_position(position, oberflaeche):
     pixel_waagerecht, pixel_senkrecht = oberflaeche.get_size()
     return Vector2(x % pixel_waagerecht, y % pixel_senkrecht)   # Modulo Operator % ist der Divisionsrest
 
-def zufaellige_position(oberflaeche):
-    return Vector2(
-        random.randrange(oberflaeche.get_width()),
-        random.randrange(oberflaeche.get_height()),
-    )
+def zufaellige_position(oberflaeche, am_rand):
+    zufaellig_x = random.randrange(oberflaeche.get_width())
+    zufaellig_y = random.randrange(oberflaeche.get_height())
+    if not am_rand:
+        return Vector2(zufaellig_x, zufaellig_y)
+    else:
+        return random.choice(
+            [
+                Vector2(zufaellig_x, 0), Vector2(zufaellig_x, oberflaeche.get_height() - 1),
+                Vector2(0, zufaellig_y), Vector2(oberflaeche.get_width() - 1, zufaellig_y)
+            ]
+        )
 
 def zufaellige_geschwindigkeit(min_geschwindigkeit, max_geschwindigkeit):
     geschwindigkeit = random.uniform(min_geschwindigkeit, max_geschwindigkeit)
