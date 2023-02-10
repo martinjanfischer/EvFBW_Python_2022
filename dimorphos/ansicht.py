@@ -62,7 +62,7 @@ class StartAnsicht(Ansicht):
         self.asteroiden = []
         for _ in range(self.anzahl_asteroiden):
             # Finde eine zufällige Position für den Asteroiden
-            position = zufaellige_position(self.leinwand)
+            position = zufaellige_position(self.leinwand, False)
             # Füge Asteroid zur Liste hinzu
             self.asteroiden.append(Asteroid(position, self.bild_asteroid, random.uniform(.5, 5)))
     

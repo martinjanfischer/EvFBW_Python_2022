@@ -25,7 +25,7 @@ class Level:
             # Finde eine zufällige Position für den Asteroiden
             # mit einem gewissen Abstand zum Raumschiff
             while True:
-                position = zufaellige_position(oberflaeche)
+                position = zufaellige_position(oberflaeche, False)
                 distanz = position.distance_to(raumschiff_position)
                 if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
                     break
@@ -48,7 +48,7 @@ class Level:
             # Finde eine zufällige Position für den Aliens
             # mit einem gewissen Abstand zum Raumschiff
             while True:
-                position = zufaellige_position(oberflaeche)
+                position = zufaellige_position(oberflaeche, False)
                 distanz = position.distance_to(raumschiff_position)
                 if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
                     break
