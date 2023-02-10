@@ -218,13 +218,13 @@ class LevelAnsicht(Ansicht):
         # Raumschiff Steuerung
         if self.raumschiff:
             # Drehe Raumschiff
-            if wurde_taste_gedrueckt[pygame.K_d]:
+            if wurde_taste_gedrueckt[pygame.K_d] or wurde_taste_gedrueckt[pygame.K_RIGHT]:
                 self.raumschiff.drehe(uhrzeigersinn=True)
             # Drehe Raumschiff
-            elif wurde_taste_gedrueckt[pygame.K_a]:
+            elif wurde_taste_gedrueckt[pygame.K_a] or wurde_taste_gedrueckt[pygame.K_LEFT]:
                 self.raumschiff.drehe(uhrzeigersinn=False)
             # Schub nach vorne
-            if wurde_taste_gedrueckt[pygame.K_w]:
+            if wurde_taste_gedrueckt[pygame.K_w] or wurde_taste_gedrueckt[pygame.K_UP]:
                 self.raumschiff.beschleunige(zeitschritt)
             # Schiesse
             if wurde_taste_gedrueckt[pygame.K_SPACE]:
