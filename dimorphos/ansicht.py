@@ -200,7 +200,12 @@ class LevelAnsicht(Ansicht):
         self.aktuelles_level = 0
     
     def initialisiere_spiel_elemente(self):
+        if len(self.level) <= 0:
+            return
+        
         aktuelles_level = self.level[self.aktuelles_level]
+        if not aktuelles_level:
+            return
         
         # Leere Laser Liste
         self.laser = []
