@@ -41,6 +41,9 @@ class StartAnsicht(Ansicht):
         self.spiel_start_text = "Drücke Enter zum Start oder ESC zum Verlassen"
         self.spiel_start_farbe = pygame.Color(0, 255, 0, 255)
         
+        self.spiel_level_schrift = pygame.font.Font(None, 48)
+        self.spiel_level_farbe = pygame.Color(255, 255, 0, 255)
+        
         # Weltraum
         self.hintergrund = lade_bild("hintergrund.magenta", False)
         
@@ -52,6 +55,11 @@ class StartAnsicht(Ansicht):
         self.bild_asteroid = lade_bild("asteroid")
         self.asteroiden = []
         self.anzahl_asteroiden = 6
+        
+        # Leeres Level Wörterbuch
+        self.level = {}
+        self.level_zyklisch = None
+        self.ausgewaehltes_level = None
     
     def initialisiere_spiel_elemente(self):
         # Raumschiffe
@@ -87,6 +95,10 @@ class StartAnsicht(Ansicht):
                 if self.ausgewaehltes_raumschiff > 0:
                     self.ausgewaehltes_raumschiff -= 1
                     self._positioniere_raumschiffe()
+            # Wechsele Level wenn die Pfeiltaste Rauf oder Runter gedrückt wurde
+            if (event.key == pygame.K_UP) or (event.key == pygame.K_DOWN):
+                if self.level and self.level_zyklisch:
+                    self.ausgewaehltes_level = next(self.level_zyklisch)
         
     def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         pass
@@ -104,11 +116,22 @@ class StartAnsicht(Ansicht):
         for spielelement in self._hole_spiel_elemente():
             spielelement.zeichne(self.leinwand, zeitschritt)
         
-        # Zeichne Text
+        # Auswahlrechteck
+        ausgewaehltes_raumschiff = self.raumschiffe[self.ausgewaehltes_raumschiff]
+        rechteck = ausgewaehltes_raumschiff.bild.get_rect()
+        rechteck.center = ausgewaehltes_raumschiff.position
+        pygame.draw.rect(self.leinwand, pygame.Color("tomato"), rechteck,  2)
+        
+        # Zeichne Titel Text
         position = Vector2(self.leinwand.get_size()) / 2
+        position.y *= 3/4
         zeige_text(self.leinwand, self.spiel_titel_text, self.spiel_titel_schrift, self.spiel_titel_farbe, position)
         position = Vector2(0, self.leinwand.get_height() * 1/4) + Vector2(self.leinwand.get_size()) / 2
         zeige_text(self.leinwand, self.spiel_start_text, self.spiel_start_schrift, self.spiel_start_farbe, position)
+        
+        # Zeichne Level Text
+        position = Vector2(self.leinwand.get_size()) / 2
+        zeige_text(self.leinwand, self.ausgewaehltes_level, self.spiel_level_schrift, self.spiel_level_farbe, position)
     
     def kann_ansicht_wechseln(self):
         return True
@@ -166,8 +189,21 @@ class LevelAnsicht(Ansicht):
         
         # Leerer Text
         self.spiel_vorbei_text = ""
+        
+        # Leere Level Liste
+        self.level = []
+        self.aktuelles_level = 0
     
     def initialisiere_spiel_elemente(self):
+        '''
+        if len(self.level) <= 0:
+            return
+        
+        aktuelles_level = self.level[self.aktuelles_level]
+        if not aktuelles_level:
+            return
+        '''
+        
         # Leere Laser Liste
         self.laser = []
         
@@ -237,8 +273,11 @@ class LevelAnsicht(Ansicht):
         for laser in self.laser[:]:
             for asteroid in self.asteroiden[:]:
                 if asteroid.kollidiert(laser):
+                    # Entferne Laser und Asteroid
                     self.asteroiden.remove(asteroid)
                     self.laser.remove(laser)
+                    
+                    # Punkte
                     self.score += 1
                     break
         
