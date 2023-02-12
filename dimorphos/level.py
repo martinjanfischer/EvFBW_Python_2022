@@ -65,7 +65,7 @@ class Level:
     def spawn_alien(self, oberflaeche, bild_laser, ton_laser):
         return None
 
-class AllYouCanDestroyLevel(Level):
+class ZerstoereWasDuKannstLevel(Level):
     def __init__(self,
         erzeugungs_rate = 1000,
         asteroiden_anzahl = 6,

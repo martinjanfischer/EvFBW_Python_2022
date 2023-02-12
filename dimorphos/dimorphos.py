@@ -7,9 +7,10 @@
 
 import os
 import pygame
+import itertools
 from pygame.math import Vector2
 from ansicht import StartAnsicht, LevelAnsicht
-from level import AllYouCanDestroyLevel, Level
+from level import ZerstoereWasDuKannstLevel, Level
 from nuetzliches import lade_bild, lade_ton
 from spielelement import Raumschiff
 
@@ -51,15 +52,19 @@ class Dimorphos:
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
         
         # Bereite Level vor
-        level_ansicht.level.append(AllYouCanDestroyLevel(1000,6,1,30,100,300,1))
-        level_ansicht.level.append(Level(3,0.5,10,50,200,1))
-        level_ansicht.level.append(Level(6,1,40,100,300,2))
-        level_ansicht.level.append(Level(9,1.5,80,150,400,3))
-        level_ansicht.aktuelles_level = 0
+        zerstoere_was_du_kannst_level = [ZerstoereWasDuKannstLevel(1000,6,1,30,100,300,1)]
+        karriere_level = []
+        karriere_level.append(Level(3,0.5,10,50,200,1))
+        karriere_level.append(Level(6,1,40,100,300,2))
+        karriere_level.append(Level(9,1.5,80,150,400,3))
+        start_ansicht.level = {}
+        start_ansicht.level['Zerstöre was Du kannst'] = zerstoere_was_du_kannst_level
+        start_ansicht.level['Karriere'] = karriere_level
+        start_ansicht.level_zyklisch = itertools.cycle(start_ansicht.level)
+        start_ansicht.ausgewaehltes_level = next(start_ansicht.level_zyklisch)
         
         # Bereite beide Anischten vor
         start_ansicht.initialisiere_spiel_elemente()
-        level_ansicht.initialisiere_spiel_elemente()
         
         # Füge die Ansichten in die Ansicht Liste der Spiele Klasse Dimorphos hinzu
         self.ansichten = []
@@ -113,7 +118,7 @@ class Dimorphos:
                 ):
                     start_ansicht = self.ansichten[self.START_ANSICHT]
                     level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
-                    level_ansicht.aktuelles_level = start_ansicht.ausgewaehltes_level
+                    level_ansicht.aktuelles_level = 0
                     self.aktuelle_ansicht = self.START_ANSICHT
                     self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 # Starte Spiel
@@ -123,7 +128,8 @@ class Dimorphos:
                     start_ansicht = self.ansichten[self.START_ANSICHT]
                     level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
                     level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
-                    level_ansicht.aktuelles_level = start_ansicht.ausgewaehltes_level
+                    level_ansicht.level = start_ansicht.level[start_ansicht.ausgewaehltes_level]
+                    level_ansicht.aktuelles_level = 0
                     self.aktuelle_ansicht = self.LEVEL_ANSICHT
                     self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 # Level Gewonnen: Nächstes Level
@@ -139,7 +145,7 @@ class Dimorphos:
                             level_ansicht.aktuelles_level += 1
                         else:
                             self.aktuelle_ansicht = self.START_ANSICHT
-                            level_ansicht.aktuelles_level = start_ansicht.ausgewaehltes_level
+                            level_ansicht.aktuelles_level = 0
                         self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
                 
             if self.ansichten[self.aktuelle_ansicht]:

@@ -1,5 +1,6 @@
 import pygame
 import random
+import itertools
 from pygame.math import Vector2
 from pygame.mixer import Sound
 from level import Level
@@ -43,9 +44,7 @@ class StartAnsicht(Ansicht):
         self.spiel_start_farbe = pygame.Color(0, 255, 0, 255)
         
         self.spiel_level_schrift = pygame.font.Font(None, 48)
-        self.spiel_level_texte = ["All you can destroy", "Kampagne"]
         self.spiel_level_farbe = pygame.Color(255, 255, 0, 255)
-        self.ausgewaehltes_level = 0
         
         # Weltraum
         self.hintergrund = lade_bild("hintergrund.magenta", False)
@@ -58,6 +57,11 @@ class StartAnsicht(Ansicht):
         self.bild_asteroid = lade_bild("asteroid")
         self.asteroiden = []
         self.anzahl_asteroiden = 6
+        
+        # Leeres Level Wörterbuch
+        self.level = {}
+        self.level_zyklisch = None
+        self.ausgewaehltes_level = None
     
     def initialisiere_spiel_elemente(self):
         # Raumschiffe
@@ -95,7 +99,8 @@ class StartAnsicht(Ansicht):
                     self._positioniere_raumschiffe()
             # Wechsele Level wenn die Pfeiltaste Rauf oder Runter gedrückt wurde
             if (event.key == pygame.K_UP) or (event.key == pygame.K_DOWN):
-                self.ausgewaehltes_level = (self.ausgewaehltes_level + 1) % 2
+                if self.level and self.level_zyklisch:
+                    self.ausgewaehltes_level = next(self.level_zyklisch)
         
     def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         pass
@@ -128,7 +133,7 @@ class StartAnsicht(Ansicht):
         
         # Zeichne Level Text
         position = Vector2(self.leinwand.get_size()) / 2
-        zeige_text(self.leinwand, self.spiel_level_texte[self.ausgewaehltes_level], self.spiel_level_schrift, self.spiel_level_farbe, position)
+        zeige_text(self.leinwand, self.ausgewaehltes_level, self.spiel_level_schrift, self.spiel_level_farbe, position)
     
     def kann_ansicht_wechseln(self):
         return True
