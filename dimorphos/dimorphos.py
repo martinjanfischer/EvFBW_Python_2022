@@ -12,6 +12,7 @@ from pygame.math import Vector2
 from ansicht import StartAnsicht, LevelAnsicht
 from nuetzliches import lade_bild
 from spielelement import Raumschiff
+from level import EndlosLevel
 
 class Dimorphos:
     """Diese Klasse ist das Spiel"""
@@ -50,7 +51,7 @@ class Dimorphos:
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
         
         # Bereite Level vor
-        zerstoere_was_du_kannst_level = []
+        zerstoere_was_du_kannst_level = [EndlosLevel()]
         karriere_level = []
         start_ansicht.level = {}
         start_ansicht.level['Zerstöre was Du kannst'] = zerstoere_was_du_kannst_level

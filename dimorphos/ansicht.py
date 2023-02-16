@@ -195,14 +195,12 @@ class LevelAnsicht(Ansicht):
         self.aktuelles_level = 0
     
     def initialisiere_spiel_elemente(self):
-        '''
         if len(self.level) <= 0:
             return
         
         aktuelles_level = self.level[self.aktuelles_level]
         if not aktuelles_level:
             return
-        '''
         
         # Leere Laser Liste
         self.laser = []
@@ -265,6 +263,8 @@ class LevelAnsicht(Ansicht):
                     self.laser.append(l)
     
     def behandle_spiele_logik(self, zeitschritt):  # Öffentliche Mitglied Funktion für Spielelogik
+        aktuelles_level = self.level[self.aktuelles_level]
+
         # Bewege alle SpielElemente pro Bild ein wenig weiter
         for spielelement in self._hole_spiel_elemente():
             spielelement.bewege(self.leinwand, zeitschritt)
@@ -300,11 +300,18 @@ class LevelAnsicht(Ansicht):
                     self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
                     self.spiel_vorbei_farbe = pygame.Color("tomato")
                     break
-        
+
         # Gewonnen: Keine Asteroiden übrig
         if not self.asteroiden and self.raumschiff:
             self.spiel_vorbei_text = self.SPIEL_VORBEI_GEWONNEN
             self.spiel_vorbei_farbe = pygame.Color("gold")
+        
+        # Erzeuge neue Asteroiden
+        if aktuelles_level:
+            if self.score % 2 == 1 and len(self.asteroiden) <= self.anzahl_asteroiden:
+                asteroiden = aktuelles_level.erzeuge_asteroiden(self.leinwand, self.bild_asteroid, 10)
+                for asteroid in asteroiden:
+                    self.asteroiden.append(asteroid)
     
     def zeichne_spiele_elemente(self, zeitschritt): # Öffentliche Mitglied Funktion für das Zeichnen
         # Zeichne Hintergrundbild neu
