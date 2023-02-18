@@ -46,11 +46,19 @@ class Dimorphos:
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_sui", self.laser_bild, [Vector2(-11, -1),Vector2(11, -1)]))
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_von_konrad", self.laser_bild, [Vector2(16, -25),Vector2(-16, -25), Vector2(39,-12), Vector2(-39,-12)]))
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff.perfect_grafic", self.laser_bild, [Vector2(0, -25)]))
-
+        
+        # Füge neue Asteroidenbilder in die Liste der Ansichten hinzu
+        bild_asteroid_1 = lade_bild("asteroid")
+        bild_asteroid_2 = lade_bild("asteroid")
+        start_ansicht.bilder_asteroiden.append(bild_asteroid_1)
+        start_ansicht.bilder_asteroiden.append(bild_asteroid_2)
+        level_ansicht.bilder_asteroiden.append(bild_asteroid_1)
+        level_ansicht.bilder_asteroiden.append(bild_asteroid_2)
+        
         # Die Level Ansicht bekommt das ausgewählte Raumschiff der Start Ansicht
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
         
-        # Bereite Level vor
+        # Bereite Level Wörterbuch vor
         zerstoere_was_du_kannst_level = [EndlosLevel()]
         karriere_level = []
         start_ansicht.level = {}
@@ -59,7 +67,7 @@ class Dimorphos:
         start_ansicht.level_zyklisch = itertools.cycle(start_ansicht.level)
         start_ansicht.ausgewaehltes_level = next(start_ansicht.level_zyklisch)
         
-        # Bereite beide Anischten vor
+        # Bereite Start Anischt vor
         start_ansicht.initialisiere_spiel_elemente()
         
         # Füge die Ansichten in die Ansicht Liste der Spiele Klasse Dimorphos hinzu

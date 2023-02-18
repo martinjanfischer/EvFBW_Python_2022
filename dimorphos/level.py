@@ -4,12 +4,14 @@ from spielelement import Asteroid
 class Level:
     def __init__(self):
         self.anzahl_asteroiden = 6
-    def erzeuge_asteroid(self, oberflaeche, bild_asteroid):
+    
+    def erzeuge_asteroiden(self, oberflaeche, bild_asteroid, anzahl):
         pass
+
 class EndlosLevel(Level):
     def __init__(self):
         super().__init__() # Aufruf Basis Klassen Konstruktor Funktion
-
+    
     def erzeuge_asteroiden(self, oberflaeche, bild_asteroid, anzahl):
         asteroiden = []
         for i in range(anzahl):
