@@ -10,9 +10,10 @@ import pygame
 import itertools
 from pygame.math import Vector2
 from ansicht import StartAnsicht, LevelAnsicht
-from level import ZerstoereWasDuKannstLevel, Level
+from level import EndlosLevel, Level
 from nuetzliches import lade_bild, lade_ton
 from spielelement import Raumschiff
+from level import EndlosLevel
 
 class Dimorphos:
     """Diese Klasse ist das Spiel"""
@@ -48,11 +49,19 @@ class Dimorphos:
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_von_konrad", self.laser_bild, self.ton_laser, [Vector2(16, -25),Vector2(-16, -25), Vector2(39,-12), Vector2(-39,-12)]))
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff.perfect_grafic", self.laser_bild, self.ton_laser, [Vector2(0, -25)]))
         
-        # Die Level Ansicht bekommt das ausgewählte Raumschiff der Start Ansicht
+        
+        # Füge neue Asteroidenbilder in die Liste der Ansichten hinzu
+        bild_asteroid_1 = lade_bild("asteroid")
+        bild_asteroid_2 = lade_bild("asteroid")
+        start_ansicht.bilder_asteroiden.append(bild_asteroid_1)
+        start_ansicht.bilder_asteroiden.append(bild_asteroid_2)
+        level_ansicht.bilder_asteroiden.append(bild_asteroid_1)
+        level_ansicht.bilder_asteroiden.append(bild_asteroid_2)
+                # Die Level Ansicht bekommt das ausgewählte Raumschiff der Start Ansicht
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
         
         # Bereite Level vor
-        zerstoere_was_du_kannst_level = [ZerstoereWasDuKannstLevel(1000,6,1,30,100,300,1)]
+        zerstoere_was_du_kannst_level = [EndlosLevel(1000,6,1,30,100,300,1)]
         karriere_level = []
         karriere_level.append(Level(3,0.5,10,50,200,1))
         karriere_level.append(Level(6,1,40,100,300,2))
@@ -63,7 +72,7 @@ class Dimorphos:
         start_ansicht.level_zyklisch = itertools.cycle(start_ansicht.level)
         start_ansicht.ausgewaehltes_level = next(start_ansicht.level_zyklisch)
         
-        # Bereite beide Anischten vor
+        # Bereite Start Anischt vor
         start_ansicht.initialisiere_spiel_elemente()
         
         # Füge die Ansichten in die Ansicht Liste der Spiele Klasse Dimorphos hinzu

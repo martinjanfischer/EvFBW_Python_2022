@@ -54,9 +54,9 @@ class StartAnsicht(Ansicht):
         self.raumschiffe = []
         
         # Leere Asteroiden Liste
-        self.bild_asteroid = lade_bild("asteroid")
+        self.bilder_asteroiden = []
         self.asteroiden = []
-        self.anzahl_asteroiden = 6
+        self.asteroiden_anzahl = 6
         
         # Leeres Level Wörterbuch
         self.level = {}
@@ -69,11 +69,12 @@ class StartAnsicht(Ansicht):
         
         # Neue Asteroiden mit zufälliger Platzierung und Geschwindigkeit
         self.asteroiden = []
-        for _ in range(self.anzahl_asteroiden):
+        for _ in range(self.asteroiden_anzahl):
             # Finde eine zufällige Position für den Asteroiden
             position = zufaellige_position(self.leinwand, False)
             # Füge Asteroid zur Liste hinzu
-            self.asteroiden.append(Asteroid(position, self.bild_asteroid, random.uniform(.5, 5)))
+            bild_asteroid = self.bilder_asteroiden[random.randrange(2)]
+            self.asteroiden.append(Asteroid(position, bild_asteroid, random.uniform(.5, 5)))
     
     def _hole_spiel_elemente(self):
         # Liste mit allen Spiel Elementen
@@ -179,7 +180,7 @@ class LevelAnsicht(Ansicht):
         self.raumschiff = None
         
         # Leere Asteroiden Liste
-        self.bild_asteroid = lade_bild("asteroid")
+        self.bilder_asteroiden = []
         self.asteroiden = []
         
         # Leere Explosionen Liste
@@ -200,19 +201,29 @@ class LevelAnsicht(Ansicht):
         self.aktuelles_level = 0
     
     def initialisiere_spiel_elemente(self):
-        if len(self.level) <= 0:
+        # Leere Laser Liste
+        self.laser = []
+        
+        # Leere Asteroiden Liste
+        self.asteroiden = []
+        
+        # Leere Explosionen Liste
+        self.explosionen = []
+        
+        # Leerer Text
+        self.spiel_vorbei_text = ""
+        
+        if len(self.level) <= 0 or self.aktuelles_level < 0 or self.aktuelles_level >= len(self.level):
             return
         
         aktuelles_level = self.level[self.aktuelles_level]
         if not aktuelles_level:
             return
         
-        # Leere Laser Liste
-        self.laser = []
-        
         # Neue Asteroiden mit zufälliger Platzierung und Geschwindigkeit
+        bild_asteroid = self.bilder_asteroiden[random.randrange(2)]
         self.asteroiden = aktuelles_level.initialisiere_asteroiden(
-            self.leinwand, self.bild_asteroid, self.raumschiff.position)
+            self.leinwand, bild_asteroid, self.raumschiff.position)
         
         # Neue Aliens mit zufälliger Platzierung und Geschwindigkeit
         self.aliens = aktuelles_level.initialisiere_aliens(
@@ -263,7 +274,9 @@ class LevelAnsicht(Ansicht):
                     self.laser.append(l)
     
     def behandle_spiele_logik(self, zeitschritt):  # Öffentliche Mitglied Funktion für Spielelogik
-        aktuelles_level = self.level[self.aktuelles_level]
+        aktuelles_level = None
+        if self.level and len(self.level) > 0:
+            aktuelles_level = self.level[self.aktuelles_level]
         
         # Bewege alle SpielElemente pro Bild ein wenig weiter
         for spielelement in self._hole_spiel_elemente():
@@ -358,24 +371,26 @@ class LevelAnsicht(Ansicht):
                     self.spiel_vorbei_farbe = pygame.Color("tomato")
                     break
         
-        # Füge neue Asteroiden hinzu
-        if len(self.asteroiden) < aktuelles_level.asteroiden_anzahl:
-            asteroid = aktuelles_level.spawn_asteroid(
-                self.leinwand, self.bild_asteroid)
-            if asteroid:
-                self.asteroiden.append(asteroid)
-        
-        # Füge neue Aliens hinzu
-        if len(self.aliens) < aktuelles_level.aliens_anzahl:
-            alien = aktuelles_level.spawn_alien(
-                self.leinwand, self.laser_bild, self.ton_laser)
-            if alien:
-                self.aliens.append(alien)
-        
         # Gewonnen: Keine Asteroiden übrig
         if not self.asteroiden and not self.aliens and self.raumschiff:
             self.spiel_vorbei_text = self.SPIEL_VORBEI_GEWONNEN
             self.spiel_vorbei_farbe = pygame.Color("gold")
+        
+        # Erzeuge neue Asteroiden
+        if aktuelles_level:
+            if self.score % 2 == 1 and len(self.asteroiden) <= aktuelles_level.asteroiden_anzahl:
+                bild_asteroid = self.bilder_asteroiden[random.randrange(2)]
+                asteroiden = aktuelles_level.erzeuge_asteroiden(self.leinwand, bild_asteroid, 10)
+                if asteroiden:
+                    for asteroid in asteroiden:
+                        self.asteroiden.append(asteroid)
+        
+        # Füge neue Aliens hinzu
+        if len(self.aliens) < aktuelles_level.aliens_anzahl:
+            alien = aktuelles_level.erzeuge_alien(
+                self.leinwand, self.laser_bild, self.ton_laser)
+            if alien:
+                self.aliens.append(alien)
     
     def zeichne_spiele_elemente(self, zeitschritt): # Öffentliche Mitglied Funktion für das Zeichnen
         # Zeichne Hintergrundbild neu
