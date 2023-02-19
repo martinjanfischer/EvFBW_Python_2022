@@ -352,8 +352,7 @@ class LevelAnsicht(Ansicht):
                 bild_asteroid = aktuelles_level.bilder_asteroiden[random.randrange(2)]
                 asteroiden = aktuelles_level.erzeuge_asteroiden(self.leinwand, bild_asteroid, 10)
                 if asteroiden:
-                    for asteroid in asteroiden:
-                        aktuelles_level.asteroiden.append(asteroid)
+                    aktuelles_level.asteroiden.extend(asteroiden)
         
         # Füge neue Aliens hinzu
         if len(aktuelles_level.aliens) < aktuelles_level.aliens_anzahl:
