@@ -59,7 +59,7 @@ class Dimorphos:
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
         
         # Bereite Level vor
-        zerstoere_was_du_kannst_level = [EndlosLevel(1000,6,1,30,100,300,1)]
+        zerstoere_was_du_kannst_level = [EndlosLevel(1000,1,1,30,100,300,2,1)]
         zerstoere_was_du_kannst_level[0].bilder_asteroiden.append(bild_asteroid_1)
         zerstoere_was_du_kannst_level[0].bilder_asteroiden.append(bild_asteroid_2)
         karriere_level = []

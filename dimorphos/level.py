@@ -94,7 +94,7 @@ class Level:
             )
         return aliens
     
-    def erzeuge_asteroiden(self, oberflaeche, bild_asteroid, anzahl):
+    def erzeuge_asteroiden(self, zusatz_bedingung, oberflaeche):
         return None
     
     def erzeuge_alien(self, oberflaeche, bild_laser, ton_laser):
@@ -108,6 +108,7 @@ class EndlosLevel(Level):
         asteroiden_geschwindigkeit_minimum = 30,
         asteroiden_geschwindigkeit_maximum = 100,
         asteroiden_dreh_geschwindigkeit_maximum = 300,
+        asteroiden_anzahl_erzeugen = 2,
         aliens_anzahl = 0
     ):
         super().__init__(
@@ -121,23 +122,28 @@ class EndlosLevel(Level):
         
         self.erzeugungs_rate = erzeugungs_rate
         self.letzter_erzeugter_zeitstempel = get_ticks()
+        self.asteroiden_anzahl_erzeugen = asteroiden_anzahl_erzeugen
     
-    def erzeuge_asteroiden(self, oberflaeche, bild_asteroid, anzahl):
+    def erzeuge_asteroiden(self, zusatz_bedingung, oberflaeche):
+        bild_asteroid = self.bilder_asteroiden[random.randrange(2)]
         # Asteroiden Liste
         asteroiden = []
-        for i in range(anzahl):
-            position = zufaellige_position(oberflaeche, True)
-            asteroiden.append(
-                Asteroid(
-                    position,
-                    bild_asteroid,
-                    self.asteroiden_groesse,
-                    self.asteroiden_geschwindigkeit_minimum,
-                    self.asteroiden_geschwindigkeit_maximum,
-                    self.asteroiden_dreh_geschwindigkeit_maximum
+        if zusatz_bedingung and len(self.asteroiden) < self.asteroiden_anzahl:
+            for i in range(self.asteroiden_anzahl_erzeugen):
+                position = zufaellige_position(oberflaeche, True)
+                asteroiden.append(
+                    Asteroid(
+                        position,
+                        bild_asteroid,
+                        self.asteroiden_groesse,
+                        self.asteroiden_geschwindigkeit_minimum,
+                        self.asteroiden_geschwindigkeit_maximum,
+                        self.asteroiden_dreh_geschwindigkeit_maximum
+                    )
                 )
-            )
-        return asteroiden
+        if asteroiden:
+            self.asteroiden.extend(asteroiden)
+            self.asteroiden_anzahl = len(self.asteroiden)
     
     def erzeuge_alien(self, oberflaeche, bild_laser, ton_laser):                     # Nur Raumschiff hat diese Mitglied Funktion
         # Laser Liste

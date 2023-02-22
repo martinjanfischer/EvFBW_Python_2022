@@ -348,11 +348,8 @@ class LevelAnsicht(Ansicht):
         
         # Erzeuge neue Asteroiden
         if aktuelles_level:
-            if self.score % 2 == 1 and len(aktuelles_level.asteroiden) <= aktuelles_level.asteroiden_anzahl:
-                bild_asteroid = aktuelles_level.bilder_asteroiden[random.randrange(2)]
-                asteroiden = aktuelles_level.erzeuge_asteroiden(self.leinwand, bild_asteroid, 10)
-                if asteroiden:
-                    aktuelles_level.asteroiden.extend(asteroiden)
+            zusatz_bedingung = self.score % 2 == 1
+            aktuelles_level.erzeuge_asteroiden(zusatz_bedingung, self.leinwand)
         
         # Füge neue Aliens hinzu
         if len(aktuelles_level.aliens) < aktuelles_level.aliens_anzahl:
