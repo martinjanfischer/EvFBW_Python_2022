@@ -195,6 +195,12 @@ class LevelAnsicht(Ansicht):
         self.level = []
         self.aktuelles_level = 0
     
+    def _aktuelles_level(self):
+        if len(self.level) <= 0 or self.aktuelles_level < 0 or self.aktuelles_level >= len(self.level):
+            return None
+        
+        return self.level[self.aktuelles_level]
+    
     def initialisiere_spiel_elemente(self):
         # Leere Laser Liste
         self.laser = []
@@ -211,7 +217,7 @@ class LevelAnsicht(Ansicht):
         if len(self.level) <= 0 or self.aktuelles_level < 0 or self.aktuelles_level >= len(self.level):
             return
         
-        aktuelles_level = self.level[self.aktuelles_level]
+        aktuelles_level = self._aktuelles_level()
         if not aktuelles_level:
             return
         
@@ -267,9 +273,7 @@ class LevelAnsicht(Ansicht):
                     self.laser.append(l)
     
     def behandle_spiele_logik(self, zeitschritt):  # Öffentliche Mitglied Funktion für Spielelogik
-        aktuelles_level = None
-        if self.level and len(self.level) > 0:
-            aktuelles_level = self.level[self.aktuelles_level]
+        aktuelles_level = self._aktuelles_level()
         
         # Bewege alle SpielElemente pro Bild ein wenig weiter
         for spielelement in self._hole_spiel_elemente():
@@ -321,6 +325,8 @@ class LevelAnsicht(Ansicht):
                     self.asteroiden.append(asteroid)
     
     def zeichne_spiele_elemente(self, zeitschritt): # Öffentliche Mitglied Funktion für das Zeichnen
+        aktuelles_level = self._aktuelles_level()
+        
         # Zeichne Hintergrundbild neu
         self.leinwand.blit(self.hintergrund, (0, 0))
         
@@ -337,6 +343,8 @@ class LevelAnsicht(Ansicht):
         zeige_text(self.leinwand, str(self.score), self.spiel_vorbei_schrift, pygame.Color("tomato"), position)
     
     def level_gewonnen(self):
+        aktuelles_level = self._aktuelles_level()
+        
         # Du Gewinnst wenn das Raumschiff noch existiert und der Text anzeigt dass Du gewonnen hast
         # Du Verlierst wenn das Raumschiff nicht existiert oder der Text nicht anzeigt dass Du gewonnen hast
         return (self.raumschiff and self.spiel_vorbei_text == self.SPIEL_VORBEI_GEWONNEN)
