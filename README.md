@@ -3,8 +3,8 @@ Python Programmierkurs 2022 für Jugendliche beim Evangelischen Familienbildungs
 
 ## Software
 Wir arbeiten auf Windows 10 Computern und installieren dort
-- das __Python__ Übersetzer Programm von
-[www.python.org](https://www.python.org/downloads/)
+- das __Python__ Übersetzer Programm in der __Version 3.11__ von
+[www.python.org](https://www.python.org/downloads/release/python-3110/)
 - das Textbearbeitungs Programm __Notepad++__ von
 [notepad-plus-plus.org](https://notepad-plus-plus.org/downloads/)
 - das Bildbearbeitungs Programm __The Gimp__ von
