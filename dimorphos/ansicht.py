@@ -318,11 +318,7 @@ class LevelAnsicht(Ansicht):
         
         # Erzeuge neue Asteroiden
         if aktuelles_level:
-            if self.score % 2 == 1 and len(self.asteroiden) <= self.anzahl_asteroiden:
-                bild_asteroid = self.bilder_asteroiden[random.randrange(2)]
-                asteroiden = aktuelles_level.erzeuge_asteroiden(self.leinwand, bild_asteroid, 10)
-                for asteroid in asteroiden:
-                    self.asteroiden.append(asteroid)
+            self.anzahl_asteroiden = aktuelles_level.behandle_spielelogik(self.score, self.asteroiden, self.anzahl_asteroiden, self.bilder_asteroiden, self.leinwand)
     
     def zeichne_spiele_elemente(self, zeitschritt): # Öffentliche Mitglied Funktion für das Zeichnen
         aktuelles_level = self._aktuelles_level()
