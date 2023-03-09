@@ -1,6 +1,6 @@
 from nuetzliches import zufaellige_position
 from spielelement import Asteroid
-from random import *
+import random
 
 class Level:
     def __init__(self):
@@ -17,14 +17,14 @@ class EndlosLevel(Level):
         asteroiden = []
         for i in range(anzahl):
             position = zufaellige_position(oberflaeche, True)
-            asteroiden.append(Asteroid(position, bild_asteroid))
+            asteroiden.append(Asteroid(position, bild_asteroid, 2))
         return asteroiden
 
     # Behandle spiele logig
     def behandle_spielelogik(self, score, asteroiden, anzahl_asteroiden, bilder_asteroiden, leinwand):
         if score % 2 == 1 and asteroiden and len(asteroiden) < anzahl_asteroiden:
-            bild_asteroid = bilder_asteroiden[0]#random.randrange(2)]
-            neue_asteroiden = self.erzeuge_asteroiden(leinwand, bild_asteroid, 10)
+            bild_asteroid = bilder_asteroiden[random.randrange(2)]
+            neue_asteroiden = self.erzeuge_asteroiden(leinwand, bild_asteroid, 3)
             asteroiden.extend(neue_asteroiden)
 
         return len(asteroiden)
