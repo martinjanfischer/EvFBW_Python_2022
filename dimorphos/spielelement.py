@@ -40,12 +40,12 @@ class Raumschiff(SpielElement):
     LASER_GESCHWINDIGKEIT = 500
     SCHWARZ = (0, 0, 0)
     
-    def __init__(self, position, raumschiff_bilddatei_name, laser_bild, positionen_laser):      # Konstruktor Funktion
+    def __init__(self, position, raumschiff_bilddatei_name, laser_bild, positionen_laser, b):      # Konstruktor Funktion
         super().__init__(position, Vector2(0), lade_bild(raumschiff_bilddatei_name)) # Aufruf Basis Klassen Konstruktor Funktion
         
         # kopiere den originalen AUFWAERTS vector
         self.richtung = Vector2(AUFWAERTS)
-        self.bild_antrieb = lade_bild("nachbrenner")
+        self.bild_antrieb = b
         self.beschleunigt = False
         
         # Laser

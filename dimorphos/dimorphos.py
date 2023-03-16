@@ -39,14 +39,17 @@ class Dimorphos:
         # Ansichten
         start_ansicht = StartAnsicht()
         level_ansicht = LevelAnsicht()
-        
+
+        self.bild_antrieb_1 = lade_bild("nachbrenner")
+
+        self.bild_antrieb_2 = lade_bild("nachbrenner_Mouthfullmod")
         # Füge neue Raumschiffe in die Raumschiff-Liste der Start Ansicht hinzu
         self.laser_bild = lade_bild("laser")
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff", self.laser_bild, [Vector2(0, -25)]))
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_sui", self.laser_bild, [Vector2(-11, -1),Vector2(11, -1)]))
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_von_konrad", self.laser_bild, [Vector2(16, -25),Vector2(-16, -25), Vector2(39,-12), Vector2(-39,-12)]))
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff.perfect_grafic", self.laser_bild, [Vector2(0, -25)]))
-        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_Mouthfullmod",self.laser_bild, [Vector2(0, -44)]))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff", self.laser_bild, [Vector2(0, -25)], self.bild_antrieb_1))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_sui", self.laser_bild, [Vector2(-11, -1),Vector2(11, -1)], self.bild_antrieb_1))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_von_konrad", self.laser_bild, [Vector2(16, -25),Vector2(-16, -25), Vector2(39,-12), Vector2(-39,-12)], self.bild_antrieb_1))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff.perfect_grafic", self.laser_bild, [Vector2(0, -25)], self.bild_antrieb_1))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_Mouthfullmod",self.laser_bild, [Vector2(0, -44)], self.bild_antrieb_2))
         
         # Füge neue Asteroidenbilder in die Liste der Ansichten hinzu
         bild_asteroid_1 = lade_bild("asteroid")
