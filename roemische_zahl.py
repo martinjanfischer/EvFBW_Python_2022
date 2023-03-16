@@ -48,6 +48,32 @@ def berechne_roemische_zahl(arabische_zahl):
     
     return roemische_zahl       # Gebe den Wert von der Variablen "roemische_zahl" zurück
 
+
+class RoemischeZahl:
+    def __init__(self, arabische_zahl):
+        self.arabische_zahl = arabische_zahl
+        self.roemische_zahl = berechne_roemische_zahl(arabische_zahl)
+    
+    def __add__(self, rechte_roemische_zahl):
+        summe_arabische_zahl = self.arabische_zahl + rechte_roemische_zahl.arabische_zahl
+        return RoemischeZahl(summe_arabische_zahl)
+    
+    def __sub__(self, rechte_roemische_zahl):
+        differenz_arabische_zahl = self.arabische_zahl - rechte_roemische_zahl.arabische_zahl
+        return RoemischeZahl(differenz_arabische_zahl)
+    
+    def __mul__(self, rechte_roemische_zahl):
+        produkt_arabische_zahl = self.arabische_zahl * rechte_roemische_zahl.arabische_zahl
+        return RoemischeZahl(produkt_arabische_zahl)
+    
+    def __floordiv__(self, rechte_roemische_zahl):
+        quotient_arabische_zahl = self.arabische_zahl // rechte_roemische_zahl.arabische_zahl
+        return RoemischeZahl(quotient_arabische_zahl)
+    
+    def ausgabe(self):
+        print(self.roemische_zahl)
+
+
 if __name__ == '__main__':      # Definiere die __main__ Funktion
     import argparse
     parser = argparse.ArgumentParser(description = 'Berechne die Römische Zahl aus einer natürlichen Arabischen Zahl')
@@ -57,4 +83,5 @@ if __name__ == '__main__':      # Definiere die __main__ Funktion
     # Die obige Funktion "berechne_roemische_zahl" 
     # wird nur dann in der Kommandozeile ausgeführt...
     # ... wenn man sie hier in der __main__ Funktion aufruft
-    print(berechne_roemische_zahl(args.arabische_zahl))
+    roemische_zahl = RoemischeZahl(args.arabische_zahl)
+    roemische_zahl.ausgabe()
