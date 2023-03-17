@@ -8,6 +8,14 @@ from roemische_zahl import berechne_roemische_zahl, RoemischeZahl
 
 class roemische_zahl_test(unittest.TestCase):   # Definiere die Test Klasse "roemische_zahl_test"
     
+    def teste_roemische_zahl_initialisierung(self):
+        r1 = RoemischeZahl(0)
+        self.assertEqual(r1.arabische_zahl, 0)
+        self.assertEqual(r1.roemische_zahl, '')
+        r2 = RoemischeZahl(-1)
+        self.assertEqual(r2.arabische_zahl, 0)
+        self.assertEqual(r2.roemische_zahl, '')
+    
     def teste_roemische_zahl_addition(self):
         r1 = RoemischeZahl(7)
         self.assertEqual(r1.roemische_zahl, 'VII')
@@ -32,13 +40,32 @@ class roemische_zahl_test(unittest.TestCase):   # Definiere die Test Klasse "roe
         r = r1 * r2
         self.assertEqual(r.roemische_zahl, 'XXVIII')
     
-    def teste_roemische_zahl_multiplikation(self):
+    def teste_roemische_zahl_division_1(self):
         r1 = RoemischeZahl(33)
         self.assertEqual(r1.roemische_zahl, 'XXXIII')
         r2 = RoemischeZahl(11)
         self.assertEqual(r2.roemische_zahl, 'XI')
         r = r1 // r2
         self.assertEqual(r.roemische_zahl, 'III')
+    
+    def teste_roemische_zahl_division_2(self):
+        r1 = RoemischeZahl(33)
+        self.assertEqual(r1.roemische_zahl, 'XXXIII')
+        r2 = RoemischeZahl(0)
+        self.assertEqual(r2.roemische_zahl, '')
+        try:
+            r = r1 // r2
+        except ZeroDivisionError:
+            self.assertEqual(r2.roemische_zahl, '')
+    
+    def teste_roemische_zahl_division_3(self):
+        r1 = RoemischeZahl(11)
+        self.assertEqual(r1.roemische_zahl, 'XI')
+        r2 = RoemischeZahl(33)
+        self.assertEqual(r2.roemische_zahl, 'XXXIII')
+        r = r1 // r2
+        self.assertEqual(r.arabische_zahl, 0)
+        self.assertEqual(r.roemische_zahl, '')
     
     def teste_roemische_zahl_0(self):           # Definiere die Testfunktion "teste_roemische_zahl_0"
         ergebnis = berechne_roemische_zahl(-1)  # Rufe die Funktion berechne_roemische_zahl mit -1 auf und speichere den Rückgabewert in der Variablen "ergebnis"

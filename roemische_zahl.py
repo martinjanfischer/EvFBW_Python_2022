@@ -51,6 +51,8 @@ def berechne_roemische_zahl(arabische_zahl):
 
 class RoemischeZahl:
     def __init__(self, arabische_zahl):
+        if arabische_zahl < 0:
+            arabische_zahl = 0
         self.arabische_zahl = arabische_zahl
         self.roemische_zahl = berechne_roemische_zahl(arabische_zahl)
     
