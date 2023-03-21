@@ -37,12 +37,7 @@ Dazu musst Du das folgende Kommando ausführen
     pip freeze > requirements.txt
 ```
 
-## 10. & 17. November & 8. Dezember 2022
-Wir beginnen mit den Grundlagen
-- Hallo Welt Programm
-- Römische Zahl aus Arabischer Zahl
-
-### hallo_welt_bunt.py
+## Hallo Welt Programm
 1. Führe folgende Kommandos aus
 ```
     pip install PyQt5
@@ -59,7 +54,7 @@ in dem der Text "Hallo Welt, mein Name ist ..." angezeigt wird.
 ```
 7. Das Programm zeigt jetzt Deinen Namen.
 
-### roemische_zahl.py
+## Römische Zahl aus Arabischer Zahl
 Das Programm erwartet ein eine Arabische Zahl als Argument.
 1. Wenn keine Arabische Zahl angegeben wird, wird ein Hilfetext angezeigt.
 Führe folgendes Kommando aus
@@ -76,7 +71,7 @@ Führe folgendes Kommando mit dem Argument 7 aus
     VII
 ```
 
-### roemische_zahl_test.py
+## Test für Römische Zahl aus Arabischer Zahl
 Das Programm testet das eigentliche Programm zur Berechnung der Römischen Zahl.
 Dieses Testprogramm ist Euer Sicherheitsnetz und gibt Euch Roten Alarm
 wenn das eigentliche Programm fehlerhaft arbeitet.
@@ -114,12 +109,22 @@ Ran 2 tests in 0.007s
 FAILED (failures=1)
 ```
 
-## 15. Dezember 2022
+## Computerspiel Dimorphos
+Führe folgendes Kommando im Hauptverzeichnis aus
+```
+    python dimorphos
+```
+oder wechsle zuerst in das Unterverzeichnis dimorphos um das Programm auszuführen
+```
+    cd dimorphos
+    python .
+```
+
+### git
 Wir programmieren diesmal nicht, sondern lernen 
 einerseits die Versionskontrolle git
 und andererseits den Debugger in PyCharm kennen.
 
-### git
 Wir klicken im Windows Explorer mit der rechten Maustaste 
 auf das Verzeichnis EvFBW_Python_2022
 und wählen das Kontextmenü "TortoiseGit, Log".
