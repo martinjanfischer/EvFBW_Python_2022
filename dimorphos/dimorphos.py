@@ -59,6 +59,9 @@ class Dimorphos:
         level_ansicht.bilder_asteroiden.append(bild_asteroid_1)
         level_ansicht.bilder_asteroiden.append(bild_asteroid_2)
         
+        bild_Sus_1 = lade_bild("Banana_alien")
+        level_ansicht.bild_Banana_alien=bild_Sus_1
+
         # Die Level Ansicht bekommt das ausgewählte Raumschiff der Start Ansicht
         level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
         

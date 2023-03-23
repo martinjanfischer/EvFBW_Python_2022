@@ -194,6 +194,8 @@ class LevelAnsicht(Ansicht):
         # Leere Level Liste
         self.level = []
         self.aktuelles_level = 0
+
+        self.bild_Banana_alien=None
     
     def _aktuelles_level(self):
         if len(self.level) <= 0 or self.aktuelles_level < 0 or self.aktuelles_level >= len(self.level):
