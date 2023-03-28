@@ -36,8 +36,12 @@ class Dimorphos:
         self.uhr = pygame.time.Clock()              # Zeitgeber
         self.letzte_zeit = pygame.time.get_ticks() / 1000
         
+        # Highsore
+        self.highscore = {}
+        self._lade_highscore()
+        
         # Ansichten
-        start_ansicht = StartAnsicht()
+        start_ansicht = StartAnsicht(self.highscore)
         level_ansicht = LevelAnsicht()
 
         self.bild_antrieb_1 = lade_bild("nachbrenner")
@@ -79,10 +83,6 @@ class Dimorphos:
         self.ansichten.append(start_ansicht)
         self.ansichten.append(level_ansicht)
         self.aktuelle_ansicht = self.START_ANSICHT
-        
-        # Highsore
-        self.highscore = {}
-        self._lade_highscore()
         
         return self
     
@@ -129,6 +129,7 @@ class Dimorphos:
                     level_ansicht.aktuelles_level = 0
                     self.aktuelle_ansicht = self.START_ANSICHT
                     self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
+                    self.highscore[level_ansicht.score] = "Jonah"
                 # Starte Spiel
                 elif (self.aktuelle_ansicht == self.START_ANSICHT
                     and event.key == pygame.K_RETURN # Enter-Taste gedrückt

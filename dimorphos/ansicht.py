@@ -29,7 +29,7 @@ class StartAnsicht(Ansicht):
     
     AUFWAERTS = Vector2(0, -1)
     
-    def __init__(self):
+    def __init__(self, highscore):
         super().__init__() # Aufruf Basis Klassen Konstruktor Funktion
         
         # Text
@@ -43,6 +43,8 @@ class StartAnsicht(Ansicht):
         
         self.spiel_level_schrift = pygame.font.Font(None, 48)
         self.spiel_level_farbe = pygame.Color(255, 255, 0, 255)
+        
+        self.highscore = highscore
         
         # Weltraum
         self.hintergrund = lade_bild("hintergrund.magenta", False)
@@ -129,6 +131,10 @@ class StartAnsicht(Ansicht):
         zeige_text(self.leinwand, self.spiel_titel_text, self.spiel_titel_schrift, self.spiel_titel_farbe, position)
         position = Vector2(0, self.leinwand.get_height() * 1/4) + Vector2(self.leinwand.get_size()) / 2
         zeige_text(self.leinwand, self.spiel_start_text, self.spiel_start_schrift, self.spiel_start_farbe, position)
+        
+        text = self.highscore[1]
+        #for score, name in enumerate(self.highscore):
+        #    zeige_text(self.leinwand, name + " " + str(score), self.spiel_level_schrift, self.spiel_level_farbe, position = Vector2(10.10))
         
         # Zeichne Level Text
         position = Vector2(self.leinwand.get_size()) / 2
