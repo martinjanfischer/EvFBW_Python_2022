@@ -36,8 +36,12 @@ class Dimorphos:
         self.uhr = pygame.time.Clock()              # Zeitgeber
         self.letzte_zeit = pygame.time.get_ticks() / 1000
         
+        # Highsore
+        self.highscore = {}
+        self._lade_highscore()
+        
         # Ansichten
-        start_ansicht = StartAnsicht()
+        start_ansicht = StartAnsicht(self.highscore)
         level_ansicht = LevelAnsicht()
 
         self.bild_antrieb_1 = lade_bild("nachbrenner")
@@ -85,10 +89,6 @@ class Dimorphos:
         self.ansichten.append(level_ansicht)
         self.aktuelle_ansicht = self.START_ANSICHT
         
-        # Highsore
-        self.highscore = {}
-        self._lade_highscore()
-        
         return self
     
     def __exit__(self, exc_type, exc_value, traceback):          # Destruktor Funktion
@@ -133,18 +133,22 @@ class Dimorphos:
                     level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
                     level_ansicht.aktuelles_level = 0
                     self.aktuelle_ansicht = self.START_ANSICHT
-                    self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
+                    self.highscore[level_ansicht.score] = "Jonah"
+                    start_ansicht.initialisiere_spiel_elemente()
                 # Starte Spiel
                 elif (self.aktuelle_ansicht == self.START_ANSICHT
                     and event.key == pygame.K_RETURN # Enter-Taste gedrückt
                 ):
+
                     start_ansicht = self.ansichten[self.START_ANSICHT]
                     level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
                     level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
                     level_ansicht.level = start_ansicht.level[start_ansicht.ausgewaehltes_level]
                     level_ansicht.aktuelles_level = 0
                     self.aktuelle_ansicht = self.LEVEL_ANSICHT
-                    self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
+                    level_ansicht.anzahl_asteroiden = 6
+                    level_ansicht.score = 0
+                    level_ansicht.initialisiere_spiel_elemente()
                 # Level Gewonnen: Nächstes Level
                 elif (self.aktuelle_ansicht == self.LEVEL_ANSICHT
                     and event.key == pygame.K_RETURN # Enter-Taste gedrückt

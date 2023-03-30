@@ -109,7 +109,11 @@ class Asteroid(SpielElement):
         self.groesse = groesse
         self.winkel = 0
         super().__init__(position, geschwindigkeit, bild)
-    
+
+    def kollidiert(self, anderes_element):                  # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
+        distanz = self.position.distance_to(anderes_element.position)
+        return distanz < self.radius * self.groesse
+
     def bewege(self, oberflaeche, zeitschritt):          # Verändere Mitglied Funktion der Klasse SpielElement
         super().bewege(oberflaeche, zeitschritt)
         self.winkel += self.dreh_geschwindigkeit * zeitschritt

@@ -29,7 +29,7 @@ class StartAnsicht(Ansicht):
     
     AUFWAERTS = Vector2(0, -1)
     
-    def __init__(self):
+    def __init__(self, highscore):
         super().__init__() # Aufruf Basis Klassen Konstruktor Funktion
         
         # Text
@@ -43,6 +43,11 @@ class StartAnsicht(Ansicht):
         
         self.spiel_level_schrift = pygame.font.Font(None, 48)
         self.spiel_level_farbe = pygame.Color(255, 255, 0, 255)
+        
+        self.spiel_highscore_schrift = pygame.font.Font(None, 32)
+        self.spiel_highscore_farbe = pygame.Color('tomato')
+        
+        self.highscore = highscore
         
         # Weltraum
         self.hintergrund = lade_bild("hintergrund.magenta", False)
@@ -130,6 +135,24 @@ class StartAnsicht(Ansicht):
         position = Vector2(0, self.leinwand.get_height() * 1/4) + Vector2(self.leinwand.get_size()) / 2
         zeige_text(self.leinwand, self.spiel_start_text, self.spiel_start_schrift, self.spiel_start_farbe, position)
         
+        # Sortiere nach Punkten
+        scores = list(self.highscore.keys())
+        scores.sort(reverse=True)
+        highscore = {i: self.highscore[i] for i in scores}
+        
+        # Zeige Highscore mit zehn Einträgen
+        position = Vector2(self.leinwand.get_size())
+        position.x *= 1/ 8
+        position.y *= 1/ 16
+        zeige_text(self.leinwand, 'Top Ten Highscore', self.spiel_level_schrift, self.spiel_highscore_farbe, position)
+        position.y += 32
+        for index, (score, name) in enumerate(highscore.items()):
+            text = name + " " + str(score)
+            zeige_text(self.leinwand, text, self.spiel_highscore_schrift, self.spiel_highscore_farbe, position)
+            position.y += 24
+            if index >= 9:
+                break
+        
         # Zeichne Level Text
         position = Vector2(self.leinwand.get_size()) / 2
         zeige_text(self.leinwand, self.ausgewaehltes_level, self.spiel_level_schrift, self.spiel_level_farbe, position)
@@ -162,7 +185,6 @@ class LevelAnsicht(Ansicht):
 
         # spielpunkte
         self.score = 0
-        self.score_text = str(self.score)
         
         # Text
         self.spiel_vorbei_schrift = pygame.font.Font(None, 64)
@@ -336,7 +358,7 @@ class LevelAnsicht(Ansicht):
         if self.spiel_vorbei_text:
             position = Vector2(self.leinwand.get_size()) / 2
             zeige_text(self.leinwand, self.spiel_vorbei_text, self.spiel_vorbei_schrift, self.spiel_vorbei_farbe, position)
-
+        
         position = Vector2(self.leinwand.get_size()) / 16
         zeige_text(self.leinwand, str(self.score), self.spiel_vorbei_schrift, pygame.Color("tomato"), position)
     
