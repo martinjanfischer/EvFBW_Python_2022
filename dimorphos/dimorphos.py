@@ -58,11 +58,13 @@ class Dimorphos:
         # Füge neue Asteroidenbilder in die Liste der Ansichten hinzu
         bild_asteroid_1 = lade_bild("asteroid")
         bild_asteroid_2 = lade_bild("pretty_asteroid.001")
+        bild_asteroid_3 = lade_bild("Noob_ist_sus_komet")
         start_ansicht.bilder_asteroiden.append(bild_asteroid_1)
         start_ansicht.bilder_asteroiden.append(bild_asteroid_2)
+        start_ansicht.bilder_asteroiden.append(bild_asteroid_3)
         level_ansicht.bilder_asteroiden.append(bild_asteroid_1)
         level_ansicht.bilder_asteroiden.append(bild_asteroid_2)
-        
+        level_ansicht.bilder_asteroiden.append(bild_asteroid_3)
         bild_Sus_1 = lade_bild("Banana_alien")
         level_ansicht.bild_Banana_alien=bild_Sus_1
 
