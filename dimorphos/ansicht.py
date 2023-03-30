@@ -71,7 +71,7 @@ class StartAnsicht(Ansicht):
             # Finde eine zufällige Position für den Asteroiden
             position = zufaellige_position(self.leinwand, False)
             # Füge Asteroid zur Liste hinzu
-            bild_asteroid = self.bilder_asteroiden[random.randrange(2)]
+            bild_asteroid = self.bilder_asteroiden[random.randrange(len(self.bilder_asteroiden))]
             self.asteroiden.append(Asteroid(position, bild_asteroid, random.uniform(.5, 5)))
     
     def _hole_spiel_elemente(self):
@@ -233,7 +233,7 @@ class LevelAnsicht(Ansicht):
                 if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
                     break
             # Füge Asteroid zur Liste hinzu
-            bild_asteroid = self.bilder_asteroiden[random.randrange(2)]
+            bild_asteroid = self.bilder_asteroiden[random.randrange(len(self.bilder_asteroiden))]
             self.asteroiden.append(Asteroid(position, bild_asteroid))
     
     def _hole_spiel_elemente(self):
