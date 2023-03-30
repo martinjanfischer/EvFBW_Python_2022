@@ -2,7 +2,7 @@ import pygame
 import random
 from pygame.math import Vector2
 from pygame.mixer import Sound
-from spielelement import SpielElement, Asteroid, Explosion
+from spielelement import SpielElement, Asteroid, Explosion, Banana_Alien
 from nuetzliches import lade_bild, lade_ton, zufaellige_position, zeige_text
 
 class Ansicht:
@@ -231,7 +231,8 @@ class LevelAnsicht(Ansicht):
         
         # Leere Asteroiden Liste
         self.asteroiden = []
-        
+        position = zufaellige_position(self.leinwand, True)
+        self.alien=Banana_Alien(position, self.bild_Banana_alien)
         # Leere Explosionen Liste
         self.explosionen = []
         
@@ -264,6 +265,8 @@ class LevelAnsicht(Ansicht):
             spiel_elemente = [*self.asteroiden, self.raumschiff, *self.laser, *self.explosionen]
         else:
             spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen]
+        if self.alien:
+            spiel_elemente.append(self.alien)
         return spiel_elemente
 
     def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
@@ -302,7 +305,7 @@ class LevelAnsicht(Ansicht):
         # Bewege alle SpielElemente pro Bild ein wenig weiter
         for spielelement in self._hole_spiel_elemente():
             spielelement.bewege(self.leinwand, zeitschritt)
-        
+
         # Treffer: Laser auf Asteroid, entferne beide
         for laser in self.laser[:]:
             for asteroid in self.asteroiden[:]:
@@ -310,11 +313,22 @@ class LevelAnsicht(Ansicht):
                     # Entferne Laser und Asteroid
                     self.asteroiden.remove(asteroid)
                     self.laser.remove(laser)
-                    
+
                     # Punkte
                     self.score += 1
                     break
-        
+
+        # Treffer: Laser auf Banana_alien entferne beide
+        for laser in self.laser[:]:
+            if self.alien and self.alien.kollidiert(laser):
+                # Entferne Laser und Asteroid
+                self.alien= None
+                self.laser.remove(laser)
+
+                # Punkte
+                self.score += 1
+                break
+
         # Entferne Laser am Bildrand
         for laser in self.laser[:]:
             if not self.leinwand.get_rect().collidepoint(laser.position):
