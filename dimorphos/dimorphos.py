@@ -196,8 +196,8 @@ class Dimorphos:
         # Standardwerte
         if not self.highscore:
             self.highscore = {
-                1000000 : "Martin",
-                100000 : "Martin",
+                1000000 : "kevin",
+                100000 : "kevin",
                 10000 : "Martin",
                 1000 : "Martin",
                 100 : "Martin",
