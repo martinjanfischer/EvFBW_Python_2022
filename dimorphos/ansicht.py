@@ -262,9 +262,11 @@ class LevelAnsicht(Ansicht):
     def _hole_spiel_elemente(self):
         # Liste mit allen Spiel Elementen
         if self.raumschiff:
-            spiel_elemente = [*self.asteroiden, self.raumschiff, *self.laser, *self.explosionen, self.alien]
+            spiel_elemente = [*self.asteroiden, self.raumschiff, *self.laser, *self.explosionen]
         else:
-            spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen, self.alien]
+            spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen]
+        if self.alien:
+            spiel_elemente.append(self.alien)
         return spiel_elemente
 
     def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
@@ -303,7 +305,7 @@ class LevelAnsicht(Ansicht):
         # Bewege alle SpielElemente pro Bild ein wenig weiter
         for spielelement in self._hole_spiel_elemente():
             spielelement.bewege(self.leinwand, zeitschritt)
-        
+
         # Treffer: Laser auf Asteroid, entferne beide
         for laser in self.laser[:]:
             for asteroid in self.asteroiden[:]:
@@ -311,11 +313,22 @@ class LevelAnsicht(Ansicht):
                     # Entferne Laser und Asteroid
                     self.asteroiden.remove(asteroid)
                     self.laser.remove(laser)
-                    
+
                     # Punkte
                     self.score += 1
                     break
-        
+
+        # Treffer: Laser auf Banana_alien entferne beide
+        for laser in self.laser[:]:
+            if self.alien and self.alien.kollidiert(laser):
+                # Entferne Laser und Asteroid
+                self.alien= None
+                self.laser.remove(laser)
+
+                # Punkte
+                self.score += 1
+                break
+
         # Entferne Laser am Bildrand
         for laser in self.laser[:]:
             if not self.leinwand.get_rect().collidepoint(laser.position):
