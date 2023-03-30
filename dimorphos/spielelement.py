@@ -194,4 +194,34 @@ class Banana_Alien(SpielElement):
             blit_position = self.position - gedrehte_oberflaeche_groesse * 0.5
             oberflaeche.blit(gedrehte_oberflaeche, blit_position)
 
-            self.bild.Banana_alien = lade_bild("nachbrenner")
+
+class kakashi(SpielElement):
+    """Die Klasse kakashi ist ein Mutterschiff und hat andere Eigenschaften als SpielElement"""
+
+    GESCHWINDIGKEIT_MINIMUM = 50
+    GESCHWINDIGKEIT_MAXIMUM = 10000
+    DREH_GESCHWINDIGKEIT_MAXIMUM = 300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+    def __init__(self, position, bild, groesse=1):  # Konstruktor Funktion
+        geschwindigkeit = zufaellige_geschwindigkeit(
+            self.GESCHWINDIGKEIT_MINIMUM, self.GESCHWINDIGKEIT_MAXIMUM)
+        dreh_geschwindigkeit = zufaellige_geschwindigkeit(
+            - self.DREH_GESCHWINDIGKEIT_MAXIMUM, self.DREH_GESCHWINDIGKEIT_MAXIMUM)
+        self.dreh_geschwindigkeit = dreh_geschwindigkeit.x
+        self.groesse = groesse
+        self.winkel = 0
+        super().__init__(position, geschwindigkeit, bild)
+
+    def kollidiert(self, anderes_element):  # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion
+        distanz = self.position.distance_to(anderes_element.position)
+        return distanz < self.radius * self.groesse
+
+    def bewege(self, oberflaeche, zeitschritt):  # Verändere Mitglied Funktion der Klasse SpielElement
+        super().bewege(oberflaeche, zeitschritt)
+        self.winkel += self.dreh_geschwindigkeit * zeitschritt
+
+    def zeichne(self, oberflaeche, zeitschritt):  # Verändere Mitglied Funktion der Klasse SpielElement
+        gedrehte_oberflaeche = rotozoom(self.bild, self.winkel, self.groesse)
+        gedrehte_oberflaeche_groesse = Vector2(gedrehte_oberflaeche.get_size())
+        blit_position = self.position - gedrehte_oberflaeche_groesse * 0.5
+        oberflaeche.blit(gedrehte_oberflaeche, blit_position)
