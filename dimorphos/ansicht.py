@@ -2,7 +2,7 @@ import pygame
 import random
 from pygame.math import Vector2
 from pygame.mixer import Sound
-from spielelement import SpielElement, Asteroid, Explosion
+from spielelement import SpielElement, Asteroid, Explosion, Banana_Alien
 from nuetzliches import lade_bild, lade_ton, zufaellige_position, zeige_text
 
 class Ansicht:
@@ -231,7 +231,8 @@ class LevelAnsicht(Ansicht):
         
         # Leere Asteroiden Liste
         self.asteroiden = []
-        
+        position = zufaellige_position(self.leinwand, True)
+        self.alien=Banana_Alien(position, self.bild_Banana_alien)
         # Leere Explosionen Liste
         self.explosionen = []
         
@@ -261,9 +262,9 @@ class LevelAnsicht(Ansicht):
     def _hole_spiel_elemente(self):
         # Liste mit allen Spiel Elementen
         if self.raumschiff:
-            spiel_elemente = [*self.asteroiden, self.raumschiff, *self.laser, *self.explosionen]
+            spiel_elemente = [*self.asteroiden, self.raumschiff, *self.laser, *self.explosionen, self.alien]
         else:
-            spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen]
+            spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen, self.alien]
         return spiel_elemente
 
     def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung

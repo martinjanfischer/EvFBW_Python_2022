@@ -193,5 +193,3 @@ class Banana_Alien(SpielElement):
             gedrehte_oberflaeche_groesse = Vector2(gedrehte_oberflaeche.get_size())
             blit_position = self.position - gedrehte_oberflaeche_groesse * 0.5
             oberflaeche.blit(gedrehte_oberflaeche, blit_position)
-
-            self.bild.Banana_alien = lade_bild("nachbrenner")
