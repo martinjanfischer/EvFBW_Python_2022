@@ -1,7 +1,7 @@
 import pygame
 import random
 from pygame.math import Vector2
-from pygame.mixer import Sound
+#from pygame.mixer import Sound
 from spielelement import SpielElement, Asteroid, Explosion, Banana_Alien
 from nuetzliches import lade_bild, lade_ton, zufaellige_position, zeige_text
 
@@ -50,7 +50,7 @@ class StartAnsicht(Ansicht):
         self.highscore = highscore
         
         # Weltraum
-        self.hintergrund = lade_bild("hintergrund.magenta", False)
+        self.hintergrund = None
         
         # Leere Raumschiff Liste
         self.ausgewaehltes_raumschiff = 0
@@ -176,7 +176,6 @@ class StartAnsicht(Ansicht):
 class LevelAnsicht(Ansicht):
     """Die Klasse LevelAnsicht ist eine Ansicht und hat andere Eigenschaften"""
     
-    MIN_ASTEROIDEN_DISTANZ = 250
     SPIEL_VORBEI_GEWONNEN = "Gewonnen!"
     SPIEL_VORBEI_VERLOREN = "Verloren!"
     
@@ -191,33 +190,12 @@ class LevelAnsicht(Ansicht):
         self.spiel_vorbei_text = ""
         self.spiel_vorbei_farbe = pygame.Color(255, 255, 255, 255)
         
-        # Weltraum
-        self.hintergrund = lade_bild("hintergrund.magenta", False)
-        
-        # Leere Laser Liste
-        self.laser = []
-        
-        # Kein Raumschiff
-        self.raumschiff = None
-        
-        # Leere Asteroiden Liste
-        self.bilder_asteroiden = []
-        self.asteroiden = []
-        self.anzahl_asteroiden = 6
-        
-        # Leere Explosionen Liste
-        self.bild_explosion = lade_bild("explosion")
-        self.ton_explosion = lade_ton("explosion")
-        self.explosionen = []
-        
         # Leerer Text
         self.spiel_vorbei_text = ""
         
         # Leere Level Liste
         self.level = []
         self.aktuelles_level = 0
-
-        self.bild_Banana_alien=None
     
     def _aktuelles_level(self):
         if len(self.level) <= 0 or self.aktuelles_level < 0 or self.aktuelles_level >= len(self.level):
@@ -225,148 +203,69 @@ class LevelAnsicht(Ansicht):
         
         return self.level[self.aktuelles_level]
     
-    def initialisiere_spiel_elemente(self):
-        # Leere Laser Liste
-        self.laser = []
-        
-        # Leere Asteroiden Liste
-        self.asteroiden = []
-        position = zufaellige_position(self.leinwand, True)
-        self.alien=Banana_Alien(position, self.bild_Banana_alien)
-        # Leere Explosionen Liste
-        self.explosionen = []
-        
+    def initialisiere_spiel_elemente(self, raumschiff):
         # Leerer Text
         self.spiel_vorbei_text = ""
         
-        if len(self.level) <= 0 or self.aktuelles_level < 0 or self.aktuelles_level >= len(self.level):
-            return
-        
         aktuelles_level = self._aktuelles_level()
-        if not aktuelles_level:
-            return
-        
-        # Neue Asteroiden mit zufälliger Platzierung und Geschwindigkeit
-        for _ in range(self.anzahl_asteroiden):
-            # Finde eine zufällige Position für den Asteroiden
-            # mit einem gewissen Abstand zum Raumschiff
-            while True:
-                position = zufaellige_position(self.leinwand, False)
-                distanz = position.distance_to(self.raumschiff.position)
-                if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
-                    break
-            # Füge Asteroid zur Liste hinzu
-            bild_asteroid = self.bilder_asteroiden[random.randrange(len(self.bilder_asteroiden))]
-            self.asteroiden.append(Asteroid(position, bild_asteroid))
+        if aktuelles_level:
+            aktuelles_level.initialisiere_spiel_elemente(self.leinwand, raumschiff)
     
     def _hole_spiel_elemente(self):
-        # Liste mit allen Spiel Elementen
-        if self.raumschiff:
-            spiel_elemente = [*self.asteroiden, self.raumschiff, *self.laser, *self.explosionen]
-        else:
-            spiel_elemente = [*self.asteroiden, *self.laser, *self.explosionen]
-        if self.alien:
-            spiel_elemente.append(self.alien)
+        aktuelles_level = self._aktuelles_level()
+        if aktuelles_level:
+            spiel_elemente = aktuelles_level.hole_spiel_elemente()
         return spiel_elemente
-
+    
     def behandle_eingabe_ereignis(self, event, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
-        if self.raumschiff:
-            if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
-                laser = self.raumschiff.schiesse()
+        if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
+            aktuelles_level = self._aktuelles_level()
+            if aktuelles_level and aktuelles_level.raumschiff:
+                laser = aktuelles_level.raumschiff.schiesse()
                 # Füge Laser in Liste hinzu
-                for l in laser:
-                    self.laser.append(l)
-
+                aktuelles_level.laser.extend(laser)
+    
     def behandle_eingaben(self, zeitschritt):      # Öffentliche Mitglied Funktion für Eingabebehandlung
         # Hole Tastatur Eingaben
         wurde_taste_gedrueckt = pygame.key.get_pressed()
         
         # Raumschiff Steuerung
-        if self.raumschiff:
+        aktuelles_level = self._aktuelles_level()
+        if aktuelles_level and aktuelles_level.raumschiff:
             # Drehe Raumschiff
             if wurde_taste_gedrueckt[pygame.K_d] or wurde_taste_gedrueckt[pygame.K_RIGHT]:
-                self.raumschiff.drehe(uhrzeigersinn=True)
+                aktuelles_level.raumschiff.drehe(uhrzeigersinn=True)
             # Drehe Raumschiff
             elif wurde_taste_gedrueckt[pygame.K_a] or wurde_taste_gedrueckt[pygame.K_LEFT]:
-                self.raumschiff.drehe(uhrzeigersinn=False)
+                aktuelles_level.raumschiff.drehe(uhrzeigersinn=False)
             # Schub nach vorne
             if wurde_taste_gedrueckt[pygame.K_w] or wurde_taste_gedrueckt[pygame.K_UP]:
-                self.raumschiff.beschleunige(zeitschritt)
+                aktuelles_level.raumschiff.beschleunige(zeitschritt)
             # Schiesse
             if wurde_taste_gedrueckt[pygame.K_SPACE]:
-                laser = self.raumschiff.schiesse()
+                laser = aktuelles_level.raumschiff.schiesse()
                 # Füge Laser in Liste hinzu
-                for l in laser:
-                    self.laser.append(l)
+                aktuelles_level.laser.extend(laser)
     
     def behandle_spiele_logik(self, zeitschritt):  # Öffentliche Mitglied Funktion für Spielelogik
         aktuelles_level = self._aktuelles_level()
-        
-        # Bewege alle SpielElemente pro Bild ein wenig weiter
-        for spielelement in self._hole_spiel_elemente():
-            spielelement.bewege(self.leinwand, zeitschritt)
-
-        # Treffer: Laser auf Asteroid, entferne beide
-        for laser in self.laser[:]:
-            for asteroid in self.asteroiden[:]:
-                if asteroid.kollidiert(laser):
-                    # Entferne Laser und Asteroid
-                    self.asteroiden.remove(asteroid)
-                    self.laser.remove(laser)
-
-                    # Punkte
-                    self.score += 1
-                    break
-
-        # Treffer: Laser auf Banana_alien entferne beide
-        for laser in self.laser[:]:
-            if self.alien and self.alien.kollidiert(laser):
-                # Entferne Laser und Asteroid
-                self.alien= None
-                self.laser.remove(laser)
-
-                # Punkte
-                self.score += 1
-                break
-
-        # Entferne Laser am Bildrand
-        for laser in self.laser[:]:
-            if not self.leinwand.get_rect().collidepoint(laser.position):
-                self.laser.remove(laser)
-        
-        # Kollision: Raumschiff mit Asteroid, entferne Raumschiff
-        if self.raumschiff:
-            for asteroid in self.asteroiden:
-                if asteroid.kollidiert(self.raumschiff):
-                    # Explosion
-                    position = self.raumschiff.position
-                    geschwindigkeit = 0.5 * self.raumschiff.geschwindigkeit + 0.5 * asteroid.geschwindigkeit
-                    self.explosion(position, geschwindigkeit)
-                    
-                    # Entferne Raumschiff
-                    self.raumschiff = None
-                    self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
-                    self.spiel_vorbei_farbe = pygame.Color("tomato")
-                    break
-        
-        # Gewonnen: Keine Asteroiden übrig
-        if not self.asteroiden and self.raumschiff:
-            self.spiel_vorbei_text = self.SPIEL_VORBEI_GEWONNEN
-            self.spiel_vorbei_farbe = pygame.Color("gold")
-        
-        # Erzeuge neue Asteroiden
         if aktuelles_level:
-            self.anzahl_asteroiden = aktuelles_level.behandle_spielelogik(self.score, self.asteroiden, self.anzahl_asteroiden, self.bilder_asteroiden, self.leinwand)
+            self.score += aktuelles_level.behandle_spiele_logik(self.score, self.leinwand, zeitschritt)
+        
+        if aktuelles_level:
+            # Gewonnen: Keine Asteroiden übrig
+            if aktuelles_level.gewonnen():
+                self.spiel_vorbei_text = self.SPIEL_VORBEI_GEWONNEN
+                self.spiel_vorbei_farbe = pygame.Color("gold")
+            # Verloren: Kein Raumschiff
+            elif aktuelles_level.verloren():
+                self.spiel_vorbei_text = self.SPIEL_VORBEI_VERLOREN
+                self.spiel_vorbei_farbe = pygame.Color("tomato")
     
     def zeichne_spiele_elemente(self, zeitschritt): # Öffentliche Mitglied Funktion für das Zeichnen
         aktuelles_level = self._aktuelles_level()
-        
-        # Zeichne Hintergrundbild neu
-        self.leinwand.blit(self.hintergrund, (0, 0))
-        
-        # Zeichne alle SpielElemente in diesem Bild
-        for spielelement in self._hole_spiel_elemente():
-            spielelement.zeichne(self.leinwand, zeitschritt)
+        if aktuelles_level:
+            aktuelles_level.zeichne_spiele_elemente(self.leinwand, zeitschritt)
         
         # Zeichne Text
         if self.spiel_vorbei_text:
@@ -377,27 +276,10 @@ class LevelAnsicht(Ansicht):
         zeige_text(self.leinwand, str(self.score), self.spiel_vorbei_schrift, pygame.Color("tomato"), position)
     
     def level_gewonnen(self):
-        aktuelles_level = self._aktuelles_level()
-        
         # Du Gewinnst wenn das Raumschiff noch existiert und der Text anzeigt dass Du gewonnen hast
         # Du Verlierst wenn das Raumschiff nicht existiert oder der Text nicht anzeigt dass Du gewonnen hast
-        return (self.raumschiff and self.spiel_vorbei_text == self.SPIEL_VORBEI_GEWONNEN)
-    
-    def explosion(self, position, geschwindigkeit):
-        # Finde in der Explosionen Liste eine unbenutzte Explosion
-        explosion = None
-        for i, e in enumerate(self.explosionen):
-            if e.explosion.beendet():
-                e.explosion.reset()
-                e.position = position
-                e.geschwindigkeit = geschwindigkeit
-                explosion = e
-                break
-        # Erzeuge eine neue Explosion wenn es keine unbenutzte Explosion gibt
-        if not explosion:
-            explosion = Explosion(position, geschwindigkeit, self.bild_explosion, self.ton_explosion)
-            self.explosionen.append(explosion)
-        # Spiele den Ton für die Explosion ab wenn Du eine Explosion hast
-        if explosion:
-            Sound.play(explosion.ton_explosion)
-
+        aktuelles_level = self._aktuelles_level()
+        if aktuelles_level:
+            return (aktuelles_level.gewonnen())
+        else:
+            return True

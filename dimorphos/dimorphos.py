@@ -10,9 +10,9 @@ import pygame
 import itertools
 from pygame.math import Vector2
 from ansicht import StartAnsicht, LevelAnsicht
-from nuetzliches import lade_bild
+from nuetzliches import lade_bild, lade_ton
 from spielelement import Raumschiff
-from level import EndlosLevel
+from level import Level, EndlosLevel
 
 class Dimorphos:
     """Diese Klasse ist das Spiel"""
@@ -45,6 +45,8 @@ class Dimorphos:
         level_ansicht = LevelAnsicht()
 
         self.bild_antrieb_1 = lade_bild("nachbrenner")
+        hintergrund_1 = lade_bild("hintergrund.magenta", False)
+        hintergrund_2 = lade_bild("weltraum", False)
 
         self.bild_antrieb_2 = lade_bild("nachbrenner_Mouthfullmod")
         # Füge neue Raumschiffe in die Raumschiff-Liste der Start Ansicht hinzu
@@ -54,26 +56,46 @@ class Dimorphos:
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_von_konrad", self.laser_bild, [Vector2(16, -25),Vector2(-16, -25), Vector2(39,-12), Vector2(-39,-12)], self.bild_antrieb_1))
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff.perfect_grafic", self.laser_bild, [Vector2(0, -25)], self.bild_antrieb_1))
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_Mouthfullmod",self.laser_bild, [Vector2(0, -44)], self.bild_antrieb_2))
+        start_ansicht.hintergrund = hintergrund_1
         
         # Füge neue Asteroidenbilder in die Liste der Ansichten hinzu
+        bild_explosion = lade_bild("explosion")
+        ton_explosion = lade_ton("explosion")
         bild_asteroid_1 = lade_bild("asteroid")
         bild_asteroid_2 = lade_bild("pretty_asteroid.001")
         bild_asteroid_3 = lade_bild("Noob_ist_sus_komet")
+        bilder_asteroiden = [bild_asteroid_1, bild_asteroid_2, bild_asteroid_3]
         start_ansicht.bilder_asteroiden.append(bild_asteroid_1)
         start_ansicht.bilder_asteroiden.append(bild_asteroid_2)
         start_ansicht.bilder_asteroiden.append(bild_asteroid_3)
-        level_ansicht.bilder_asteroiden.append(bild_asteroid_1)
-        level_ansicht.bilder_asteroiden.append(bild_asteroid_2)
-        level_ansicht.bilder_asteroiden.append(bild_asteroid_3)
         bild_Sus_1 = lade_bild("Banana_alien")
-        level_ansicht.bild_Banana_alien=bild_Sus_1
-
-        # Die Level Ansicht bekommt das ausgewählte Raumschiff der Start Ansicht
-        level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
         
         # Bereite Level Wörterbuch vor
-        zerstoere_was_du_kannst_level = [EndlosLevel()]
-        karriere_level = []
+        endlos_level = EndlosLevel()
+        endlos_level.anzahl_asteroiden = 3
+        endlos_level.hintergrund = hintergrund_1
+        endlos_level.bild_explosion = bild_explosion
+        endlos_level.ton_explosion = ton_explosion
+        endlos_level.bilder_asteroiden = bilder_asteroiden
+        endlos_level.bild_Banana_alien=bild_Sus_1
+        zerstoere_was_du_kannst_level = [endlos_level]
+        
+        level_1 = Level()
+        level_2 = Level()
+        level_1.anzahl_asteroiden = 3
+        level_2.anzahl_asteroiden = 10
+        level_1.hintergrund = hintergrund_1
+        level_2.hintergrund = hintergrund_2
+        level_1.bild_explosion = bild_explosion
+        level_2.bild_explosion = bild_explosion
+        level_1.ton_explosion = ton_explosion
+        level_2.ton_explosion = ton_explosion
+        level_1.bilder_asteroiden = bilder_asteroiden
+        level_2.bilder_asteroiden = bilder_asteroiden
+        level_1.bild_Banana_alien=bild_Sus_1
+        level_2.bild_Banana_alien=bild_Sus_1
+        karriere_level = [level_1, level_2]
+        
         start_ansicht.level = {}
         start_ansicht.level['Zerstöre was Du kannst'] = zerstoere_was_du_kannst_level
         start_ansicht.level['Karriere'] = karriere_level
@@ -139,16 +161,17 @@ class Dimorphos:
                 elif (self.aktuelle_ansicht == self.START_ANSICHT
                     and event.key == pygame.K_RETURN # Enter-Taste gedrückt
                 ):
-
                     start_ansicht = self.ansichten[self.START_ANSICHT]
                     level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
-                    level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
+                    raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
                     level_ansicht.level = start_ansicht.level[start_ansicht.ausgewaehltes_level]
                     level_ansicht.aktuelles_level = 0
                     self.aktuelle_ansicht = self.LEVEL_ANSICHT
-                    level_ansicht.anzahl_asteroiden = 6
+                    aktuelles_level = level_ansicht._aktuelles_level()
+                    if aktuelles_level:
+                        aktuelles_level.anzahl_asteroiden = 3
                     level_ansicht.score = 0
-                    level_ansicht.initialisiere_spiel_elemente()
+                    level_ansicht.initialisiere_spiel_elemente(raumschiff)
                 # Level Gewonnen: Nächstes Level
                 elif (self.aktuelle_ansicht == self.LEVEL_ANSICHT
                     and event.key == pygame.K_RETURN # Enter-Taste gedrückt
@@ -156,15 +179,16 @@ class Dimorphos:
                     if self.ansichten[self.aktuelle_ansicht].level_gewonnen():
                         start_ansicht = self.ansichten[self.START_ANSICHT]
                         level_ansicht = self.ansichten[self.LEVEL_ANSICHT]
-                        level_ansicht.raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
+                        raumschiff = start_ansicht.raumschiffe[start_ansicht.ausgewaehltes_raumschiff]
                         if level_ansicht.aktuelles_level < len(level_ansicht.level) - 1:
                             self.aktuelle_ansicht = self.LEVEL_ANSICHT
                             level_ansicht.aktuelles_level += 1
+                            level_ansicht.initialisiere_spiel_elemente(raumschiff)
                         else:
                             self.aktuelle_ansicht = self.START_ANSICHT
                             level_ansicht.aktuelles_level = 0
-                        self.ansichten[self.aktuelle_ansicht].initialisiere_spiel_elemente()
-                
+                            start_ansicht.initialisiere_spiel_elemente()
+            
             if self.ansichten[self.aktuelle_ansicht]:
                 self.ansichten[self.aktuelle_ansicht].behandle_eingabe_ereignis(event, zeitschritt)
         
