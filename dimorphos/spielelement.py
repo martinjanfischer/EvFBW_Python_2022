@@ -173,8 +173,9 @@ class Banana_Alien(SpielElement):
     GESCHWINDIGKEIT_MINIMUM = 30
     GESCHWINDIGKEIT_MAXIMUM = 100
     DREH_GESCHWINDIGKEIT_MAXIMUM = 300
-    
-    def __init__(self, position, bild, groesse=1):  # Konstruktor Funktion
+    LASER_GESCHWINDIGKEIT = 500
+
+    def __init__(self, position, bild, laser_bild, groesse=1):  # Konstruktor Funktion
         geschwindigkeit = zufaellige_geschwindigkeit(
             self.GESCHWINDIGKEIT_MINIMUM, self.GESCHWINDIGKEIT_MAXIMUM)
         dreh_geschwindigkeit = zufaellige_geschwindigkeit(
@@ -182,6 +183,10 @@ class Banana_Alien(SpielElement):
         self.dreh_geschwindigkeit = dreh_geschwindigkeit.x
         self.groesse = groesse
         self.winkel = 0
+        self.letzter_schuss_zeitstempel = get_ticks()
+        self.schuss_periode = 200
+        self.richtung = Vector2(AUFWAERTS)
+        self.laser_bild = laser_bild
         super().__init__(position, geschwindigkeit, bild)
     
     def bewege(self, oberflaeche, zeitschritt):  # Verändere Mitglied Funktion der Klasse SpielElement
@@ -194,13 +199,27 @@ class Banana_Alien(SpielElement):
         blit_position = self.position - gedrehte_oberflaeche_groesse * 0.5
         oberflaeche.blit(gedrehte_oberflaeche, blit_position)
 
+    def schiesse(self):
+        # Laser Liste
+        if get_ticks() - self.letzter_schuss_zeitstempel > self.schuss_periode:
+            self.letzter_schuss_zeitstempel = get_ticks()
+            winkel = self.richtung.angle_to(AUFWAERTS)
+            laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT
+            laser = []
+            laser.append(
+                Laser(self.position, laser_geschwindigkeit, self.laser_bild))
+            return laser
+        # Leere Liste
+        else:
+            return []
+
 
 class kakashi(SpielElement):
     """Die Klasse kakashi ist ein Mutterschiff und hat andere Eigenschaften als SpielElement"""
 
     GESCHWINDIGKEIT_MINIMUM = 50
-    GESCHWINDIGKEIT_MAXIMUM = 10000
-    DREH_GESCHWINDIGKEIT_MAXIMUM = 300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+    GESCHWINDIGKEIT_MAXIMUM = 10
+    DREH_GESCHWINDIGKEIT_MAXIMUM =1
 
     def __init__(self, position, bild, groesse=1):  # Konstruktor Funktion
         geschwindigkeit = zufaellige_geschwindigkeit(

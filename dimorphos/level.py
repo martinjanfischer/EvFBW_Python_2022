@@ -29,7 +29,8 @@ class Level:
         self.explosionen = []
         
         # Alien
-        self.bild_Banana_alien=None
+        self.bild_Banana_alien = None
+        self.bild_Laser = None
     
     def initialisiere_spiel_elemente(self, leinwand, raumschiff):
         # Kein Raumschiff
@@ -43,7 +44,7 @@ class Level:
         
         # Alien
         position = zufaellige_position(leinwand, True)
-        self.alien=Banana_Alien(position, self.bild_Banana_alien)
+        self.alien=Banana_Alien(position, self.bild_Banana_alien,self.bild_Laser)
         
         # Leere Asteroiden Liste
         self.asteroiden = []
@@ -118,6 +119,12 @@ class Level:
                     # Entferne Raumschiff
                     self.raumschiff = None
                     break
+        
+        # banana alien schießt: Laser trifft Raumschiff, entferne Raumschiff
+        if self.alien and self.raumschiff:
+             laser = self.alien.schiesse()
+             # Füge Laser in Liste hinzu
+             self.laser.extend(laser)
         
         return score
     

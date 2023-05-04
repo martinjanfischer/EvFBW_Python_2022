@@ -78,6 +78,7 @@ class Dimorphos:
         endlos_level.ton_explosion = ton_explosion
         endlos_level.bilder_asteroiden = bilder_asteroiden
         endlos_level.bild_Banana_alien=bild_Sus_1
+        endlos_level.bild_Laser=self.laser_bild
         zerstoere_was_du_kannst_level = [endlos_level]
         
         level_1 = Level()
@@ -94,6 +95,8 @@ class Dimorphos:
         level_2.bilder_asteroiden = bilder_asteroiden
         level_1.bild_Banana_alien=bild_Sus_1
         level_2.bild_Banana_alien=bild_Sus_1
+        level_1.bild_Laser=self.laser_bild
+        level_2.bild_Laser=self.laser_bild
         karriere_level = [level_1, level_2]
         
         start_ansicht.level = {}
@@ -222,7 +225,7 @@ class Dimorphos:
         # Standardwerte
         if not self.highscore:
             self.highscore = {
-                1000000 : "kevin",
+                1000000 : "Marlene",
                 100000 : "kevin",
                 10000 : "Martin",
                 1000 : "Martin",
