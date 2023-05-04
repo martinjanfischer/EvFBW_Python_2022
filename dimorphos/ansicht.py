@@ -1,7 +1,6 @@
 import pygame
 import random
 from pygame.math import Vector2
-#from pygame.mixer import Sound
 from spielelement import SpielElement, Asteroid, Explosion, Banana_Alien
 from nuetzliches import lade_bild, lade_ton, zufaellige_position, zeige_text
 

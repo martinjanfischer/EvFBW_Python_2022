@@ -30,9 +30,8 @@ class Level:
         
         # Alien
         self.bild_Banana_alien = None
-        self.bild_Laser = None
+        self.bild_laser = None
         self.bild_mutterschiff=None
-        self.laser_bild = None
     
     def initialisiere_spiel_elemente(self, leinwand, raumschiff):
         # Kein Raumschiff
@@ -46,9 +45,9 @@ class Level:
         
         # Alien
         position = zufaellige_position(leinwand, True)
-        self.alien=Banana_Alien(position, self.bild_Banana_alien,self.bild_Laser)
+        self.alien=Banana_Alien(position, self.bild_Banana_alien,self.bild_laser)
         
-        self.mutterschiff = kakashi(position, self.bild_mutterschiff,self.laser_bild,5)
+        self.mutterschiff = kakashi(position, self.bild_mutterschiff,self.bild_laser,5)
         # Leere Asteroiden Liste
         self.asteroiden = []
         
@@ -67,13 +66,14 @@ class Level:
     
     def hole_spiel_elemente(self):
         # Liste mit allen Spiel Elementen
-        spiel_elemente = [*self.asteroiden]
+        spiel_elemente = []
+        if self.mutterschiff:
+            spiel_elemente.append(self.mutterschiff)
+        spiel_elemente.extend(self.asteroiden)
         if self.alien:
             spiel_elemente.append(self.alien)
         if self.raumschiff:
             spiel_elemente.append(self.raumschiff)
-        if self.mutterschiff:
-            spiel_elemente.append(self.mutterschiff)
 
         spiel_elemente.extend([*self.laser, *self.explosionen])
         return spiel_elemente
@@ -88,7 +88,7 @@ class Level:
         # Treffer: Laser auf Asteroid, entferne beide
         for laser in self.laser[:]:
             for asteroid in self.asteroiden[:]:
-                if asteroid.kollidiert(laser):
+                if laser.von_spieler and asteroid.kollidiert(laser):
                     # Entferne Laser und Asteroid
                     self.asteroiden.remove(asteroid)
                     self.laser.remove(laser)
@@ -99,13 +99,27 @@ class Level:
         
         # Treffer: Laser auf Banana_alien entferne beide
         for laser in self.laser[:]:
-            if self.alien and self.alien.kollidiert(laser):
-                # Entferne Laser und Asteroid
+            if self.alien and laser.von_spieler and self.alien.kollidiert(laser):
+                # Entferne Laser und Alien
                 self.alien= None
                 self.laser.remove(laser)
                 
                 # Punkte
                 score += 1
+                break
+        
+        # Treffer: Laser auf Raumschiff entferne beide
+        for laser in self.laser[:]:
+            if self.raumschiff and not laser.von_spieler and self.raumschiff.kollidiert(laser):
+                # Explosion
+                position = self.raumschiff.position
+                geschwindigkeit = 0.5 * laser.geschwindigkeit + 0.5 * self.raumschiff.geschwindigkeit
+                self.explosion(position, geschwindigkeit)
+                
+                # Entferne Laser und Raumschiff
+                self.raumschiff = None
+                self.laser.remove(laser)
+                
                 break
         
         # Entferne Laser am Bildrand
@@ -126,9 +140,9 @@ class Level:
                     self.raumschiff = None
                     break
         
-        # banana alien schießt: Laser trifft Raumschiff, entferne Raumschiff
+        # banana alien schießt
         if self.alien and self.raumschiff:
-             laser = self.alien.schiesse()
+             laser = self.alien.schiesse(self.raumschiff.position)
              # Füge Laser in Liste hinzu
              self.laser.extend(laser)
         

@@ -79,7 +79,7 @@ class Dimorphos:
         endlos_level.ton_explosion = ton_explosion
         endlos_level.bilder_asteroiden = bilder_asteroiden
         endlos_level.bild_Banana_alien=bild_Sus_1
-        endlos_level.bild_Laser=self.laser_bild
+        endlos_level.bild_laser=self.laser_bild
         endlos_level.bild_mutterschiff = bild_mutterschiff
         zerstoere_was_du_kannst_level = [endlos_level]
         

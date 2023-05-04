@@ -37,7 +37,6 @@ class Raumschiff(SpielElement):
     
     MANEUVRIERFAEHIGKEIT = 3
     BESCHLEUNIGUNG = 100
-    LASER_GESCHWINDIGKEIT = 500
     SCHWARZ = (0, 0, 0)
     
     def __init__(self, position, raumschiff_bilddatei_name, laser_bild, positionen_laser, b):      # Konstruktor Funktion
@@ -83,10 +82,9 @@ class Raumschiff(SpielElement):
         if get_ticks() - self.letzter_schuss_zeitstempel > self.schuss_periode:
             self.letzter_schuss_zeitstempel = get_ticks()
             winkel = self.richtung.angle_to(AUFWAERTS)
-            laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT
             laser = []
             for position_laser in self.positionen_laser:
-                laser.append(Laser(self.position + position_laser.rotate(-winkel), laser_geschwindigkeit, self.laser_bild))
+                laser.append(Laser(self.position + position_laser.rotate(-winkel), self.richtung, self.laser_bild, True))
             return laser
         # Leere Liste
         else:
@@ -127,6 +125,13 @@ class Asteroid(SpielElement):
 
 class Laser(SpielElement):
     """Die Klasse Laser ist ein SpielElement und hat andere Eigenschaften"""
+    
+    GESCHWINDIGKEIT = 500
+    
+    def __init__(self, position, richtung, bild, von_spieler):  # Konstruktor Funktion
+        super().__init__(position, richtung * self.GESCHWINDIGKEIT, bild) # Aufruf Basis Klassen Konstruktor Funktion
+        
+        self.von_spieler = von_spieler
     
     def zeichne(self, oberflaeche, zeitschritt):    # Verändere Mitglied Funktion der Klasse SpielElement
         winkel = self.geschwindigkeit.angle_to(AUFWAERTS)
@@ -173,7 +178,6 @@ class Banana_Alien(SpielElement):
     GESCHWINDIGKEIT_MINIMUM = 30
     GESCHWINDIGKEIT_MAXIMUM = 100
     DREH_GESCHWINDIGKEIT_MAXIMUM = 300
-    LASER_GESCHWINDIGKEIT = 500
 
     def __init__(self, position, bild, laser_bild, groesse=1):  # Konstruktor Funktion
         geschwindigkeit = zufaellige_geschwindigkeit(
@@ -184,7 +188,7 @@ class Banana_Alien(SpielElement):
         self.groesse = groesse
         self.winkel = 0
         self.letzter_schuss_zeitstempel = get_ticks()
-        self.schuss_periode = 200
+        self.schuss_periode = 2000
         self.richtung = Vector2(AUFWAERTS)
         self.laser_bild = laser_bild
         super().__init__(position, geschwindigkeit, bild)
@@ -199,15 +203,15 @@ class Banana_Alien(SpielElement):
         blit_position = self.position - gedrehte_oberflaeche_groesse * 0.5
         oberflaeche.blit(gedrehte_oberflaeche, blit_position)
 
-    def schiesse(self):
+    def schiesse(self, ziel_position):
         # Laser Liste
         if get_ticks() - self.letzter_schuss_zeitstempel > self.schuss_periode:
             self.letzter_schuss_zeitstempel = get_ticks()
-            winkel = self.richtung.angle_to(AUFWAERTS)
-            laser_geschwindigkeit = self.richtung * self.LASER_GESCHWINDIGKEIT
+            #Sound.play(self.ton_laser)
+            richtung = ziel_position - self.position
             laser = []
             laser.append(
-                Laser(self.position, laser_geschwindigkeit, self.laser_bild))
+                Laser(self.position, richtung.normalize(), self.laser_bild, False))
             return laser
         # Leere Liste
         else:
