@@ -202,7 +202,7 @@ class kakashi(SpielElement):
     GESCHWINDIGKEIT_MAXIMUM = 10
     DREH_GESCHWINDIGKEIT_MAXIMUM = 3
 
-    def __init__(self, position, bild, groesse=1):  # Konstruktor Funktion
+    def __init__(self, position, bild, bild_laser, groesse=1):  # Konstruktor Funktion
         geschwindigkeit = zufaellige_geschwindigkeit(
             self.GESCHWINDIGKEIT_MINIMUM, self.GESCHWINDIGKEIT_MAXIMUM)
         dreh_geschwindigkeit = zufaellige_geschwindigkeit(
@@ -210,6 +210,7 @@ class kakashi(SpielElement):
         self.dreh_geschwindigkeit = dreh_geschwindigkeit.x
         self.groesse = groesse
         self.winkel = 0
+        self.bild_laser=bild_laser
         super().__init__(position, geschwindigkeit, bild)
 
     def kollidiert(self, anderes_element):  # Alle SpielElement Klassen haben ebenfalls diese Mitglied Funktion

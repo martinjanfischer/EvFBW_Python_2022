@@ -98,6 +98,8 @@ class Dimorphos:
         level_2.bild_Banana_alien=bild_Sus_1
         level_1.bild_mutterschiff = bild_mutterschiff
         level_2.bild_mutterschiff = bild_mutterschiff
+        level_1.bild_laser= self.laser_bild
+        level_2.bild_laser =self.laser_bild
         karriere_level = [level_1, level_2]
         
         start_ansicht.level = {}

@@ -31,6 +31,7 @@ class Level:
         # Alien
         self.bild_Banana_alien=None
         self.bild_mutterschiff=None
+        self.laser_bild = None
     
     def initialisiere_spiel_elemente(self, leinwand, raumschiff):
         # Kein Raumschiff
@@ -46,7 +47,7 @@ class Level:
         position = zufaellige_position(leinwand, True)
         self.alien=Banana_Alien(position, self.bild_Banana_alien)
         
-        self.mutterschiff = kakashi(position, self.bild_mutterschiff, 5)
+        self.mutterschiff = kakashi(position, self.bild_mutterschiff,self.laser_bild,5)
         # Leere Asteroiden Liste
         self.asteroiden = []
         
