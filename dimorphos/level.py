@@ -1,7 +1,7 @@
 import random
 from pygame.mixer import Sound
 from nuetzliches import zufaellige_position
-from spielelement import Asteroid, Banana_Alien, Explosion
+from spielelement import Asteroid, Banana_Alien, Explosion,kakashi
 
 class Level:
     MIN_ASTEROIDEN_DISTANZ = 250
@@ -31,6 +31,8 @@ class Level:
         # Alien
         self.bild_Banana_alien = None
         self.bild_Laser = None
+        self.bild_mutterschiff=None
+        self.laser_bild = None
     
     def initialisiere_spiel_elemente(self, leinwand, raumschiff):
         # Kein Raumschiff
@@ -46,6 +48,7 @@ class Level:
         position = zufaellige_position(leinwand, True)
         self.alien=Banana_Alien(position, self.bild_Banana_alien,self.bild_Laser)
         
+        self.mutterschiff = kakashi(position, self.bild_mutterschiff,self.laser_bild,5)
         # Leere Asteroiden Liste
         self.asteroiden = []
         
@@ -69,6 +72,9 @@ class Level:
             spiel_elemente.append(self.alien)
         if self.raumschiff:
             spiel_elemente.append(self.raumschiff)
+        if self.mutterschiff:
+            spiel_elemente.append(self.mutterschiff)
+
         spiel_elemente.extend([*self.laser, *self.explosionen])
         return spiel_elemente
     
