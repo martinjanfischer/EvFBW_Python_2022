@@ -69,6 +69,7 @@ class Dimorphos:
         start_ansicht.bilder_asteroiden.append(bild_asteroid_2)
         start_ansicht.bilder_asteroiden.append(bild_asteroid_3)
         bild_Sus_1 = lade_bild("Banana_alien")
+        bild_mutterschiff = lade_bild("raumschiff_sui")
         
         # Bereite Level Wörterbuch vor
         endlos_level = EndlosLevel()
@@ -78,6 +79,7 @@ class Dimorphos:
         endlos_level.ton_explosion = ton_explosion
         endlos_level.bilder_asteroiden = bilder_asteroiden
         endlos_level.bild_Banana_alien=bild_Sus_1
+        endlos_level.bild_mutterschiff = bild_mutterschiff
         zerstoere_was_du_kannst_level = [endlos_level]
         
         level_1 = Level()
@@ -94,6 +96,8 @@ class Dimorphos:
         level_2.bilder_asteroiden = bilder_asteroiden
         level_1.bild_Banana_alien=bild_Sus_1
         level_2.bild_Banana_alien=bild_Sus_1
+        level_1.bild_mutterschiff = bild_mutterschiff
+        level_2.bild_mutterschiff = bild_mutterschiff
         karriere_level = [level_1, level_2]
         
         start_ansicht.level = {}
