@@ -56,6 +56,7 @@ class Dimorphos:
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_von_konrad", self.laser_bild, [Vector2(16, -25),Vector2(-16, -25), Vector2(39,-12), Vector2(-39,-12)], self.bild_antrieb_1))
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff.perfect_grafic", self.laser_bild, [Vector2(0, -25)], self.bild_antrieb_1))
         start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_Mouthfullmod",self.laser_bild, [Vector2(0, -44)], self.bild_antrieb_2))
+        start_ansicht.raumschiffe.append(Raumschiff(Vector2(0, 0), "raumschiff_UFO",self.laser_bild, [Vector2(-25, -3)], self.bild_antrieb_2))
         start_ansicht.hintergrund = hintergrund_1
         
         # Füge neue Asteroidenbilder in die Liste der Ansichten hinzu
