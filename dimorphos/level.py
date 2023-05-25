@@ -10,6 +10,7 @@ class Level:
         # Leere Asteroiden Liste
         self.asteroiden = []
         self.anzahl_asteroiden = 6
+        self.anzahl_aliens = 0
         
         # Weltraum
         self.hintergrund = None#lade_bild("hintergrund.magenta", False)
@@ -44,10 +45,19 @@ class Level:
         self.explosionen = []
         
         # Alien
-        position = zufaellige_position(leinwand, True)
-        self.alien=Banana_Alien(position, self.bild_Banana_alien,self.bild_laser)
+        self.aliens = []
+        for _ in range(self.anzahl_aliens):
+            while True:
+                position = zufaellige_position(leinwand, True)
+                distanz = position.distance_to(self.raumschiff.position)
+                if (distanz > self.MIN_ASTEROIDEN_DISTANZ):
+                    break
+            bild_asteroid = self.bilder_asteroiden[random.randrange(len(self.bilder_asteroiden))]
+            self.aliens.append(Banana_Alien(position, self.bild_Banana_alien,self.bild_laser))
         
+        position = zufaellige_position(leinwand, True)
         self.mutterschiff = kakashi(position, self.bild_mutterschiff,self.bild_laser,5)
+        
         # Leere Asteroiden Liste
         self.asteroiden = []
         
@@ -70,8 +80,7 @@ class Level:
         if self.mutterschiff:
             spiel_elemente.append(self.mutterschiff)
         spiel_elemente.extend(self.asteroiden)
-        if self.alien:
-            spiel_elemente.append(self.alien)
+        spiel_elemente.extend(self.aliens)
         if self.raumschiff:
             spiel_elemente.append(self.raumschiff)
 
@@ -99,14 +108,15 @@ class Level:
         
         # Treffer: Laser auf Banana_alien entferne beide
         for laser in self.laser[:]:
-            if self.alien and laser.von_spieler and self.alien.kollidiert(laser):
-                # Entferne Laser und Alien
-                self.alien= None
-                self.laser.remove(laser)
-                
-                # Punkte
-                score += 1
-                break
+            for alien in self.aliens[:]:
+                if alien and laser.von_spieler and alien.kollidiert(laser):
+                    # Entferne Laser und Alien
+                    self.aliens.remove(alien)
+                    self.laser.remove(laser)
+
+                    # Punkte
+                    score += 2
+                    break
         
         # Treffer: Laser auf Raumschiff entferne beide
         for laser in self.laser[:]:
@@ -141,10 +151,11 @@ class Level:
                     break
         
         # banana alien schießt
-        if self.alien and self.raumschiff:
-             laser = self.alien.schiesse(self.raumschiff.position)
-             # Füge Laser in Liste hinzu
-             self.laser.extend(laser)
+        for alien in self.aliens[:]:
+            if alien and self.raumschiff:
+                laser = alien.schiesse(self.raumschiff.position)
+                # Füge Laser in Liste hinzu
+                self.laser.extend(laser)
         
         return score
     
