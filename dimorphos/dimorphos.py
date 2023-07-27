@@ -92,6 +92,9 @@ class Dimorphos:
         level_5 = Level()
         level_6 = Level()
         level_7 = Level()
+        level_8 = Level()
+        level_9 = Level()
+        level_10 = Level()
         level_1.anzahl_asteroiden = 4
         level_2.anzahl_asteroiden = 8
         level_3.anzahl_asteroiden = 12
@@ -99,6 +102,9 @@ class Dimorphos:
         level_5.anzahl_asteroiden = 16
         level_6.anzahl_asteroiden = 20
         level_7.anzahl_asteroiden = 20
+        level_8.anzahl_asteroiden = 24
+        level_9.anzahl_asteroiden = 28
+        level_10.anzahl_asteroiden = 28
         level_1.hintergrund = hintergrund_1
         level_2.hintergrund = hintergrund_2
         level_3.hintergrund = hintergrund_1
@@ -106,6 +112,9 @@ class Dimorphos:
         level_5.hintergrund = hintergrund_1
         level_6.hintergrund = hintergrund_2
         level_7.hintergrund = hintergrund_1
+        level_8.hintergrund = hintergrund_2
+        level_9.hintergrund = hintergrund_1
+        level_10.hintergrund = hintergrund_2
         level_1.bild_explosion = bild_explosion
         level_2.bild_explosion = bild_explosion
         level_3.bild_explosion = bild_explosion
@@ -113,6 +122,9 @@ class Dimorphos:
         level_5.bild_explosion = bild_explosion
         level_6.bild_explosion = bild_explosion
         level_7.bild_explosion = bild_explosion
+        level_8.bild_explosion = bild_explosion
+        level_9.bild_explosion = bild_explosion
+        level_10.bild_explosion = bild_explosion
         level_1.ton_explosion = ton_explosion
         level_2.ton_explosion = ton_explosion
         level_3.ton_explosion = ton_explosion
@@ -120,6 +132,9 @@ class Dimorphos:
         level_5.ton_explosion = ton_explosion
         level_6.ton_explosion = ton_explosion
         level_7.ton_explosion = ton_explosion
+        level_8.ton_explosion = ton_explosion
+        level_9.ton_explosion = ton_explosion
+        level_10.ton_explosion = ton_explosion
         level_1.bilder_asteroiden = bilder_asteroiden
         level_2.bilder_asteroiden = bilder_asteroiden
         level_3.bilder_asteroiden = bilder_asteroiden
@@ -127,12 +142,18 @@ class Dimorphos:
         level_5.bilder_asteroiden = bilder_asteroiden
         level_6.bilder_asteroiden = bilder_asteroiden
         level_7.bilder_asteroiden = bilder_asteroiden
+        level_8.bilder_asteroiden = bilder_asteroiden
+        level_9.bilder_asteroiden = bilder_asteroiden
+        level_10.bilder_asteroiden = bilder_asteroiden
         level_2.bild_Banana_alien = bild_Sus_1
         level_3.bild_Banana_alien = bild_Sus_1
         level_4.bild_Banana_alien = bild_Sus_1
         level_5.bild_Banana_alien = bild_Sus_1
         level_6.bild_Banana_alien = bild_Sus_1
         level_7.bild_Banana_alien = bild_Sus_1
+        level_8.bild_Banana_alien = bild_Sus_1
+        level_9.bild_Banana_alien = bild_Sus_1
+        level_10.bild_Banana_alien = bild_Sus_1
         level_1.anzahl_aliens = 0
         level_2.anzahl_aliens = 1
         level_3.anzahl_aliens = 1
@@ -140,6 +161,9 @@ class Dimorphos:
         level_5.anzahl_aliens = 2
         level_6.anzahl_aliens = 2
         level_7.anzahl_aliens = 3
+        level_8.anzahl_aliens = 3
+        level_9.anzahl_aliens = 3
+        level_10.anzahl_aliens = 4
         level_1.bild_mutterschiff = bild_mutterschiff
         level_2.bild_mutterschiff = bild_mutterschiff
         level_3.bild_mutterschiff = bild_mutterschiff
@@ -147,6 +171,9 @@ class Dimorphos:
         level_5.bild_mutterschiff = bild_mutterschiff
         level_6.bild_mutterschiff = bild_mutterschiff
         level_7.bild_mutterschiff = bild_mutterschiff
+        level_8.bild_mutterschiff = bild_mutterschiff
+        level_9.bild_mutterschiff = bild_mutterschiff
+        level_10.bild_mutterschiff = bild_mutterschiff
         level_1.bild_laser = self.laser_bild
         level_2.bild_laser = self.laser_bild
         level_3.bild_laser = self.laser_bild
@@ -154,7 +181,10 @@ class Dimorphos:
         level_5.bild_laser = self.laser_bild
         level_6.bild_laser = self.laser_bild
         level_7.bild_laser = self.laser_bild
-        karriere_level = [level_1, level_2, level_3, level_4, level_5, level_6, level_7]
+        level_8.bild_laser = self.laser_bild
+        level_9.bild_laser = self.laser_bild
+        level_10.bild_laser = self.laser_bild
+        karriere_level = [level_1, level_2, level_3, level_4, level_5, level_6, level_7, level_8, level_9, level_10]
         
         start_ansicht.level = {}
         start_ansicht.level['Zerstöre was Du kannst'] = zerstoere_was_du_kannst_level
