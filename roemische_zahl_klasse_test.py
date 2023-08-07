@@ -4,35 +4,94 @@
 # http://roemischezahlen.babuo.com/roemischen-ziffern-1-1000
 
 import unittest
-from roemische_zahl import berechne_roemische_zahl
+from roemische_zahl import RoemischeZahl
 
 class roemische_zahl_test(unittest.TestCase):   # Definiere die Test Klasse "roemische_zahl_test"
     
-    def teste_roemische_zahl_0(self):           # Definiere die Testfunktion "teste_roemische_zahl_0"
-        ergebnis = berechne_roemische_zahl(-1)  # Rufe die Funktion berechne_roemische_zahl mit -1 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, '')          # Melde einen Fehler wenn die Variable ergebnis nicht den leeren Zeichenketten-Text enthält
-        ergebnis = berechne_roemische_zahl(0)   # Rufe die Funktion berechne_roemische_zahl mit 0 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, '')          # Melde einen Fehler wenn die Variable ergebnis nicht den leeren Zeichenketten-Text enthält
+    def teste_roemische_zahl_initialisierung(self):
+        r1 = RoemischeZahl(0)
+        self.assertEqual(r1.arabische_zahl, 0)
+        self.assertEqual(r1.roemische_zahl, '')
+        r2 = RoemischeZahl(-1)
+        self.assertEqual(r2.arabische_zahl, 0)
+        self.assertEqual(r2.roemische_zahl, '')
     
-    def teste_roemische_zahl_1_bis_9(self):    # Definiere die Testfunktion "teste_roemische_zahl_1_bis_10"
-        ergebnis = berechne_roemische_zahl(1)   # Rufe die Funktion berechne_roemische_zahl mit 1 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, 'I')         # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text I enthält
-        ergebnis = berechne_roemische_zahl(2)   # Rufe die Funktion berechne_roemische_zahl mit 2 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, 'II')        # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text II enthält
-        ergebnis = berechne_roemische_zahl(3)   # Rufe die Funktion berechne_roemische_zahl mit 3 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, 'III')       # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text III enthält
-        ergebnis = berechne_roemische_zahl(4)   # Rufe die Funktion berechne_roemische_zahl mit 4 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, 'IV')        # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text IV enthält
-        ergebnis = berechne_roemische_zahl(5)   # Rufe die Funktion berechne_roemische_zahl mit 5 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, 'V')         # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text V enthält
-        ergebnis = berechne_roemische_zahl(6)   # Rufe die Funktion berechne_roemische_zahl mit 6 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, 'VI')        # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text VI enthält
-        ergebnis = berechne_roemische_zahl(7)   # Rufe die Funktion berechne_roemische_zahl mit 7 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, 'VII')       # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text VII enthält
-        ergebnis = berechne_roemische_zahl(8)   # Rufe die Funktion berechne_roemische_zahl mit 8 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, 'VIII')      # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text VIII enthält
-        ergebnis = berechne_roemische_zahl(9)   # Rufe die Funktion berechne_roemische_zahl mit 9 auf und speichere den Rückgabewert in der Variablen "ergebnis"
-        self.assertEqual(ergebnis, 'IX')        # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text IX enthält
+    def teste_roemische_zahl_addition(self):
+        r1 = RoemischeZahl(7)
+        self.assertEqual(r1.roemische_zahl, 'VII')
+        r2 = RoemischeZahl(4)
+        self.assertEqual(r2.roemische_zahl, 'IV')
+        r = r1 + r2
+        self.assertEqual(r.roemische_zahl, 'XI')
+    
+    def teste_roemische_zahl_subtraktion(self):
+        r1 = RoemischeZahl(7)
+        self.assertEqual(r1.roemische_zahl, 'VII')
+        r2 = RoemischeZahl(4)
+        self.assertEqual(r2.roemische_zahl, 'IV')
+        r = r1 - r2
+        self.assertEqual(r.roemische_zahl, 'III')
+    
+    def teste_roemische_zahl_multiplikation(self):
+        r1 = RoemischeZahl(7)
+        self.assertEqual(r1.roemische_zahl, 'VII')
+        r2 = RoemischeZahl(4)
+        self.assertEqual(r2.roemische_zahl, 'IV')
+        r = r1 * r2
+        self.assertEqual(r.roemische_zahl, 'XXVIII')
+    
+    def teste_roemische_zahl_division_1(self):
+        r1 = RoemischeZahl(33)
+        self.assertEqual(r1.roemische_zahl, 'XXXIII')
+        r2 = RoemischeZahl(11)
+        self.assertEqual(r2.roemische_zahl, 'XI')
+        r = r1 // r2
+        self.assertEqual(r.roemische_zahl, 'III')
+    
+    def teste_roemische_zahl_division_2(self):
+        r1 = RoemischeZahl(33)
+        self.assertEqual(r1.roemische_zahl, 'XXXIII')
+        r2 = RoemischeZahl(0)
+        self.assertEqual(r2.roemische_zahl, '')
+        try:
+            r = r1 // r2
+        except ZeroDivisionError:
+            self.assertEqual(r2.roemische_zahl, '')
+    
+    def teste_roemische_zahl_division_3(self):
+        r1 = RoemischeZahl(11)
+        self.assertEqual(r1.roemische_zahl, 'XI')
+        r2 = RoemischeZahl(33)
+        self.assertEqual(r2.roemische_zahl, 'XXXIII')
+        r = r1 // r2
+        self.assertEqual(r.arabische_zahl, 0)
+        self.assertEqual(r.roemische_zahl, '')
+    
+    def teste_roemische_zahl_0(self):               # Definiere die Testfunktion "teste_roemische_zahl_0"
+        r = RoemischeZahl(-1)                       # Rufe die Funktion berechne_roemische_zahl mit -1 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, '')      # Melde einen Fehler wenn die Variable ergebnis nicht den leeren Zeichenketten-Text enthält
+        r = RoemischeZahl(0)                        # Rufe die Funktion berechne_roemische_zahl mit 0 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, '')      # Melde einen Fehler wenn die Variable ergebnis nicht den leeren Zeichenketten-Text enthält
+    
+    def teste_roemische_zahl_1_bis_9(self):         # Definiere die Testfunktion "teste_roemische_zahl_1_bis_10"
+        r = RoemischeZahl(1)                        # Rufe die Funktion berechne_roemische_zahl mit 1 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, 'I')     # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text I enthält
+        r = RoemischeZahl(2)                        # Rufe die Funktion berechne_roemische_zahl mit 2 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, 'II')    # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text II enthält
+        r = RoemischeZahl(3)                        # Rufe die Funktion berechne_roemische_zahl mit 3 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, 'III')   # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text III enthält
+        r = RoemischeZahl(4)                        # Rufe die Funktion berechne_roemische_zahl mit 4 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, 'IV')    # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text IV enthält
+        r = RoemischeZahl(5)                        # Rufe die Funktion berechne_roemische_zahl mit 5 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, 'V')     # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text V enthält
+        r = RoemischeZahl(6)                        # Rufe die Funktion berechne_roemische_zahl mit 6 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, 'VI')    # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text VI enthält
+        r = RoemischeZahl(7)                        # Rufe die Funktion berechne_roemische_zahl mit 7 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, 'VII')   # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text VII enthält
+        r = RoemischeZahl(8)                        # Rufe die Funktion berechne_roemische_zahl mit 8 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, 'VIII')  # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text VIII enthält
+        r = RoemischeZahl(9)                        # Rufe die Funktion berechne_roemische_zahl mit 9 auf und speichere den Rückgabewert in der Variablen "ergebnis"
+        self.assertEqual(r.roemische_zahl, 'IX')    # Melde einen Fehler wenn die Variable ergebnis nicht den Zeichenketten-Text IX enthält
     
     def teste_roemische_zahl_10_bis_99(self):
         arabisch_roemisch_woerterbuch = {
@@ -128,8 +187,8 @@ class roemische_zahl_test(unittest.TestCase):   # Definiere die Test Klasse "roe
             , 99: 'XCIX'
         }
         for arabische_zahl, roemische_zahl in arabisch_roemisch_woerterbuch.items():
-            ergebnis = berechne_roemische_zahl(arabische_zahl)
-            self.assertEqual(ergebnis, roemische_zahl)
+            r = RoemischeZahl(arabische_zahl)
+            self.assertEqual(r.roemische_zahl, roemische_zahl)
     
     def teste_roemische_zahl_100_bis_1000(self):
         arabisch_roemisch_woerterbuch = {
@@ -1036,8 +1095,8 @@ class roemische_zahl_test(unittest.TestCase):   # Definiere die Test Klasse "roe
             , 1000: 'M'
         }
         for arabische_zahl, roemische_zahl in arabisch_roemisch_woerterbuch.items():
-            ergebnis = berechne_roemische_zahl(arabische_zahl)
-            self.assertEqual(ergebnis, roemische_zahl)
+            r = RoemischeZahl(arabische_zahl)
+            self.assertEqual(r.roemische_zahl, roemische_zahl)
 
 if __name__ == '__main__':  # Die obigen Funktionen werden nur dann in der Kommandozeile ausgeführt...
     unittest.main()         # ... wenn man sie hier in der __main__ Funktion aufruft
