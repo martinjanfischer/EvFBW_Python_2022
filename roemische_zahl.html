@@ -39,17 +39,81 @@
 			function berechne_roemische_zahl(arabische_zahl)
 			{
 				roemische_zahl = '';
-				if(arabische_zahl==3)	// Wenn die Variable "arabische_zahl" gleich Eins ist ...
+				
+				// 101 bis 1000
+				if (arabische_zahl >= 1000)
 				{
-					roemische_zahl = 'III'; // ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
+					roemische_zahl += "M";
+					arabische_zahl -= 1000;
 				}
-				if(arabische_zahl==2)	// Wenn die Variable "arabische_zahl" gleich Eins ist ...
+				if (arabische_zahl >= 900)
 				{
-					roemische_zahl = 'II';	// ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
+					roemische_zahl += "CM";
+					arabische_zahl -= 900;
 				}
-				if(arabische_zahl==1)	// Wenn die Variable "arabische_zahl" gleich Eins ist ...
+				if (arabische_zahl >= 500)
 				{
-					roemische_zahl = 'I';	// ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
+					roemische_zahl += "D";
+					arabische_zahl -= 500;
+				}
+				if (arabische_zahl >= 400)
+				{
+					roemische_zahl += "CD";
+					arabische_zahl -= 400;
+				}
+				while (arabische_zahl >= 100)
+				{
+					roemische_zahl += "C";
+					arabische_zahl -= 100;
+				}
+				
+				//10 bis 100
+				if (arabische_zahl >= 100)
+				{
+					roemische_zahl += "C";
+					arabische_zahl -= 100;
+				}
+				if (arabische_zahl >= 90)
+				{
+					roemische_zahl += "XC";
+					arabische_zahl -= 90;
+				}
+				if (arabische_zahl >= 50)
+				{
+					roemische_zahl += "L";
+					arabische_zahl -= 50;
+				}
+				if (arabische_zahl >= 40)
+				{
+					roemische_zahl += "XL";
+					arabische_zahl -= 40;
+				}
+				while (arabische_zahl >= 10)
+				{
+					roemische_zahl += "X";
+					arabische_zahl -= 10;
+				}
+
+				//1 bis 9
+				if (arabische_zahl >= 9)
+				{
+					roemische_zahl += "IX";
+					arabische_zahl -= 9;
+				}
+				if (arabische_zahl >= 5)
+				{
+					roemische_zahl += "V";
+					arabische_zahl -= 5;
+				}
+				if (arabische_zahl >= 4)
+				{
+					roemische_zahl += "IV";
+					arabische_zahl -= 4;
+				}
+				while (arabische_zahl >= 1)
+				{
+					roemische_zahl += "I";
+					arabische_zahl -= 1;
 				}
 				return roemische_zahl;
 			}
