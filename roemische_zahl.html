@@ -1,81 +1,95 @@
 <HTML>
-  <HEAD>
-    <style>
-    h2 {
-      margin-bottom: 2em;
-    }
-    
-    label {
-      font-weight: bold;
-    }
-    
-    input,
-    arabische_zahl_eingabe {
-      color: black;
-      font-weight: bold;
-      font-size: 1.5em;
-      <!--background-image: linear-gradient(160deg, white, lightgrey 100%, grey);-->
-      border-radius: 1em;
-      padding: 0.7em 1em;
-    }
-    
-    output,
-    roemische_zahl_ausgabe {
-      color: black;
-      font-weight: bold;
-      font-size: 1.5em;
-      <!--background-image: linear-gradient(160deg, white, lightgrey 100%, grey);-->
-      border-radius: 1em;
-      padding: 0.7em 1em;
-    }
-    </style>
-    <TITLE>Römische Zahl</TITLE>
-    <SCRIPT type="text/javascript">
+	<HEAD>
+		<style>
+			h2
+			{
+				margin-bottom: 2em;
+			}
 
-        function berechne_roemische_zahl(arabische_zahl)
-        {
-          roemische_zahl = '';
-          if(arabische_zahl==3) {   // Wenn die Variable "arabische_zahl" gleich Eins ist ...
-            roemische_zahl = 'III'; // ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
-          }
-          if(arabische_zahl==2) {   // Wenn die Variable "arabische_zahl" gleich Eins ist ...
-            roemische_zahl = 'II';  // ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
-          }
-          if(arabische_zahl==1) {   // Wenn die Variable "arabische_zahl" gleich Eins ist ...
-            roemische_zahl = 'I';   // ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
-          }
-          return roemische_zahl;
-        }
+			label
+			{
+				font-weight: bold;
+			}
 
-        document.addEventListener('DOMContentLoaded', function () {
-            let arabische_zahl_eingabe = document.getElementById('arabische_zahl_eingabe'),
-                roemische_zahl_ausgabe = document.getElementById('roemische_zahl_ausgabe');
-        
-            function setzeVolumeAnzeige(wert) {
-                roemische_zahl_ausgabe.value = wert;
-            }
-            arabische_zahl_eingabe.addEventListener('input', function (event) {
-                roemische_zahl_ausgabe.value = berechne_roemische_zahl(event.target.value);
-            });
-            roemische_zahl_ausgabe.value = berechne_roemische_zahl(arabische_zahl_eingabe.value);
-            roemische_zahl_ausgabe.hidden = false;
-        });
+			input,
+			arabische_zahl_eingabe
+			{
+				color: black;
+				font-weight: bold;
+				font-size: 1.5em;
+				<!--background-image: linear-gradient(160deg, white, lightgrey 100%, grey);-->
+				border-radius: 1em;
+				padding: 0.7em 1em;
+			}
 
-    </SCRIPT>
-  </HEAD>
-  <BODY">
-    <h2>Berechne die Römische Zahl aus einer Arabischen Zahl</h2>
-    <form>
-      <label for="arabische_zahl_eingabe">Arabische Zahl:</label>
-      <input type="number" id="arabische_zahl_eingabe" step="1" value="0"><br>
-	  <br>
-      <label for="roemische_zahl_ausgabe">Römische Zahl:</label>
-      <output id="roemische_zahl_ausgabe" for="arabische_zahl_eingabe"></output>
-      <NOSCRIPT>
-        Diese Seite wird nur mit JavaScript
-        korrekt dargestellt. Bitte schalten
-        Sie JavaScript in Ihrem Browser ein!
-      </NOSCRIPT>
-    </form>
-  </BODY>
+			output,
+			roemische_zahl_ausgabe
+			{
+				color: black;
+				font-weight: bold;
+				font-size: 1.5em;
+				<!--background-image: linear-gradient(160deg, white, lightgrey 100%, grey);-->
+				border-radius: 1em;
+				padding: 0.7em 1em;
+			}
+		</style>
+		<TITLE>Römische Zahl</TITLE>
+		<SCRIPT type="text/javascript">
+
+			function berechne_roemische_zahl(arabische_zahl)
+			{
+				roemische_zahl = '';
+				if(arabische_zahl==3)	// Wenn die Variable "arabische_zahl" gleich Eins ist ...
+				{
+					roemische_zahl = 'III'; // ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
+				}
+				if(arabische_zahl==2)	// Wenn die Variable "arabische_zahl" gleich Eins ist ...
+				{
+					roemische_zahl = 'II';	// ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
+				}
+				if(arabische_zahl==1)	// Wenn die Variable "arabische_zahl" gleich Eins ist ...
+				{
+					roemische_zahl = 'I';	// ... dann bekommt die Variable "roemische_zahl" den Zeichenketten-Text 'I'
+				}
+				return roemische_zahl;
+			}
+
+			document.addEventListener('DOMContentLoaded',
+				function ()
+				{
+					let arabische_zahl_eingabe = document.getElementById('arabische_zahl_eingabe'),
+					roemische_zahl_ausgabe = document.getElementById('roemische_zahl_ausgabe');
+
+					function setzeVolumeAnzeige(wert)
+					{
+						roemische_zahl_ausgabe.value = wert;
+					}
+					arabische_zahl_eingabe.addEventListener('input', 
+						function (event)
+						{
+							roemische_zahl_ausgabe.value = berechne_roemische_zahl(event.target.value);
+						}
+					);
+					roemische_zahl_ausgabe.value = berechne_roemische_zahl(arabische_zahl_eingabe.value);
+					roemische_zahl_ausgabe.hidden = false;
+				}
+			);
+
+		</SCRIPT>
+	</HEAD>
+	<BODY">
+		<h2>Berechne die Römische Zahl aus einer Arabischen Zahl</h2>
+		<form>
+			<label for="arabische_zahl_eingabe">Arabische Zahl:</label>
+			<input type="number" id="arabische_zahl_eingabe" step="1" value="0"><br>
+			<br>
+			<label for="roemische_zahl_ausgabe">Römische Zahl:</label>
+			<output id="roemische_zahl_ausgabe" for="arabische_zahl_eingabe"></output>
+			<NOSCRIPT>
+				Diese Seite wird nur mit JavaScript
+				korrekt dargestellt. Bitte schalten
+				Sie JavaScript in Ihrem Browser ein!
+			</NOSCRIPT>
+		</form>
+	</BODY>
 </HTML>
